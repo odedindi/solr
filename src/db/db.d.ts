@@ -1,4 +1,4 @@
-export interface Weather {
+export interface CelestialBodies {
 	bodies?: BodiesEntity[] | null
 }
 export interface BodiesEntity {
