@@ -1,6 +1,6 @@
 # Solr
 
-
+Jan's contrinution so far
 
 ## Getting started
 
