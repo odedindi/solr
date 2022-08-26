@@ -5,18 +5,18 @@ import {
 	Button,
 	Container,
 	Group,
-} from '@mantine/core'
+} from "@mantine/core"
 
 const useStyles = createStyles((theme) => {
-	const isDark = theme.colorScheme === 'dark'
+	const isDark = theme.colorScheme === "dark"
 	return {
 		root: {
-			padding: '180px 80px',
+			padding: "180px 80px",
 			backgroundColor: isDark ? theme.colors.dark[7] : theme.white,
 		},
 
 		label: {
-			textAlign: 'center',
+			textAlign: "center",
 			fontWeight: 900,
 			fontSize: 220,
 			lineHeight: 1,
@@ -25,26 +25,26 @@ const useStyles = createStyles((theme) => {
 				? theme.colors[theme.primaryColor][3]
 				: theme.colors[theme.primaryColor][7],
 
-			[theme.fn.smallerThan('sm')]: {
+			[theme.fn.smallerThan("sm")]: {
 				fontSize: 120,
 			},
 		},
 
 		title: {
 			fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-			textAlign: 'center',
+			textAlign: "center",
 			fontWeight: 900,
 			fontSize: 38,
 			color: isDark ? theme.white : theme.colors.dark[7],
 
-			[theme.fn.smallerThan('sm')]: {
+			[theme.fn.smallerThan("sm")]: {
 				fontSize: 32,
 			},
 		},
 
 		description: {
 			maxWidth: 540,
-			margin: 'auto',
+			margin: "auto",
 			marginTop: theme.spacing.xl,
 			marginBottom: theme.spacing.xl * 1.5,
 			color: isDark
@@ -59,7 +59,7 @@ export default function ServerError() {
 
 	const onClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
 		if (typeof window !== undefined) {
-			let currentLocation = window.origin // get url of current page
+			const currentLocation = window.origin
 			window.location.href = currentLocation
 		}
 	}
@@ -74,7 +74,7 @@ export default function ServerError() {
 					development team was already notified. Try refreshing the page.
 				</Text>
 				<Group position="center">
-					<Button   size="md" onClick={onClick}>
+					<Button size="md" onClick={onClick}>
 						Refresh the page
 					</Button>
 				</Group>

@@ -1,30 +1,30 @@
-import { createStyles, Container, Title, Text, Button } from '@mantine/core'
-import Link from 'next/link'
+import { createStyles, Container, Title, Text, Button } from "@mantine/core"
+import Link from "next/link"
 
 const useStyles = createStyles((theme) => ({
 	root: {
-		backgroundColor: '#11284b',
-		backgroundSize: 'cover',
-		backgroundPosition: 'center',
+		backgroundColor: "#11284b",
+		backgroundSize: "cover",
+		backgroundPosition: "center",
 		backgroundImage:
-			'linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 70%), url(https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80)',
+			"linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 70%), url(https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80)",
 		paddingTop: theme.spacing.xl * 20,
 		paddingBottom: theme.spacing.xl * 5,
-		height: '100vh',
+		height: "100vh",
 	},
 
 	inner: {
-		display: 'flex',
-		justifyContent: 'space-between',
+		display: "flex",
+		justifyContent: "space-between",
 
-		[theme.fn.smallerThan('md')]: {
-			flexDirection: 'column',
+		[theme.fn.smallerThan("md")]: {
+			flexDirection: "column",
 		},
 	},
 
 	image: {
-		[theme.fn.smallerThan('md')]: {
-			display: 'none',
+		[theme.fn.smallerThan("md")]: {
+			display: "none",
 		},
 	},
 
@@ -33,7 +33,7 @@ const useStyles = createStyles((theme) => ({
 		paddingBottom: theme.spacing.xl * 2,
 		marginRight: theme.spacing.xl * 3,
 
-		[theme.fn.smallerThan('md')]: {
+		[theme.fn.smallerThan("md")]: {
 			marginRight: 0,
 		},
 	},
@@ -46,8 +46,8 @@ const useStyles = createStyles((theme) => ({
 		maxWidth: 500,
 		fontSize: 48,
 
-		[theme.fn.smallerThan('md')]: {
-			maxWidth: '100%',
+		[theme.fn.smallerThan("md")]: {
+			maxWidth: "100%",
 			fontSize: 34,
 			lineHeight: 1.15,
 		},
@@ -58,8 +58,8 @@ const useStyles = createStyles((theme) => ({
 		opacity: 0.75,
 		maxWidth: 500,
 
-		[theme.fn.smallerThan('md')]: {
-			maxWidth: '100%',
+		[theme.fn.smallerThan("md")]: {
+			maxWidth: "100%",
 		},
 	},
 
@@ -69,8 +69,8 @@ const useStyles = createStyles((theme) => ({
 		fontFamily: `Greycliff CF, ${theme.fontFamily}`,
 		fontSize: 22,
 
-		[theme.fn.smallerThan('md')]: {
-			width: '100%',
+		[theme.fn.smallerThan("md")]: {
+			width: "100%",
 		},
 	},
 }))
@@ -85,29 +85,30 @@ export default function Hero() {
 						<Text
 							component="span"
 							variant="gradient"
-							gradient={{ from: 'pink', to: 'yellow' }}>
+							gradient={{ from: "pink", to: "yellow" }}
+						>
 							Solr
 						</Text>
 						<Title className={classes.title}>Solar System Model</Title>
 
 						<Text className={classes.description} mt={30}>
-							Build fully functional accessible web applications with ease –
-							Mantine includes more than 100 customizable components and hooks
-							to cover you in any situation
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+							eiusmod tempor incididunt ut labore et dolore magna aliqua...
 						</Text>
 
 						<Button
 							variant="gradient"
-							gradient={{ from: 'pink', to: 'yellow' }}
+							gradient={{ from: "pink", to: "yellow" }}
 							size="xl"
 							className={classes.control}
 							mt={40}
 							onClick={() => {
 								window.scrollTo({
-									top: document.getElementById('green')?.offsetTop,
-									behavior: 'smooth',
+									top: document.getElementById("green")?.offsetTop,
+									behavior: "smooth",
 								})
-							}}>
+							}}
+						>
 							Get started
 						</Button>
 					</div>

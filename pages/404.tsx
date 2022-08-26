@@ -6,20 +6,20 @@ import {
 	Button,
 	Group,
 	useMantineTheme,
-} from '@mantine/core'
-import Link from 'next/link'
+} from "@mantine/core"
+import Link from "next/link"
 
 const useStyles = createStyles((theme) => ({
 	root: {
-		padding: '180px 80px',
+		padding: "180px 80px",
 	},
 
 	inner: {
-		position: 'relative',
+		position: "relative",
 	},
 
 	image: {
-		position: 'absolute',
+		position: "absolute",
 		top: 0,
 		right: 0,
 		left: 0,
@@ -29,29 +29,29 @@ const useStyles = createStyles((theme) => ({
 
 	content: {
 		paddingTop: 120,
-		position: 'relative',
+		position: "relative",
 		top: 150,
 		zIndex: 1,
 
-		[theme.fn.smallerThan('sm')]: {
+		[theme.fn.smallerThan("sm")]: {
 			paddingTop: 120,
 		},
 	},
 
 	title: {
 		fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-		textAlign: 'center',
+		textAlign: "center",
 		fontWeight: 900,
 		fontSize: 38,
 
-		[theme.fn.smallerThan('sm')]: {
+		[theme.fn.smallerThan("sm")]: {
 			fontSize: 32,
 		},
 	},
 
 	description: {
 		maxWidth: 540,
-		margin: 'auto',
+		margin: "auto",
 		marginTop: theme.spacing.xl,
 		marginBottom: theme.spacing.xl * 1.5,
 	},
@@ -70,13 +70,14 @@ export default function NothingFoundBackground() {
 						color="dimmed"
 						size="lg"
 						align="center"
-						className={classes.description}>
+						className={classes.description}
+					>
 						Page you are trying to open does not exist. You may have mistyped
 						the address, or the page has been moved to another URL. If you think
 						this is an error contact support.
 					</Text>
 					<Group position="center">
-						<Link href={'/'}>
+						<Link href={"/"}>
 							<Button size="md">Take me back to home page</Button>
 						</Link>
 					</Group>
@@ -86,14 +87,14 @@ export default function NothingFoundBackground() {
 	)
 }
 
-type IllustrationProps = React.ComponentPropsWithoutRef<'svg'>
+type IllustrationProps = React.ComponentPropsWithoutRef<"svg">
 const Illustration: React.FC<IllustrationProps> = (props) => {
 	const theme = useMantineTheme()
 	return (
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 362 145" {...props}>
 			<path
 				fill={
-					theme.colorScheme === 'dark'
+					theme.colorScheme === "dark"
 						? theme.colors.dark[6]
 						: theme.colors.gray[0]
 				}

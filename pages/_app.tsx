@@ -1,5 +1,5 @@
-import type { AppProps } from 'next/app'
-import Providers from '../src/providers'
+import type { AppProps } from "next/app"
+import Providers from "../src/providers"
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
