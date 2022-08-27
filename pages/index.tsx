@@ -7,7 +7,6 @@ import Hero from "@/components/Hero"
 import ourDB from "@/db/ourDB.json"
 import DBInfo from "@/components/DBInfo"
 import dynamic from "next/dynamic"
-import GoodPracticeDemo from "@/components/GoodPracticeDemo"
 
 // import SpringDemo from "@/components/SpringDemo"
 const SpringDemo = dynamic(() => import("@/components/SpringDemo"), {
@@ -26,9 +25,7 @@ const Home: NextPage = () => {
 			<div style={{ height: "100vh" }}>
 				<SpringDemo />
 			</div>
-			<div id="db" style={{ height: "100vh" }}>
-				<GoodPracticeDemo />
-			</div>
+
 			<div style={{ height: "20vh" }}>
 				<DBInfo />
 			</div>
