@@ -7,8 +7,7 @@ echo '🔨👷🔨 Styling, testing and building your project before committing 
 yarn check:format ||
 (
     echo '❌🤢🤮❌ Prettier Check Failed. ❌🤮🤢❌
-            run yarn format, add changes and try commit again.';
-#     false;
+            running yarn format, let us keep our code nice and tidy.';
 yarn format
 )
 

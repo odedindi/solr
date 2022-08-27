@@ -28,7 +28,6 @@ const DBInfo: React.FC<DBInfoProps> = () => {
 	)
 
 	const allPlanets = useAllPlanetsQuery()?.data?.allPlanets
-
 	return (
 		<Box>
 			<Title>DB:</Title>
