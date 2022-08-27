@@ -1,16 +1,33 @@
+import ThreeDemo from "@/components/ThreeDemo"
 import type { NextPage } from "next"
-import Hero from "../src/components/Hero"
+import * as React from "react"
+import * as Three from "three"
+import Hero from "@/components/Hero"
 
+import DBInfo from "@/components/DBInfo"
+import dynamic from "next/dynamic"
+import GoodPracticeDemo from "@/components/GoodPracticeDemo"
+// import SpringDemo from "@/components/SpringDemo"
+const SpringDemo = dynamic(() => import("@/components/SpringDemo"), {
+	ssr: false,
+})
 const Home: NextPage = () => {
+	const ref = React.useRef<HTMLDivElement>(undefined!)
 	return (
 		<>
-			<Hero />
-			<div id="red" style={{ height: "100vh", backgroundColor: "red" }}></div>
-			<div
-				id="green"
-				style={{ height: "100vh", backgroundColor: "green" }}
-			></div>
-			<div id="blue" style={{ height: "100vh", backgroundColor: "blue" }}></div>
+			<Hero scrollTo={"#db"} />
+			<div ref={ref} style={{ height: "100vh" }}>
+				<ThreeDemo />
+			</div>
+			<div style={{ height: "100vh" }}>
+				<SpringDemo />
+			</div>
+			<div id="db" style={{ height: "100vh" }}>
+				<GoodPracticeDemo />
+			</div>
+			<div style={{ height: "20vh" }}>
+				<DBInfo />
+			</div>
 		</>
 	)
 }

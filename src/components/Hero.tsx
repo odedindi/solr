@@ -4,6 +4,10 @@ import { createStyles, Container, Title, Text, Button } from "@mantine/core"
 import gsap from "gsap"
 import ScrollToPlugin from "gsap/dist/ScrollToPlugin"
 
+export type HeroProps = {
+	scrollTo: gsap.TweenVars["scrollTo"]
+}
+
 const useStyles = createStyles((theme) => ({
 	root: {
 		backgroundSize: "cover",
@@ -45,27 +49,36 @@ const useStyles = createStyles((theme) => ({
 		paddingRight: 50,
 		fontFamily: `Greycliff CF, ${theme.fontFamily}`,
 		fontSize: 22,
+		borderRadius: 50,
 	},
 }))
 
-export default function Hero() {
+const Hero: React.FC<HeroProps> = ({ scrollTo }) => {
 	React.useEffect(() => {
 		gsap.registerPlugin(ScrollToPlugin)
 	}, [])
 	const { classes } = useStyles()
+
+	const handleGetStarted: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+		gsap.to(window, {
+			duration: 1.5,
+			scrollTo: scrollTo,
+			ease: "power2",
+		})
+	}
 	return (
 		<div className={classes.root}>
 			<Container size="lg">
 				<div className={classes.inner}>
 					<div className={classes.content}>
 						<Title className={classes.title} pb={25}>
-							Klassenlager 2022{" "}
+							Klassenlager 2022
 						</Title>
 						<Title>
 							<Text
 								component="span"
 								variant="gradient"
-								gradient={{ from: "pink", to: "yellow" }}
+								gradient={{ from: "red", to: "yellow" }}
 							>
 								Solr
 							</Text>
@@ -79,17 +92,11 @@ export default function Hero() {
 						</Text>
 						<Button
 							variant="gradient"
-							gradient={{ from: "pink", to: "yellow" }}
+							gradient={{ from: "yellow", to: "red" }}
 							size="xl"
 							className={classes.control}
 							mt={40}
-							onClick={() => {
-								gsap.to(window, {
-									duration: 2,
-									scrollTo: "#green",
-									ease: "power3",
-								})
-							}}
+							onClick={handleGetStarted}
 						>
 							Get started
 						</Button>
@@ -99,3 +106,5 @@ export default function Hero() {
 		</div>
 	)
 }
+
+export default Hero
