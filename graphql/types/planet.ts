@@ -40,7 +40,8 @@ export const Query = extendType({
 			args: {
 				id: nonNull(intArg()),
 			},
-			async resolve(_source, { id }, { ourDatabase }) {
+			async resolve(_source,
+				 { id }, { ourDatabase }) {
 				const allPlanets = (ourDatabase as OurDatabase).celestialBodies.planets
 				return allPlanets.filter((planet) => planet.id === Number(id))
 			},

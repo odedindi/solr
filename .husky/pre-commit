@@ -8,7 +8,8 @@ yarn check:format ||
 (
     echo '❌🤢🤮❌ Prettier Check Failed. ❌🤮🤢❌
             run yarn format, add changes and try commit again.';
-    false;
+#     false;
+yarn format
 )
 
 # Check ESLint Standards
