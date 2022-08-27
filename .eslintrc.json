@@ -16,7 +16,7 @@
 		"ecmaFeatures": {
 			"jsx": true
 		},
-		"ecmaVersion": 2018,
+		"ecmaVersion": "es2017",
 		"sourceType": "module"
 	},
 	"ignorePatterns": ["plopTemplates"],

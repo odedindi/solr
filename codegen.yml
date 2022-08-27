@@ -1,0 +1,21 @@
+overwrite: true
+schema: "./schema.graphql"
+documents:
+  - "src/**/*.tsx"
+  - "src/**/*.ts"
+  - "pages/**/*.ts"
+  - "pages/**/*.tsx"
+generates:
+  generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
+hooks:
+  afterOneFileWrite:
+    - prettier --write
+config:
+  withHooks: true

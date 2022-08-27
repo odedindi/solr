@@ -1,4 +1,5 @@
 import * as React from "react"
+import ApolloClientProvider from "./Apollo"
 import HeadProvider from "./Head"
 import StylesProvider from "./Styles"
 
@@ -7,8 +8,10 @@ export type ProvidersProps = { children: React.ReactNode }
 const Providers: React.FC<ProvidersProps> = ({ children }) => {
 	return (
 		<>
-			<HeadProvider />
-			<StylesProvider>{children}</StylesProvider>
+			<ApolloClientProvider>
+				<HeadProvider />
+				<StylesProvider>{children}</StylesProvider>
+			</ApolloClientProvider>
 		</>
 	)
 }
