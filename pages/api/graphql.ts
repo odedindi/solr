@@ -1,9 +1,10 @@
 import { MicroRequest } from "apollo-server-micro/dist/types"
 import { ServerResponse } from "http"
 
-import { server } from "@/graphql/apolloServer"
+import { server } from "@/graphql/server"
+import { NextApiHandler } from "next"
 
-const allowCors = (fn: any) => async (req: any, res: any) => {
+const allowCors = (fn: NextApiHandler) => async (req: any, res: any) => {
 	res.setHeader("Access-Control-Allow-Credentials", true)
 	res.setHeader(
 		"Access-Control-Allow-Origin",
@@ -26,13 +27,9 @@ const startServer = server.start()
 
 async function handler(req: MicroRequest, res: ServerResponse) {
 	await startServer
-	await server.createHandler({
-		path: "/api/graphql",
-	})(req, res)
+	await server.createHandler({ path: "/api/graphql" })(req, res)
 }
 export const config = {
-	api: {
-		bodyParser: false,
-	},
+	api: { bodyParser: false },
 }
 export default allowCors(handler)

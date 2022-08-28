@@ -3,17 +3,19 @@ import { createStyles, Container, Title, Text, Button } from "@mantine/core"
 
 import gsap from "gsap"
 import ScrollToPlugin from "gsap/dist/ScrollToPlugin"
+import Link from "next/link"
+import ScaleInOut from "@/GSAPAnimation/ScaleInOut"
 
 export type HeroProps = {
-	scrollTo: gsap.TweenVars["scrollTo"]
+	scrollTo?: gsap.TweenVars["scrollTo"]
+	href?: string
 }
 
 const useStyles = createStyles((theme) => ({
 	root: {
 		backgroundSize: "cover",
 		backgroundPosition: "center",
-		backgroundImage:
-			"linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 90%), url(https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80)",
+		backgroundImage: `linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 65%), url(assets/textures/sun_detailed.jpg)`,
 		paddingTop: theme.spacing.xl * 15,
 		paddingBottom: theme.spacing.xl * 5,
 		height: "100vh",
@@ -53,27 +55,33 @@ const useStyles = createStyles((theme) => ({
 	},
 }))
 
-const Hero: React.FC<HeroProps> = ({ scrollTo }) => {
+const Hero: React.FC<HeroProps> = ({ href, scrollTo }) => {
 	React.useEffect(() => {
 		gsap.registerPlugin(ScrollToPlugin)
 	}, [])
 	const { classes } = useStyles()
 
-	const handleGetStarted: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+	const handleGetStarted: React.MouseEventHandler<HTMLButtonElement> = (_e) => {
 		gsap.to(window, {
 			duration: 1.5,
 			scrollTo: scrollTo,
 			ease: "power2",
 		})
 	}
+
 	return (
 		<div className={classes.root}>
 			<Container size="lg">
+				<Text
+					sx={{ position: "absolute", top: 10, fontWeight: "bold" }}
+					pb={25}
+				>
+					<ScaleInOut delay={1} skipOutro={false}>
+						Klassenlager 2022
+					</ScaleInOut>
+				</Text>
 				<div className={classes.inner}>
 					<div className={classes.content}>
-						<Title className={classes.title} pb={25}>
-							Klassenlager 2022
-						</Title>
 						<Title>
 							<Text
 								component="span"
@@ -90,16 +98,30 @@ const Hero: React.FC<HeroProps> = ({ scrollTo }) => {
 						<Text className={classes.description}>
 							Jan Hric & Oded Winberger
 						</Text>
-						<Button
-							variant="gradient"
-							gradient={{ from: "yellow", to: "red" }}
-							size="xl"
-							className={classes.control}
-							mt={40}
-							onClick={handleGetStarted}
-						>
-							Get started
-						</Button>
+						{href ? (
+							<Link href={href}>
+								<Button
+									variant="gradient"
+									gradient={{ from: "yellow", to: "red" }}
+									size="xl"
+									className={classes.control}
+									mt={40}
+								>
+									Get started
+								</Button>
+							</Link>
+						) : (
+							<Button
+								variant="gradient"
+								gradient={{ from: "yellow", to: "red" }}
+								size="xl"
+								className={classes.control}
+								mt={40}
+								onClick={handleGetStarted}
+							>
+								Get started
+							</Button>
+						)}
 					</div>
 				</div>
 			</Container>

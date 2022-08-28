@@ -1,5 +1,6 @@
 import * as React from "react"
 import ApolloClientProvider from "./Apollo"
+import GSAPTransitionProvider from "./GSAPTransition"
 import HeadProvider from "./Head"
 import StylesProvider from "./Styles"
 
@@ -10,7 +11,9 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
 		<>
 			<ApolloClientProvider>
 				<HeadProvider />
-				<StylesProvider>{children}</StylesProvider>
+				<StylesProvider>
+					<GSAPTransitionProvider>{children}</GSAPTransitionProvider>
+				</StylesProvider>
 			</ApolloClientProvider>
 		</>
 	)

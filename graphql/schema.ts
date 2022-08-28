@@ -9,10 +9,7 @@ export const schema = makeSchema({
 		export: "Context",
 	},
 	outputs: {
-		schema: true, // means schema.graphql in the root
-		typegen: join(
-			process.cwd(),
-			"node_modules/@types/nexus-typegen-custom/index.d.ts"
-		),
+		schema: join(process.cwd(), "generated", "schema.graphql"),
+		typegen: join(process.cwd(), "generated/nexus-typegen-custom.d.ts"),
 	},
 })

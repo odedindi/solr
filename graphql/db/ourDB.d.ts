@@ -39,7 +39,7 @@ export interface SunsEntity {
 	bodyType: string
 	radiuskm: number
 	masston: string
-	gravityg: number
+	gravity: number
 	density: number
 	avgTemp: string
 	composition: Composition

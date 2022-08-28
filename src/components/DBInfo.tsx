@@ -1,9 +1,13 @@
 import * as React from "react"
 import { Box, List, Text, Title } from "@mantine/core"
 
-import ourDB from "@/db"
+import ourDB from "@/graphql/db"
 import gql from "graphql-tag"
-import { useAllPlanetsQuery } from "generated/graphql"
+import {
+	useAllCelestialBodiesQuery,
+	useAllPlanetsQuery,
+} from "generated/graphql"
+import { getKeys } from "@/lib/getKeys"
 
 export type DBInfoProps = {}
 
@@ -18,20 +22,23 @@ const QueryAllPlanets = gql`
 	}
 `
 
-const DBInfo: React.FC<DBInfoProps> = () => {
-	const celestialBodies = Object.keys(ourDB.celestialBodies)
-	const bodies: number = celestialBodies.reduce(
-		(acc, body) =>
-			acc +
-			ourDB.celestialBodies[body as keyof typeof ourDB.celestialBodies].length,
-		0
-	)
+const QueryAllCelestialBodies = gql`
+	query AllCelestialBodies {
+		allCelestialBodies {
+			id
+			name
+		}
+	}
+`
 
+const DBInfo: React.FC<DBInfoProps> = () => {
+	const allCelestialBodies =
+		useAllCelestialBodiesQuery()?.data?.allCelestialBodies
 	const allPlanets = useAllPlanetsQuery()?.data?.allPlanets
 	return (
 		<Box>
 			<Title>DB:</Title>
-			<Text>bodies in database: {bodies}</Text>
+			<Text>Celestial bodies in database: {allCelestialBodies?.length}</Text>
 			<Text>
 				Known planets in our solar system:
 				{allPlanets?.map(({ id, name }) => (

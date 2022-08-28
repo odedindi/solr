@@ -21,6 +21,29 @@ export type Scalars = {
 	Float: number
 }
 
+export type CelestialBody = {
+	__typename?: "CelestialBody"
+	/** the body's type */
+	bodyType: Scalars["String"]
+	/** diameter of the body */
+	diameter: Scalars["Float"]
+	/** @deprecated m/s^2 */
+	gravity: Scalars["Float"]
+	id: Scalars["Float"]
+	isPlanet: Scalars["Boolean"]
+	mass?: Maybe<CelestialBodyMass>
+	/** Body's name */
+	name: Scalars["String"]
+}
+
+export type CelestialBodyMass = {
+	__typename?: "CelestialBodyMass"
+	/** the multiplicative factor */
+	massExponent: Scalars["Float"]
+	/** multiply the mass value with the mas exponent to get the weight in tons */
+	massValue: Scalars["Float"]
+}
+
 export type Planet = {
 	__typename?: "Planet"
 	/** diameter of the planet */
@@ -35,6 +58,7 @@ export type Planet = {
 
 export type Query = {
 	__typename?: "Query"
+	allCelestialBodies: Array<Maybe<CelestialBody>>
 	/** get all planets */
 	allPlanets: Array<Planet>
 	/** get planet by id */
@@ -56,6 +80,17 @@ export type AllPlanetsQuery = {
 		diameter: number
 		lengthOfDay: number
 	}>
+}
+
+export type AllCelestialBodiesQueryVariables = Exact<{ [key: string]: never }>
+
+export type AllCelestialBodiesQuery = {
+	__typename?: "Query"
+	allCelestialBodies: Array<{
+		__typename?: "CelestialBody"
+		id: number
+		name: string
+	} | null>
 }
 
 export const AllPlanetsDocument = gql`
@@ -115,4 +150,62 @@ export type AllPlanetsLazyQueryHookResult = ReturnType<
 export type AllPlanetsQueryResult = Apollo.QueryResult<
 	AllPlanetsQuery,
 	AllPlanetsQueryVariables
+>
+export const AllCelestialBodiesDocument = gql`
+	query AllCelestialBodies {
+		allCelestialBodies {
+			id
+			name
+		}
+	}
+`
+
+/**
+ * __useAllCelestialBodiesQuery__
+ *
+ * To run a query within a React component, call `useAllCelestialBodiesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllCelestialBodiesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllCelestialBodiesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllCelestialBodiesQuery(
+	baseOptions?: Apollo.QueryHookOptions<
+		AllCelestialBodiesQuery,
+		AllCelestialBodiesQueryVariables
+	>
+) {
+	const options = { ...defaultOptions, ...baseOptions }
+	return Apollo.useQuery<
+		AllCelestialBodiesQuery,
+		AllCelestialBodiesQueryVariables
+	>(AllCelestialBodiesDocument, options)
+}
+export function useAllCelestialBodiesLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		AllCelestialBodiesQuery,
+		AllCelestialBodiesQueryVariables
+	>
+) {
+	const options = { ...defaultOptions, ...baseOptions }
+	return Apollo.useLazyQuery<
+		AllCelestialBodiesQuery,
+		AllCelestialBodiesQueryVariables
+	>(AllCelestialBodiesDocument, options)
+}
+export type AllCelestialBodiesQueryHookResult = ReturnType<
+	typeof useAllCelestialBodiesQuery
+>
+export type AllCelestialBodiesLazyQueryHookResult = ReturnType<
+	typeof useAllCelestialBodiesLazyQuery
+>
+export type AllCelestialBodiesQueryResult = Apollo.QueryResult<
+	AllCelestialBodiesQuery,
+	AllCelestialBodiesQueryVariables
 >

@@ -1,4 +1,4 @@
-import { OurDatabase } from "@/db"
+import { OurDatabase } from "@/graphql/db"
 import {
 	objectType,
 	extendType,
@@ -30,7 +30,7 @@ export const Query = extendType({
 			type: nonNull(list(nonNull(Planet))),
 			description: "get all planets",
 			async resolve(_source, _arg, { ourDatabase }) {
-				const allPlanets = (ourDatabase as OurDatabase).celestialBodies.planets
+				const allPlanets = ourDatabase.planets
 				return allPlanets
 			},
 		})
@@ -41,8 +41,8 @@ export const Query = extendType({
 				id: nonNull(intArg()),
 			},
 			async resolve(_source, { id }, { ourDatabase }) {
-				const allPlanets = (ourDatabase as OurDatabase).celestialBodies.planets
-				return allPlanets.filter((planet) => planet.id === Number(id))
+				const allPlanets = ourDatabase.planets
+				return allPlanets.filter((planet) => planet.id === id)
 			},
 		})
 	},

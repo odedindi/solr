@@ -1,4 +1,4 @@
-import ourDatabase, { OurDatabase } from "@/db"
+import ourDatabase, { OurDatabase } from "@/graphql/db"
 
 export interface Context {
 	ourDatabase: OurDatabase
