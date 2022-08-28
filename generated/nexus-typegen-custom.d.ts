@@ -3,193 +3,204 @@
  * Do not make changes to this file directly
  */
 
-
 import type { Context } from "./../graphql/context"
 
-
-
-
 declare global {
-  interface NexusGen extends NexusGenTypes {}
+	interface NexusGen extends NexusGenTypes {}
 }
 
-export interface NexusGenInputs {
-}
+export interface NexusGenInputs {}
 
-export interface NexusGenEnums {
-}
+export interface NexusGenEnums {}
 
 export interface NexusGenScalars {
-  String: string
-  Int: number
-  Float: number
-  Boolean: boolean
-  ID: string
+	String: string
+	Int: number
+	Float: number
+	Boolean: boolean
+	ID: string
 }
 
 export interface NexusGenObjects {
-  CelestialBody: { // root type
-    bodyType: string; // String!
-    diameter: number; // Float!
-    gravity: number; // Float!
-    id: number; // Float!
-    isPlanet: boolean; // Boolean!
-    mass?: NexusGenRootTypes['CelestialBodyMass'] | null; // CelestialBodyMass
-    name: string; // String!
-  }
-  CelestialBodyMass: { // root type
-    massExponent: number; // Float!
-    massValue: number; // Float!
-  }
-  Planet: { // root type
-    diameter: number; // Float!
-    id: number; // Float!
-    lengthOfDay: number; // Float!
-    name: string; // String!
-  }
-  Query: {};
+	CelestialBody: {
+		// root type
+		bodyType: string // String!
+		diameter: number // Float!
+		gravity: number // Float!
+		id: number // Float!
+		isPlanet: boolean // Boolean!
+		mass?: NexusGenRootTypes["CelestialBodyMass"] | null // CelestialBodyMass
+		name: string // String!
+	}
+	CelestialBodyMass: {
+		// root type
+		massExponent: number // Float!
+		massValue: number // Float!
+	}
+	Planet: {
+		// root type
+		diameter: number // Float!
+		id: number // Float!
+		lengthOfDay: number // Float!
+		name: string // String!
+	}
+	Query: {}
 }
 
-export interface NexusGenInterfaces {
-}
+export interface NexusGenInterfaces {}
 
-export interface NexusGenUnions {
-}
+export interface NexusGenUnions {}
 
 export type NexusGenRootTypes = NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
-  CelestialBody: { // field return type
-    bodyType: string; // String!
-    diameter: number; // Float!
-    gravity: number; // Float!
-    id: number; // Float!
-    isPlanet: boolean; // Boolean!
-    mass: NexusGenRootTypes['CelestialBodyMass'] | null; // CelestialBodyMass
-    name: string; // String!
-  }
-  CelestialBodyMass: { // field return type
-    massExponent: number; // Float!
-    massValue: number; // Float!
-  }
-  Planet: { // field return type
-    diameter: number; // Float!
-    id: number; // Float!
-    lengthOfDay: number; // Float!
-    name: string; // String!
-  }
-  Query: { // field return type
-    allCelestialBodies: Array<NexusGenRootTypes['CelestialBody'] | null>; // [CelestialBody]!
-    allPlanets: NexusGenRootTypes['Planet'][]; // [Planet!]!
-    planet: Array<NexusGenRootTypes['Planet'] | null>; // [Planet]!
-  }
+	CelestialBody: {
+		// field return type
+		bodyType: string // String!
+		diameter: number // Float!
+		gravity: number // Float!
+		id: number // Float!
+		isPlanet: boolean // Boolean!
+		mass: NexusGenRootTypes["CelestialBodyMass"] | null // CelestialBodyMass
+		name: string // String!
+	}
+	CelestialBodyMass: {
+		// field return type
+		massExponent: number // Float!
+		massValue: number // Float!
+	}
+	Planet: {
+		// field return type
+		diameter: number // Float!
+		id: number // Float!
+		lengthOfDay: number // Float!
+		name: string // String!
+	}
+	Query: {
+		// field return type
+		allCelestialBodies: Array<NexusGenRootTypes["CelestialBody"] | null> // [CelestialBody]!
+		allPlanets: NexusGenRootTypes["Planet"][] // [Planet!]!
+		planet: Array<NexusGenRootTypes["Planet"] | null> // [Planet]!
+	}
 }
 
 export interface NexusGenFieldTypeNames {
-  CelestialBody: { // field return type name
-    bodyType: 'String'
-    diameter: 'Float'
-    gravity: 'Float'
-    id: 'Float'
-    isPlanet: 'Boolean'
-    mass: 'CelestialBodyMass'
-    name: 'String'
-  }
-  CelestialBodyMass: { // field return type name
-    massExponent: 'Float'
-    massValue: 'Float'
-  }
-  Planet: { // field return type name
-    diameter: 'Float'
-    id: 'Float'
-    lengthOfDay: 'Float'
-    name: 'String'
-  }
-  Query: { // field return type name
-    allCelestialBodies: 'CelestialBody'
-    allPlanets: 'Planet'
-    planet: 'Planet'
-  }
+	CelestialBody: {
+		// field return type name
+		bodyType: "String"
+		diameter: "Float"
+		gravity: "Float"
+		id: "Float"
+		isPlanet: "Boolean"
+		mass: "CelestialBodyMass"
+		name: "String"
+	}
+	CelestialBodyMass: {
+		// field return type name
+		massExponent: "Float"
+		massValue: "Float"
+	}
+	Planet: {
+		// field return type name
+		diameter: "Float"
+		id: "Float"
+		lengthOfDay: "Float"
+		name: "String"
+	}
+	Query: {
+		// field return type name
+		allCelestialBodies: "CelestialBody"
+		allPlanets: "Planet"
+		planet: "Planet"
+	}
 }
 
 export interface NexusGenArgTypes {
-  Query: {
-    planet: { // args
-      id: number; // Int!
-    }
-  }
+	Query: {
+		planet: {
+			// args
+			id: number // Int!
+		}
+	}
 }
 
-export interface NexusGenAbstractTypeMembers {
-}
+export interface NexusGenAbstractTypeMembers {}
 
-export interface NexusGenTypeInterfaces {
-}
+export interface NexusGenTypeInterfaces {}
 
-export type NexusGenObjectNames = keyof NexusGenObjects;
+export type NexusGenObjectNames = keyof NexusGenObjects
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = never
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = never
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = never
 
-export type NexusGenScalarNames = keyof NexusGenScalars;
+export type NexusGenScalarNames = keyof NexusGenScalars
 
-export type NexusGenUnionNames = never;
+export type NexusGenUnionNames = never
 
-export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
+export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = never
 
 export type NexusGenFeaturesConfig = {
-  abstractTypeStrategies: {
-    isTypeOf: false
-    resolveType: true
-    __typename: false
-  }
+	abstractTypeStrategies: {
+		isTypeOf: false
+		resolveType: true
+		__typename: false
+	}
 }
 
 export interface NexusGenTypes {
-  context: Context;
-  inputTypes: NexusGenInputs;
-  rootTypes: NexusGenRootTypes;
-  inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;
-  argTypes: NexusGenArgTypes;
-  fieldTypes: NexusGenFieldTypes;
-  fieldTypeNames: NexusGenFieldTypeNames;
-  allTypes: NexusGenAllTypes;
-  typeInterfaces: NexusGenTypeInterfaces;
-  objectNames: NexusGenObjectNames;
-  inputNames: NexusGenInputNames;
-  enumNames: NexusGenEnumNames;
-  interfaceNames: NexusGenInterfaceNames;
-  scalarNames: NexusGenScalarNames;
-  unionNames: NexusGenUnionNames;
-  allInputTypes: NexusGenTypes['inputNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['scalarNames'];
-  allOutputTypes: NexusGenTypes['objectNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['unionNames'] | NexusGenTypes['interfaceNames'] | NexusGenTypes['scalarNames'];
-  allNamedTypes: NexusGenTypes['allInputTypes'] | NexusGenTypes['allOutputTypes']
-  abstractTypes: NexusGenTypes['interfaceNames'] | NexusGenTypes['unionNames'];
-  abstractTypeMembers: NexusGenAbstractTypeMembers;
-  objectsUsingAbstractStrategyIsTypeOf: NexusGenObjectsUsingAbstractStrategyIsTypeOf;
-  abstractsUsingStrategyResolveType: NexusGenAbstractsUsingStrategyResolveType;
-  features: NexusGenFeaturesConfig;
+	context: Context
+	inputTypes: NexusGenInputs
+	rootTypes: NexusGenRootTypes
+	inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars
+	argTypes: NexusGenArgTypes
+	fieldTypes: NexusGenFieldTypes
+	fieldTypeNames: NexusGenFieldTypeNames
+	allTypes: NexusGenAllTypes
+	typeInterfaces: NexusGenTypeInterfaces
+	objectNames: NexusGenObjectNames
+	inputNames: NexusGenInputNames
+	enumNames: NexusGenEnumNames
+	interfaceNames: NexusGenInterfaceNames
+	scalarNames: NexusGenScalarNames
+	unionNames: NexusGenUnionNames
+	allInputTypes:
+		| NexusGenTypes["inputNames"]
+		| NexusGenTypes["enumNames"]
+		| NexusGenTypes["scalarNames"]
+	allOutputTypes:
+		| NexusGenTypes["objectNames"]
+		| NexusGenTypes["enumNames"]
+		| NexusGenTypes["unionNames"]
+		| NexusGenTypes["interfaceNames"]
+		| NexusGenTypes["scalarNames"]
+	allNamedTypes:
+		| NexusGenTypes["allInputTypes"]
+		| NexusGenTypes["allOutputTypes"]
+	abstractTypes: NexusGenTypes["interfaceNames"] | NexusGenTypes["unionNames"]
+	abstractTypeMembers: NexusGenAbstractTypeMembers
+	objectsUsingAbstractStrategyIsTypeOf: NexusGenObjectsUsingAbstractStrategyIsTypeOf
+	abstractsUsingStrategyResolveType: NexusGenAbstractsUsingStrategyResolveType
+	features: NexusGenFeaturesConfig
 }
 
-
 declare global {
-  interface NexusGenPluginTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginInputTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
-  }
-  interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
-  }
-  interface NexusGenPluginSchemaConfig {
-  }
-  interface NexusGenPluginArgConfig {
-  }
+	interface NexusGenPluginTypeConfig<TypeName extends string> {}
+	interface NexusGenPluginInputTypeConfig<TypeName extends string> {}
+	interface NexusGenPluginFieldConfig<
+		TypeName extends string,
+		FieldName extends string
+	> {}
+	interface NexusGenPluginInputFieldConfig<
+		TypeName extends string,
+		FieldName extends string
+	> {}
+	interface NexusGenPluginSchemaConfig {}
+	interface NexusGenPluginArgConfig {}
 }

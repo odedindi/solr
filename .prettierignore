@@ -4,6 +4,7 @@ coverage
 .next
 node_modules
 plopTemplates
+generated
 package-lock.json
 yarn.lock
 next-env.d.ts
