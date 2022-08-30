@@ -3,8 +3,13 @@ build
 coverage
 .next
 node_modules
+
+# plop
 plopTemplates
+
+# auto generated files
 generated
+
 package-lock.json
 yarn.lock
 next-env.d.ts

@@ -22,6 +22,6 @@
 			"@/lib/*": ["lib/*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "plopfile.js"],
 	"exclude": ["next.config.js", ".next", "node_modules", "plopTemplates"]
 }

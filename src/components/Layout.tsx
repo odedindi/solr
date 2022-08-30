@@ -8,13 +8,20 @@ export type LayoutProps = {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, backgroundColor }) => {
-	const { setBackground } = useGSAPTransition()
+	const [didMount, setDidMount] = React.useState<boolean>(false)
+	React.useEffect(() => {
+		setDidMount(true)
+	}, [])
 
+	const { setBackground } = useGSAPTransition()
+	
 	React.useEffect(() => {
 		setBackground(backgroundColor || "dark")
 	}, [backgroundColor, setBackground])
-
-	return <Box component="main">{children}</Box>
+	
+	const emptyBox = <Box component="main">{null}</Box>
+	
+	return didMount ? <Box component="main">{children}</Box> : emptyBox
 }
 
 export default Layout

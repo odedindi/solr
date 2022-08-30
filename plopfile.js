@@ -1,8 +1,10 @@
+
 const providerPath = "plopTemplates/provider.tsx"
 const componentPath = "plopTemplates/component.tsx"
 const GSAPAnimation = "plopTemplates/GSAPAnimation.tsx"
 const hookPath = "plopTemplates/hook.ts"
 
+/** @type {import('plop').NodePlopAPI} */
 module.exports = (plop) => {
 	// Components generator
 	plop.setGenerator("component", {

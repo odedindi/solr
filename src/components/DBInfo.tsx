@@ -7,7 +7,7 @@ import {
 	useAllCelestialBodiesQuery,
 	useAllPlanetsQuery,
 } from "generated/graphql"
-import { getKeys } from "@/lib/getKeys"
+import { getTypedKeys } from "@/lib/getTypedKeys"
 
 export type DBInfoProps = {}
 
