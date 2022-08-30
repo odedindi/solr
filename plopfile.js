@@ -1,4 +1,3 @@
-
 const providerPath = "plopTemplates/provider.tsx"
 const componentPath = "plopTemplates/component.tsx"
 const GSAPAnimation = "plopTemplates/GSAPAnimation.tsx"

@@ -14,13 +14,11 @@ const Layout: React.FC<LayoutProps> = ({ children, backgroundColor }) => {
 	}, [])
 
 	const { setBackground } = useGSAPTransition()
-	
 	React.useEffect(() => {
 		setBackground(backgroundColor || "dark")
 	}, [backgroundColor, setBackground])
-	
+
 	const emptyBox = <Box component="main">{null}</Box>
-	
 	return didMount ? <Box component="main">{children}</Box> : emptyBox
 }
 
