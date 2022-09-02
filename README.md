@@ -1,13 +1,16 @@
 # Solr
-*Klassenlager 2022 project*
+
+_Klassenlager 2022 project_
 
 - [Can be seen live here](solr.vercel.app)
 
 ## Preface
+
 We want to create both a visual dictionary as well as a 3D model of our solar system.
 
 Along side the fun of dealing with our solar system, this project aims to be a playground especially for [GSAP](https://greensock.com) as well as [Three.js](https://threejs.org) and if we will have enough time and reach it also [Theatre.js](https://www.theatrejs.com/).
-In the background of it thought, is the use of the Panter stack and implamantation of frontend concepts from my training program such as: 
+In the background of it thought, is the use of the Panter stack and implamantation of frontend concepts from my training program such as:
+
 - coding techniques:
   - KISS, DRY, SOLID and Occam’s Razor principles
   - Design patterns in frontend development
@@ -21,7 +24,7 @@ In the background of it thought, is the use of the Panter stack and implamantati
   - React (Next.js)
   - State Management
   - Consuming a (graphql) API
-  - Building functional components 
+  - Building functional components
   - Routing
   - Responsivity
 - Tooling
@@ -34,11 +37,13 @@ In the background of it thought, is the use of the Panter stack and implamantati
 #### I value the care and effort to improve in case of any comment by the reader feel free to contact me at odi@panter.ch
 
 # Getting started
+
 ## Setup
 
 This is a [nextjs](https://nextjs.org/) project with
 
 - graph api
+
   - [micro](https://github.com/vercel/micro)
   - [apollo-server](https://www.apollographql.com/docs/apollo-server/)
   - [nexus](https://nexusjs.org/) to define graphql resolvers and schema
@@ -60,13 +65,12 @@ This is a [nextjs](https://nextjs.org/) project with
 - run `yarn check:all` to check both types, linting and formatting
 - run `generate:types` to transpile and generate hooks and types for queries
 
-
-
-
 ## Contributing
+
 - If you'd like to contribute, by all means fork the repository and use a feature branch.
 - Pull requests are warmly welcome.
 - There are few known bugs and some unintentional behaviors.
 
 ## Licensing
+
 The code in this project is licensed under MIT [license](https://git.panter.ch/panter/klassenlager22/solr/-/blob/main/LICENSE).

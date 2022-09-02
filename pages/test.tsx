@@ -1,7 +1,7 @@
 import type { NextPage } from "next"
 import * as React from "react"
 
-import Slider, { Animal,  Landing } from "@/components/Slider"
+import Slider, { Animal, Landing } from "@/components/Slider"
 
 const Home: NextPage = () => {
 	const [item, setItem] = React.useState<number>(0)
