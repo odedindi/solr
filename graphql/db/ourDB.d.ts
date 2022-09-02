@@ -38,7 +38,6 @@ export interface SunsEntity {
 	longAscNode: number
 	bodyType: string
 	radiuskm: number
-	masston: string
 	gravity: number
 	density: number
 	avgTemp: string

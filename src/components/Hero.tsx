@@ -73,7 +73,12 @@ const Hero: React.FC<HeroProps> = ({ href, scrollTo }) => {
 		<div className={classes.root}>
 			<Container size="lg">
 				<Text
-					sx={{ position: "absolute", top: 10, fontWeight: "bold" }}
+					sx={(theme) => ({
+						position: "absolute",
+						top: 10,
+						fontWeight: "bold",
+						color: theme.white,
+					})}
 					pb={25}
 				>
 					<ScaleInOut delay={1} skipOutro={false}>

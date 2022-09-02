@@ -3,7 +3,7 @@ import { Box } from "@mantine/core";
 
 export type {{name}}Props = {}
 
-const {{name}}: React.FC<{{name}}Props> = ({}) => {
+const {{name}}: React.FC<{{name}}Props> = () => {
   return (
   <Box>
     {{name}}

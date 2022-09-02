@@ -1,25 +1,16 @@
-import { OurDatabase } from "@/graphql/db"
-import {
-	objectType,
-	extendType,
-	nonNull,
-	list,
-	stringArg,
-	floatArg,
-	intArg,
-} from "nexus"
+import { objectType, extendType, nonNull, list, intArg } from "nexus"
 
 export const Planet = objectType({
 	name: "Planet",
 	definition(t) {
 		t.nonNull.float("id", {
 			description: "the order of the planet from the sun",
-		}),
-			t.nonNull.string("name", { description: "planet's name" }),
-			t.nonNull.float("diameter", { description: "diameter of the planet" }),
-			t.nonNull.float("lengthOfDay", {
-				description: "length of planet's day in earth hours",
-			})
+		})
+		t.nonNull.string("name", { description: "planet's name" })
+		t.nonNull.float("diameter", { description: "diameter of the planet" })
+		t.nonNull.float("lengthOfDay", {
+			description: "length of planet's day in earth hours",
+		})
 	},
 })
 
