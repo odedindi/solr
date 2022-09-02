@@ -8,7 +8,7 @@ export const Mass = objectType({
 	},
 })
 export const Vol = objectType({
-	name: "Mass",
+	name: "Vol",
 	definition(t) {
 		t.nonNull.float("volValue")
 		t.nonNull.float("volExponent")
@@ -30,12 +30,21 @@ export const Composition = objectType({
 	},
 })
 
-export const Texture = objectType({
-	name: "Texture",
+export const Textures = objectType({
+	name: "Textures",
 	definition(t) {
 		t.nonNull.string("base")
 		t.nullable.string("topo")
 		t.nullable.string("specular")
 		t.nullable.string("clouds")
+	},
+})
+
+export const Rings = objectType({
+	name: "Rings",
+	definition(t) {
+		t.nonNull.float("binnerRadius")
+		t.nullable.float("outerRadius")
+		t.nullable.field("textures", { type: Textures })
 	},
 })

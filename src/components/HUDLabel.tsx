@@ -63,13 +63,14 @@ const useStyles = createStyles(() => ({
 	},
 }))
 export type HUDLabelProps = {
-	label: string
-	text: string
+	label?: string | number | null
+	text?: string | number | null
 	small?: boolean
 }
 
 const HUDLabel: React.FC<HUDLabelProps> = ({ label, text, small }) => {
 	const { classes, cx } = useStyles()
+	if (!label && !text) return null
 	return (
 		<Box>
 			<Box className={classes.labelContainer}>

@@ -29,7 +29,7 @@ const useStyles = createStyles((theme) => ({
 
 export type HUDProps = {
 	children: React.ReactNode
-	labels: { [key: string]: string }[]
+	labels: { [key: string]: string | number | null | undefined | Object }[]
 }
 
 const HUD: React.FC<HUDProps> = ({ children, labels }) => {
@@ -39,9 +39,11 @@ const HUD: React.FC<HUDProps> = ({ children, labels }) => {
 			{children}
 			<Box className={classes.container}>
 				{labels.map((label) =>
-					Object.entries(label).map(([key, value], i) => (
-						<HUDLabel key={key} label={key} text={value} small={!!i} />
-					))
+					Object.entries(label).map(([key, value], i) =>
+						typeof value === "object" ? null : (
+							<HUDLabel key={key} label={key} text={value} small={!!i} />
+						)
+					)
 				)}
 			</Box>
 		</Box>
