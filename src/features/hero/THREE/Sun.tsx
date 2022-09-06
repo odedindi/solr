@@ -8,7 +8,7 @@ import {
 	useTexture,
 } from "@react-three/drei"
 import { MathUtils } from "three"
-
+import sun from "../../../../public/assets/textures/sun_detailed.jpg"
 import { a } from "@react-spring/three"
 
 const Sun = () => {
@@ -48,7 +48,7 @@ const Sun = () => {
 					<meshBasicMaterial
 						ref={matRef}
 						attach="material"
-						map={useTexture(texturePath)}
+						map={useTexture(sun.src)}
 					/>
 				</a.mesh>
 				<ContactShadows
