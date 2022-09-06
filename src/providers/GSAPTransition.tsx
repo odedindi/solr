@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import gsap from "gsap"
-import { DefaultMantineColor, useMantineTheme } from "@mantine/core"
+import { Box, DefaultMantineColor, useMantineTheme } from "@mantine/core"
 
 type TransitionContext = {
 	timeline: gsap.core.Timeline

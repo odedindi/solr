@@ -493,24 +493,40 @@
 						"description": null,
 						"args": [
 							{
-								"name": "id",
+								"name": "ids",
 								"description": null,
 								"type": {
-									"kind": "SCALAR",
-									"name": "Int",
-									"ofType": null
+									"kind": "LIST",
+									"name": null,
+									"ofType": {
+										"kind": "NON_NULL",
+										"name": null,
+										"ofType": {
+											"kind": "SCALAR",
+											"name": "Int",
+											"ofType": null
+										}
+									}
 								},
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
 							},
 							{
-								"name": "name",
+								"name": "names",
 								"description": null,
 								"type": {
-									"kind": "SCALAR",
-									"name": "String",
-									"ofType": null
+									"kind": "LIST",
+									"name": null,
+									"ofType": {
+										"kind": "NON_NULL",
+										"name": null,
+										"ofType": {
+											"kind": "SCALAR",
+											"name": "String",
+											"ofType": null
+										}
+									}
 								},
 								"defaultValue": null,
 								"isDeprecated": false,
@@ -524,9 +540,13 @@
 								"kind": "LIST",
 								"name": null,
 								"ofType": {
-									"kind": "OBJECT",
-									"name": "SolarDictionaryItem",
-									"ofType": null
+									"kind": "NON_NULL",
+									"name": null,
+									"ofType": {
+										"kind": "OBJECT",
+										"name": "SolarDictionaryItem",
+										"ofType": null
+									}
 								}
 							}
 						},

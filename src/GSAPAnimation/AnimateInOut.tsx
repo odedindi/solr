@@ -38,9 +38,17 @@ const AnimateInOut: React.FC<AnimateInOutProps> = ({
 
 	useIsomorphicLayoutEffect(() => {
 		// intro animation
+		gsap.set("main", { overflow: "hidden" })
 		if (set) gsap.set(boxRef.current, { ...set })
 
-		gsap.to(boxRef.current, { ...to, delay, duration: durationIn })
+		gsap.to(boxRef.current, {
+			...to,
+			delay,
+			duration: durationIn,
+			onComplete: () => {
+				gsap.set("main", { overflow: "auto" })
+			},
+		})
 		// outro animation
 		if (!skipOutro)
 			timeline.add(
@@ -48,8 +56,11 @@ const AnimateInOut: React.FC<AnimateInOutProps> = ({
 					...from,
 					delay: delayOut,
 					duration: durationOut,
+					onComplete: () => {
+						gsap.set("main", { overflow: "auto" })
+					},
 				}),
-				0
+				0.5
 			)
 	}, [])
 

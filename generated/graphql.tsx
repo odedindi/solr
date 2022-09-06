@@ -75,7 +75,7 @@ export type Query = {
   allPlanets: Array<Planet>;
   /** get planet by id */
   planet: Array<Maybe<Planet>>;
-  solarDictionary: Array<Maybe<SolarDictionaryItem>>;
+  solarDictionary: Array<SolarDictionaryItem>;
 };
 
 
@@ -85,8 +85,8 @@ export type QueryPlanetArgs = {
 
 
 export type QuerySolarDictionaryArgs = {
-  id?: InputMaybe<Scalars['Int']>;
-  name?: InputMaybe<Scalars['String']>;
+  ids?: InputMaybe<Array<Scalars['Int']>>;
+  names?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type Rings = {
@@ -134,12 +134,12 @@ export type Vol = {
 };
 
 export type SolarDictionaryQueryVariables = Exact<{
-  id?: InputMaybe<Scalars['Int']>;
-  name?: InputMaybe<Scalars['String']>;
+  ids?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
+  names?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 
-export type SolarDictionaryQuery = { __typename?: 'Query', solarDictionary: Array<{ __typename?: 'SolarDictionaryItem', id: number, name: string, diameter: number, lengthOfDay?: number | null, dimension?: number | null, gravity?: number | null, density?: number | null, avgTemp?: string | null, orbitalPeriod?: number | null, orbitalVelocity?: number | null, orbitalInclination?: number | null, orbitPositionOffset?: number | null, axialTilt?: number | null, discoveredBy?: string | null, discoveryDate?: string | null, alternativeName?: string | null, mass?: { __typename?: 'Mass', massValue: number, massExponent: number } | null, composition?: { __typename?: 'Composition', majorElements?: Array<{ __typename?: 'MajorElementsEntity', abbr: string, element: string, percentageOfComposition: number } | null> | null } | null, textures?: { __typename?: 'Textures', base: string, topo?: string | null, specular?: string | null, clouds?: string | null } | null } | null> };
+export type SolarDictionaryQuery = { __typename?: 'Query', solarDictionary: Array<{ __typename?: 'SolarDictionaryItem', id: number, name: string, diameter: number, lengthOfDay?: number | null, dimension?: number | null, gravity?: number | null, density?: number | null, avgTemp?: string | null, orbitalPeriod?: number | null, orbitalVelocity?: number | null, orbitalInclination?: number | null, orbitPositionOffset?: number | null, axialTilt?: number | null, discoveredBy?: string | null, discoveryDate?: string | null, alternativeName?: string | null, mass?: { __typename?: 'Mass', massValue: number, massExponent: number } | null, composition?: { __typename?: 'Composition', majorElements?: Array<{ __typename?: 'MajorElementsEntity', abbr: string, element: string, percentageOfComposition: number } | null> | null } | null, textures?: { __typename?: 'Textures', base: string, topo?: string | null, specular?: string | null, clouds?: string | null } | null }> };
 
 export type AllPlanetsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -153,8 +153,8 @@ export type AllCelestialBodiesQuery = { __typename?: 'Query', allCelestialBodies
 
 
 export const SolarDictionaryDocument = gql`
-    query SolarDictionary($id: Int, $name: String) {
-  solarDictionary(id: $id, name: $name) {
+    query SolarDictionary($ids: [Int!], $names: [String!]) {
+  solarDictionary(ids: $ids, names: $names) {
     id
     name
     diameter
@@ -204,8 +204,8 @@ export const SolarDictionaryDocument = gql`
  * @example
  * const { data, loading, error } = useSolarDictionaryQuery({
  *   variables: {
- *      id: // value for 'id'
- *      name: // value for 'name'
+ *      ids: // value for 'ids'
+ *      names: // value for 'names'
  *   },
  * });
  */

@@ -144,7 +144,7 @@ export interface NexusGenFieldTypes {
     allCelestialBodies: Array<NexusGenRootTypes['CelestialBody'] | null>; // [CelestialBody]!
     allPlanets: NexusGenRootTypes['Planet'][]; // [Planet!]!
     planet: Array<NexusGenRootTypes['Planet'] | null>; // [Planet]!
-    solarDictionary: Array<NexusGenRootTypes['SolarDictionaryItem'] | null>; // [SolarDictionaryItem]!
+    solarDictionary: NexusGenRootTypes['SolarDictionaryItem'][]; // [SolarDictionaryItem!]!
   }
   Rings: { // field return type
     binnerRadius: number; // Float!
@@ -266,8 +266,8 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     solarDictionary: { // args
-      id?: number | null; // Int
-      name?: string | null; // String
+      ids?: number[] | null; // [Int!]
+      names?: string[] | null; // [String!]
     }
   }
 }

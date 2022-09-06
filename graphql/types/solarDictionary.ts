@@ -1,10 +1,11 @@
+import { getTypedKeys } from "../../src/lib/getTypedKeys"
+import { SolarDictionaryItem as SolarDictionaryItemType } from "generated/graphql"
 import {
 	objectType,
 	extendType,
 	nonNull,
 	list,
 	stringArg,
-	floatArg,
 	intArg,
 	nullable,
 } from "nexus"
@@ -35,18 +36,48 @@ export const SolarDictionaryItem = objectType({
 		t.nullable.string("alternativeName")
 	},
 })
+const demoEntity: SolarDictionaryItemType = {
+	id: 0,
+	name: "demo",
+	diameter: 1,
+	mass: {
+		massValue: 1,
+		massExponent: 1,
+	},
+
+	discoveredBy: "",
+	discoveryDate: "",
+	alternativeName: "",
+	gravity: 1,
+	density: 1,
+	avgTemp: "1 K",
+	composition: {},
+	textures: {
+		base: "/assets/textures/earth_4k.jpg",
+	},
+	orbitalPeriod: 1,
+	orbitalVelocity: 1,
+	orbitalInclination: 1,
+	orbitPositionOffset: 1,
+	axialTilt: 1,
+}
+const demoEntityKeys = getTypedKeys(demoEntity)
 
 export const Query = extendType({
 	type: "Query",
 	definition(t) {
 		t.field("solarDictionary", {
-			type: nonNull(list(SolarDictionaryItem)),
+			type: nonNull(list(nonNull(SolarDictionaryItem))),
 			args: {
-				id: nullable(intArg()),
-				name: nullable(stringArg()),
+				ids: nullable(list(nonNull(intArg()))),
+				names: nullable(list(nonNull(stringArg()))),
 			},
-			resolve: async (_source, { id, name }, { ourDatabase }) => {
-				return getAllSolarDictionaryItems(ourDatabase, { id, name })
+			resolve: async (_source, { ids, names }, { ourDatabase }) => {
+				return getAllSolarDictionaryItems(
+					ourDatabase,
+					{ ids, names },
+					demoEntityKeys
+				)
 			},
 		})
 	},

@@ -302,12 +302,12 @@ export const Landing: React.FC<LandingProps> = ({ item, animals }) => {
 					key={index}
 					hidden={index !== item}
 				>
-					<img
+					{/* <img
 						src={animal.url}
 						className="landing__image"
 						alt="Animal"
 						ref={imageRef}
-					></img>
+					></img> */}
 					<HUDContainer>
 						<Label id="title" label="SPECIES" text={animal.species} />
 						<Label id="age" label="AGE" text={animal.age} small />

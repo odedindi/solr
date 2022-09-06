@@ -64,7 +64,7 @@ type Query {
 
   """get planet by id"""
   planet(id: Int!): [Planet]!
-  solarDictionary(id: Int, name: String): [SolarDictionaryItem]!
+  solarDictionary(ids: [Int!], names: [String!]): [SolarDictionaryItem!]!
 }
 
 type Rings {

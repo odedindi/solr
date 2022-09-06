@@ -1,17 +1,12 @@
 import type { NextPage } from "next"
-import * as React from "react"
-
-import Hero from "@/components/Hero"
 
 import Layout from "@/components/Layout"
-import FadeInOutUp from "@/GSAPAnimation/FadeInOutUp"
+import Hero from "@/features/hero/components"
 
 const Home: NextPage = () => {
 	return (
 		<Layout>
-			<FadeInOutUp>
-				<Hero href="/solar_dictionary" />
-			</FadeInOutUp>
+			<Hero href="/solar_dictionary/0" />
 		</Layout>
 	)
 }
