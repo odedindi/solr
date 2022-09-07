@@ -147,12 +147,7 @@ type SphereProps = {
 	setMode: React.Dispatch<React.SetStateAction<boolean>>
 }
 const Sphere: React.FC<SphereProps> = ({
-	// color,
-	env,
-	coat,
-	mode,
 	sphere,
-	// wobble,
 	setHovered,
 	setDown,
 	setMode,
@@ -168,7 +163,7 @@ const Sphere: React.FC<SphereProps> = ({
 			onPointerUp={() => {
 				setDown(false)
 				// Toggle mode between dark and bright
-				setMode(!mode)
+				setMode((prev) => !prev)
 			}}
 		>
 			{/* <sphereBufferGeometry args={[1, 32, 32]} /> */}

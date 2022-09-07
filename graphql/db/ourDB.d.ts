@@ -1,13 +1,13 @@
 // import ourDatabase from "./ourDB.json"
 // type OurDatabase = typeof ourDatabase
 
-export interface OurDatabase {
-	suns: SunsEntity[]
-	planets: PlanetsEntity[]
-	dwarfPlanets: DwarfPlanetsEntity[]
-	asteroids: AsteroidsEntity[]
-	comets: CometsEntity[]
-}
+// export interface OurDatabase {
+// 	suns: SunsEntity[]
+// 	planets: PlanetsEntity[]
+// 	dwarfPlanets: DwarfPlanetsEntity[]
+// 	asteroids: AsteroidsEntity[]
+// 	comets: CometsEntity[]
+// }
 export interface SunsEntity {
 	id: number
 	name: string

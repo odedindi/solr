@@ -1,18 +1,54 @@
 const providerPath = "plopTemplates/provider.tsx"
 const componentPath = "plopTemplates/component.tsx"
+const featurePath = "plopTemplates/feature.tsx"
 const GSAPAnimation = "plopTemplates/GSAPAnimation.tsx"
 const hookPath = "plopTemplates/hook.ts"
 
 /** @type {import('plop').NodePlopAPI} */
 module.exports = (plop) => {
+	// Feature generator
+	plop.setGenerator("feature", {
+		prompts: [{ type: "input", name: "module" }],
+		actions: () => {
+			const actions = [
+				{
+					type: "add",
+					path: "src/features/{{module}}/components/index.tsx",
+					templateFile: featurePath,
+				},
+			]
+
+			return actions
+		},
+	})
+
 	// Components generator
 	plop.setGenerator("component", {
+		prompts: [
+			{ type: "input", name: "module" },
+			{ type: "input", name: "name" },
+		],
+		actions: () => {
+			const actions = [
+				{
+					type: "add",
+					path: "src/features/{{module}}/components/{{name}}.tsx",
+					templateFile: componentPath,
+				},
+			]
+
+			return actions
+		},
+	})
+
+	// Primitive generator
+	plop.setGenerator("primitive", {
 		prompts: [{ type: "input", name: "name" }],
 		actions: () => {
 			const actions = [
 				{
 					type: "add",
-					path: "src/components/{{name}}.tsx",
+					path: "src/primitives/{{name}}.tsx",
 					templateFile: componentPath,
 				},
 			]

@@ -1,36 +1,6 @@
 import * as React from "react"
-import { Box, createStyles, keyframes, Text } from "@mantine/core"
-
-const blurInUp = keyframes`
-  0%   { 
-      transform: translate(0px, 25px);
-      -filter: blur(10px);
-      -webkit-filter: blur(10px);
-  }
-  25% {
-      transform: translate(0px, 20px);
-      
-  }
-  50% {
-      transform: translate(0px, 15px);
-      
-  }
-  75% {
-      transform: translate(0px, 10px);
-      -filter: blur(5px);
-      -webkit-filter: blur(5px);
-  }
-  85% {
-    transform: translate(0px, 5px);
-    -filter: blur(3px);
-    -webkit-filter: blur(3px);
-  }
-  100% {
-    transform: translate(0px, 0px);
-    -filter: blur(0px);
-    -webkit-filter: blur(0px);
-  }
-    `
+import { Box, createStyles, Text } from "@mantine/core"
+import { blurUpIn } from "../keyframes/blurUpIn"
 
 const useStyles = createStyles(() => ({
 	labelContainer: {
@@ -56,20 +26,22 @@ const useStyles = createStyles(() => ({
 		padding: "20px 0 30px",
 		letterSpacing: "1px",
 		opacity: "1",
-		animation: `${blurInUp} 0.8s`,
+		animation: `${blurUpIn} 0.8s`,
 	},
 	smallText: {
 		fontSize: "20px",
 	},
 }))
+
 export type HUDLabelProps = {
-	label: string
-	text: string
+	label?: string | number | null
+	text?: string | number | null
 	small?: boolean
 }
 
 const HUDLabel: React.FC<HUDLabelProps> = ({ label, text, small }) => {
 	const { classes, cx } = useStyles()
+	if (!label && !text) return null
 	return (
 		<Box>
 			<Box className={classes.labelContainer}>
