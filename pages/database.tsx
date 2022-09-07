@@ -4,7 +4,6 @@ import * as React from "react"
 
 import DBInfo from "@/components/DBInfo"
 
-
 const Database: NextPage = () => {
 	const ref = React.useRef<HTMLDivElement>(undefined!)
 	return (
