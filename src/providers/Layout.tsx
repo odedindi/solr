@@ -3,7 +3,7 @@ import { Box, createStyles, DefaultMantineColor } from "@mantine/core"
 import { useGSAPTransition } from "@/providers/GSAPTransition"
 import FadeInOutUp from "@/GSAPAnimation/FadeInOutUp"
 
-export type LayoutProps = {
+export type LayoutProviderProps = {
 	children: React.ReactNode
 	backgroundColor?: DefaultMantineColor
 }
@@ -14,7 +14,11 @@ const useStyles = createStyles(() => ({
 	},
 }))
 
-const Layout: React.FC<LayoutProps> = ({ children, backgroundColor }) => {
+const LayoutProvider: React.FC<LayoutProviderProps> = ({
+	children,
+	backgroundColor,
+}) => {
+	const { classes } = useStyles()
 	const [didMount, setDidMount] = React.useState<boolean>(false)
 	React.useEffect(() => {
 		setDidMount(true)
@@ -25,17 +29,15 @@ const Layout: React.FC<LayoutProps> = ({ children, backgroundColor }) => {
 		setBackground(backgroundColor || "dark")
 	}, [backgroundColor, setBackground])
 
-	const { classes } = useStyles()
 	const emptyBox = <Box component="main">{null}</Box>
-	return didMount ? (
+	const body = (
 		<FadeInOutUp>
 			<Box component="main" className={classes.main}>
 				{children}
 			</Box>
 		</FadeInOutUp>
-	) : (
-		emptyBox
 	)
+	return didMount ? body : emptyBox
 }
 
-export default Layout
+export default LayoutProvider

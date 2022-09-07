@@ -7,13 +7,13 @@ import { Effects } from "../THREE/Effects"
 
 import { useIsMobile } from "@/hooks/useIsMobile"
 
-const Sphere = dynamic(() => import("../THREE/Sun"), { ssr: false })
+const Sun = dynamic(() => import("../THREE/Sun"), { ssr: false })
 
 export const Scene: React.FC = () => {
 	const isMobile = useIsMobile()
 	return (
 		<Canvas dpr={isMobile ? 1 : 2} gl={{ antialias: false }}>
-			<Sphere />
+			<Sun />
 			<Effects />
 			{process.env.NODE_ENV === "development" && <Stats />}
 		</Canvas>

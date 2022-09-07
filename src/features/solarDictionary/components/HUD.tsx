@@ -1,9 +1,11 @@
 import * as React from "react"
-import { useRouter } from "next/router"
 import { Box, createStyles } from "@mantine/core"
 
 import HUDLabel from "./HUDLabel"
-import { SolarDictionaryQuery } from "generated/graphql"
+import type { SolarDictionaryQuery } from "generated/graphql"
+
+import { useGetHUDLabels } from "../hooks/useGetHUDLabels"
+import Scene from "../THREE/Scene"
 
 const useStyles = createStyles((theme) => ({
 	base: {
@@ -67,39 +69,48 @@ const useStyles = createStyles((theme) => ({
 }))
 
 export type HUDProps = {
-	children: React.ReactNode
-	labels: { [key: string]: string | number }[]
 	solarDict: SolarDictionaryQuery["solarDictionary"]
+	activeEntityIndex: number
+	handleChangeActiveEntity: (newIndex: number) => void
 }
 
-const HUD: React.FC<HUDProps> = ({ children, labels, solarDict }) => {
-	const { basePath, query, ...router } = useRouter()
+const HUD: React.FC<HUDProps> = ({
+	solarDict,
+	activeEntityIndex,
+	handleChangeActiveEntity,
+}) => {
 	const { classes, cx } = useStyles()
+
+	const requiredLabels = ["name"]
+
+	const labels = useGetHUDLabels(solarDict[activeEntityIndex], requiredLabels)
+	const HUDLabels = labels.map((label) =>
+		Object.entries(label).map(
+			([key, value], i) =>
+				value && <HUDLabel key={key} label={key} text={value} small={!!i} />
+		)
+	)
 
 	return (
 		<Box className={classes.base}>
-			{children}
-			<Box className={classes.container}>
-				{labels.map((label) =>
-					Object.entries(label).map(
-						([key, value], i) =>
-							value && (
-								<HUDLabel key={key} label={key} text={value} small={!!i} />
-							)
-					)
-				)}
-			</Box>
+			{solarDict.map((entity, i) => (
+				<Box key={i} hidden={i !== activeEntityIndex} sx={{ height: "100%" }}>
+					<Scene baseTexture={entity.textures?.base!} />
+					<Box className={classes.container}>{HUDLabels}</Box>
+				</Box>
+			))}
 			<Box
 				className={classes.sliderContainer}
 				sx={{ top: `calc(50% - ${solarDict.length * 35}px)` }}
 			>
-				{Array.from({ length: solarDict.length }, (_, i) => (
+				{solarDict.map((_, i) => (
 					<Box
+						component="div"
 						className={cx(classes.sliderItem, {
-							isActive: i === Number(query.id),
+							isActive: i === activeEntityIndex,
 						})}
 						key={i}
-						onClick={() => router.push(`${basePath}/solar_dictionary/${i}`)}
+						onClick={() => handleChangeActiveEntity(i)}
 					/>
 				))}
 			</Box>

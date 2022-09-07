@@ -6,7 +6,9 @@ import {
 	Noise,
 	Glitch,
 } from "@react-three/postprocessing"
-import { BlendFunction, GlitchMode } from "postprocessing"
+import { GlitchMode } from "postprocessing"
+
+import { BlendFunction } from "postprocessing"
 
 import * as THREE from "three"
 

@@ -133,14 +133,6 @@ export type Vol = {
   volValue: Scalars['Float'];
 };
 
-export type SolarDictionaryQueryVariables = Exact<{
-  ids?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
-  names?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
-}>;
-
-
-export type SolarDictionaryQuery = { __typename?: 'Query', solarDictionary: Array<{ __typename?: 'SolarDictionaryItem', id: number, name: string, diameter: number, lengthOfDay?: number | null, dimension?: number | null, gravity?: number | null, density?: number | null, avgTemp?: string | null, orbitalPeriod?: number | null, orbitalVelocity?: number | null, orbitalInclination?: number | null, orbitPositionOffset?: number | null, axialTilt?: number | null, discoveredBy?: string | null, discoveryDate?: string | null, alternativeName?: string | null, mass?: { __typename?: 'Mass', massValue: number, massExponent: number } | null, composition?: { __typename?: 'Composition', majorElements?: Array<{ __typename?: 'MajorElementsEntity', abbr: string, element: string, percentageOfComposition: number } | null> | null } | null, textures?: { __typename?: 'Textures', base: string, topo?: string | null, specular?: string | null, clouds?: string | null } | null }> };
-
 export type AllPlanetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -151,75 +143,15 @@ export type AllCelestialBodiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AllCelestialBodiesQuery = { __typename?: 'Query', allCelestialBodies: Array<{ __typename?: 'CelestialBody', id: number, name: string } | null> };
 
+export type SolarDictionaryQueryVariables = Exact<{
+  ids?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
+  names?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+}>;
 
-export const SolarDictionaryDocument = gql`
-    query SolarDictionary($ids: [Int!], $names: [String!]) {
-  solarDictionary(ids: $ids, names: $names) {
-    id
-    name
-    diameter
-    lengthOfDay
-    dimension
-    mass {
-      massValue
-      massExponent
-    }
-    gravity
-    density
-    avgTemp
-    composition {
-      majorElements {
-        abbr
-        element
-        percentageOfComposition
-      }
-    }
-    textures {
-      base
-      topo
-      specular
-      clouds
-    }
-    orbitalPeriod
-    orbitalVelocity
-    orbitalInclination
-    orbitPositionOffset
-    axialTilt
-    discoveredBy
-    discoveryDate
-    alternativeName
-  }
-}
-    `;
 
-/**
- * __useSolarDictionaryQuery__
- *
- * To run a query within a React component, call `useSolarDictionaryQuery` and pass it any options that fit your needs.
- * When your component renders, `useSolarDictionaryQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSolarDictionaryQuery({
- *   variables: {
- *      ids: // value for 'ids'
- *      names: // value for 'names'
- *   },
- * });
- */
-export function useSolarDictionaryQuery(baseOptions?: Apollo.QueryHookOptions<SolarDictionaryQuery, SolarDictionaryQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SolarDictionaryQuery, SolarDictionaryQueryVariables>(SolarDictionaryDocument, options);
-      }
-export function useSolarDictionaryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SolarDictionaryQuery, SolarDictionaryQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SolarDictionaryQuery, SolarDictionaryQueryVariables>(SolarDictionaryDocument, options);
-        }
-export type SolarDictionaryQueryHookResult = ReturnType<typeof useSolarDictionaryQuery>;
-export type SolarDictionaryLazyQueryHookResult = ReturnType<typeof useSolarDictionaryLazyQuery>;
-export type SolarDictionaryQueryResult = Apollo.QueryResult<SolarDictionaryQuery, SolarDictionaryQueryVariables>;
+export type SolarDictionaryQuery = { __typename?: 'Query', solarDictionary: Array<{ __typename?: 'SolarDictionaryItem', id: number, name: string, diameter: number, lengthOfDay?: number | null, dimension?: number | null, gravity?: number | null, density?: number | null, avgTemp?: string | null, orbitalPeriod?: number | null, orbitalVelocity?: number | null, orbitalInclination?: number | null, orbitPositionOffset?: number | null, axialTilt?: number | null, discoveredBy?: string | null, discoveryDate?: string | null, alternativeName?: string | null, mass?: { __typename?: 'Mass', massValue: number, massExponent: number } | null, composition?: { __typename?: 'Composition', majorElements?: Array<{ __typename?: 'MajorElementsEntity', abbr: string, element: string, percentageOfComposition: number } | null> | null } | null, textures?: { __typename?: 'Textures', base: string, topo?: string | null, specular?: string | null, clouds?: string | null } | null }> };
+
+
 export const AllPlanetsDocument = gql`
     query AllPlanets {
   allPlanets {
@@ -292,3 +224,71 @@ export function useAllCelestialBodiesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AllCelestialBodiesQueryHookResult = ReturnType<typeof useAllCelestialBodiesQuery>;
 export type AllCelestialBodiesLazyQueryHookResult = ReturnType<typeof useAllCelestialBodiesLazyQuery>;
 export type AllCelestialBodiesQueryResult = Apollo.QueryResult<AllCelestialBodiesQuery, AllCelestialBodiesQueryVariables>;
+export const SolarDictionaryDocument = gql`
+    query SolarDictionary($ids: [Int!], $names: [String!]) {
+  solarDictionary(ids: $ids, names: $names) {
+    id
+    name
+    diameter
+    lengthOfDay
+    dimension
+    mass {
+      massValue
+      massExponent
+    }
+    gravity
+    density
+    avgTemp
+    composition {
+      majorElements {
+        abbr
+        element
+        percentageOfComposition
+      }
+    }
+    textures {
+      base
+      topo
+      specular
+      clouds
+    }
+    orbitalPeriod
+    orbitalVelocity
+    orbitalInclination
+    orbitPositionOffset
+    axialTilt
+    discoveredBy
+    discoveryDate
+    alternativeName
+  }
+}
+    `;
+
+/**
+ * __useSolarDictionaryQuery__
+ *
+ * To run a query within a React component, call `useSolarDictionaryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSolarDictionaryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSolarDictionaryQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *      names: // value for 'names'
+ *   },
+ * });
+ */
+export function useSolarDictionaryQuery(baseOptions?: Apollo.QueryHookOptions<SolarDictionaryQuery, SolarDictionaryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SolarDictionaryQuery, SolarDictionaryQueryVariables>(SolarDictionaryDocument, options);
+      }
+export function useSolarDictionaryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SolarDictionaryQuery, SolarDictionaryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SolarDictionaryQuery, SolarDictionaryQueryVariables>(SolarDictionaryDocument, options);
+        }
+export type SolarDictionaryQueryHookResult = ReturnType<typeof useSolarDictionaryQuery>;
+export type SolarDictionaryLazyQueryHookResult = ReturnType<typeof useSolarDictionaryLazyQuery>;
+export type SolarDictionaryQueryResult = Apollo.QueryResult<SolarDictionaryQuery, SolarDictionaryQueryVariables>;
