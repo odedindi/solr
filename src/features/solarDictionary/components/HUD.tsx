@@ -7,6 +7,8 @@ import type { SolarDictionaryQuery } from "generated/graphql"
 import { useGetHUDLabels } from "../hooks/useGetHUDLabels"
 import Scene from "../THREE/Scene"
 
+import { OurButton } from "./SliderArrow"
+
 const useStyles = createStyles((theme) => ({
 	base: {
 		width: "100%",
@@ -31,7 +33,14 @@ const useStyles = createStyles((theme) => ({
 		},
 	},
 
-	sliderContainer: { position: "absolute", right: "10%", zIndex: 2 },
+	sliderContainer: {
+		transform: "rotate(-90deg)",
+		position: "absolute",
+		top: "-140px",
+		right: "50%",
+		zIndex: 2,
+		padding: "2.5px",
+	},
 	sliderItem: {
 		width: "16px",
 		height: "16px",
@@ -91,6 +100,13 @@ const HUD: React.FC<HUDProps> = ({
 		)
 	)
 
+	const handlePrevBtnClick = () => {
+		handleChangeActiveEntity(activeEntityIndex - 1)
+	}
+	const handleNextBtnClick = () => {
+		handleChangeActiveEntity(activeEntityIndex + 1)
+	}
+
 	return (
 		<Box className={classes.base}>
 			{solarDict.map((entity, i) => (
@@ -99,10 +115,12 @@ const HUD: React.FC<HUDProps> = ({
 					<Box className={classes.container}>{HUDLabels}</Box>
 				</Box>
 			))}
-			<Box
-				className={classes.sliderContainer}
-				sx={{ top: `calc(50% - ${solarDict.length * 35}px)` }}
-			>
+			<OurButton
+				prev
+				disabled={activeEntityIndex === 0}
+				onClick={handlePrevBtnClick}
+			/>
+			<Box className={classes.sliderContainer}>
 				{solarDict.map((_, i) => (
 					<Box
 						component="div"
@@ -114,6 +132,10 @@ const HUD: React.FC<HUDProps> = ({
 					/>
 				))}
 			</Box>
+			<OurButton
+				disabled={activeEntityIndex === solarDict.length - 1}
+				onClick={handleNextBtnClick}
+			/>
 		</Box>
 	)
 }

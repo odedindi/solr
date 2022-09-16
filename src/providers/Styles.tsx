@@ -1,9 +1,19 @@
 import * as React from "react"
-import { MantineProvider, createEmotionCache } from "@mantine/core"
+import {
+	MantineProvider,
+	createEmotionCache,
+	useMantineTheme,
+} from "@mantine/core"
+import { ThemeProvider } from "@emotion/react"
 
 const solrStylesCache = createEmotionCache({ key: "solr" })
 
 export type StylesProviderProps = { children: React.ReactNode }
+
+const EmotionStylesProvider: React.FC<StylesProviderProps> = ({ children }) => {
+	const theme = useMantineTheme()
+	return <ThemeProvider theme={theme}>{children}</ThemeProvider>
+}
 
 const StylesProvider: React.FC<StylesProviderProps> = ({ children }) => {
 	return (
@@ -15,7 +25,7 @@ const StylesProvider: React.FC<StylesProviderProps> = ({ children }) => {
 				colorScheme: "dark",
 			}}
 		>
-			{children}
+			<EmotionStylesProvider>{children}</EmotionStylesProvider>
 		</MantineProvider>
 	)
 }
