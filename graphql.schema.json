@@ -628,6 +628,18 @@
 						"deprecationReason": null
 					},
 					{
+						"name": "aphelion",
+						"description": null,
+						"args": [],
+						"type": {
+							"kind": "SCALAR",
+							"name": "Float",
+							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
 						"name": "avgTemp",
 						"description": null,
 						"args": [],
@@ -722,6 +734,18 @@
 						"type": {
 							"kind": "SCALAR",
 							"name": "String",
+							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "eccentricity",
+						"description": null,
+						"args": [],
+						"type": {
+							"kind": "SCALAR",
+							"name": "Float",
 							"ofType": null
 						},
 						"isDeprecated": false,
@@ -833,6 +857,30 @@
 					},
 					{
 						"name": "orbitalVelocity",
+						"description": null,
+						"args": [],
+						"type": {
+							"kind": "SCALAR",
+							"name": "Float",
+							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "perihelion",
+						"description": null,
+						"args": [],
+						"type": {
+							"kind": "SCALAR",
+							"name": "Float",
+							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "semimajorAxis",
 						"description": null,
 						"args": [],
 						"type": {

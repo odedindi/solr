@@ -34,6 +34,10 @@ export const SolarDictionaryItem = objectType({
 		t.nullable.string("discoveredBy")
 		t.nullable.string("discoveryDate")
 		t.nullable.string("alternativeName")
+		t.nullable.float("perihelion")
+		t.nullable.float("aphelion")
+		t.nullable.float("semimajorAxis")
+		t.nullable.float("eccentricity")
 	},
 })
 const demoEntity: SolarDictionaryItemType = {
@@ -44,7 +48,7 @@ const demoEntity: SolarDictionaryItemType = {
 		massValue: 1,
 		massExponent: 1,
 	},
-
+	lengthOfDay: 1,
 	discoveredBy: "",
 	discoveryDate: "",
 	alternativeName: "",
@@ -60,6 +64,10 @@ const demoEntity: SolarDictionaryItemType = {
 	orbitalInclination: 1,
 	orbitPositionOffset: 1,
 	axialTilt: 1,
+	perihelion: 1,
+	aphelion: 1,
+	semimajorAxis: 1,
+	eccentricity: 1,
 }
 const demoEntityKeys = getTypedKeys(demoEntity)
 

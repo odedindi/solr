@@ -75,6 +75,7 @@ type Rings {
 
 type SolarDictionaryItem {
   alternativeName: String
+  aphelion: Float
   avgTemp: String
   axialTilt: Float
   composition: Composition
@@ -83,6 +84,7 @@ type SolarDictionaryItem {
   dimension: Float
   discoveredBy: String
   discoveryDate: String
+  eccentricity: Float
   gravity: Float
   id: Int!
   lengthOfDay: Float
@@ -92,6 +94,8 @@ type SolarDictionaryItem {
   orbitalInclination: Float
   orbitalPeriod: Float
   orbitalVelocity: Float
+  perihelion: Float
+  semimajorAxis: Float
   textures: Textures
 }
 

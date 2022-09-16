@@ -99,6 +99,7 @@ export type Rings = {
 export type SolarDictionaryItem = {
   __typename?: 'SolarDictionaryItem';
   alternativeName?: Maybe<Scalars['String']>;
+  aphelion?: Maybe<Scalars['Float']>;
   avgTemp?: Maybe<Scalars['String']>;
   axialTilt?: Maybe<Scalars['Float']>;
   composition?: Maybe<Composition>;
@@ -107,6 +108,7 @@ export type SolarDictionaryItem = {
   dimension?: Maybe<Scalars['Float']>;
   discoveredBy?: Maybe<Scalars['String']>;
   discoveryDate?: Maybe<Scalars['String']>;
+  eccentricity?: Maybe<Scalars['Float']>;
   gravity?: Maybe<Scalars['Float']>;
   id: Scalars['Int'];
   lengthOfDay?: Maybe<Scalars['Float']>;
@@ -116,6 +118,8 @@ export type SolarDictionaryItem = {
   orbitalInclination?: Maybe<Scalars['Float']>;
   orbitalPeriod?: Maybe<Scalars['Float']>;
   orbitalVelocity?: Maybe<Scalars['Float']>;
+  perihelion?: Maybe<Scalars['Float']>;
+  semimajorAxis?: Maybe<Scalars['Float']>;
   textures?: Maybe<Textures>;
 };
 
@@ -149,7 +153,7 @@ export type SolarDictionaryQueryVariables = Exact<{
 }>;
 
 
-export type SolarDictionaryQuery = { __typename?: 'Query', solarDictionary: Array<{ __typename?: 'SolarDictionaryItem', id: number, name: string, diameter: number, lengthOfDay?: number | null, dimension?: number | null, gravity?: number | null, density?: number | null, avgTemp?: string | null, orbitalPeriod?: number | null, orbitalVelocity?: number | null, orbitalInclination?: number | null, orbitPositionOffset?: number | null, axialTilt?: number | null, discoveredBy?: string | null, discoveryDate?: string | null, alternativeName?: string | null, mass?: { __typename?: 'Mass', massValue: number, massExponent: number } | null, composition?: { __typename?: 'Composition', majorElements?: Array<{ __typename?: 'MajorElementsEntity', abbr: string, element: string, percentageOfComposition: number } | null> | null } | null, textures?: { __typename?: 'Textures', base: string, topo?: string | null, specular?: string | null, clouds?: string | null } | null }> };
+export type SolarDictionaryQuery = { __typename?: 'Query', solarDictionary: Array<{ __typename?: 'SolarDictionaryItem', id: number, name: string, diameter: number, lengthOfDay?: number | null, dimension?: number | null, gravity?: number | null, density?: number | null, avgTemp?: string | null, orbitalPeriod?: number | null, orbitalVelocity?: number | null, orbitalInclination?: number | null, orbitPositionOffset?: number | null, axialTilt?: number | null, discoveredBy?: string | null, discoveryDate?: string | null, alternativeName?: string | null, aphelion?: number | null, eccentricity?: number | null, perihelion?: number | null, semimajorAxis?: number | null, mass?: { __typename?: 'Mass', massValue: number, massExponent: number } | null, composition?: { __typename?: 'Composition', majorElements?: Array<{ __typename?: 'MajorElementsEntity', abbr: string, element: string, percentageOfComposition: number } | null> | null } | null, textures?: { __typename?: 'Textures', base: string, topo?: string | null, specular?: string | null, clouds?: string | null } | null }> };
 
 
 export const AllPlanetsDocument = gql`
@@ -260,6 +264,10 @@ export const SolarDictionaryDocument = gql`
     discoveredBy
     discoveryDate
     alternativeName
+    aphelion
+    eccentricity
+    perihelion
+    semimajorAxis
   }
 }
     `;

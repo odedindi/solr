@@ -36,6 +36,10 @@ export const QuerySolarDictionary = gql`
 			discoveredBy
 			discoveryDate
 			alternativeName
+			aphelion
+			eccentricity
+			perihelion
+			semimajorAxis
 		}
 	}
 `

@@ -5,9 +5,7 @@ import { createStyles, Box } from "@mantine/core"
 import LeftSection from "./LeftSection"
 import Scene from "../THREE/Scene"
 
-export type HeroProps = {
-	href: string
-}
+export type HeroProps = {}
 
 const useStyles = createStyles((theme) => ({
 	root: {
@@ -17,11 +15,11 @@ const useStyles = createStyles((theme) => ({
 	},
 }))
 
-const Hero: React.FC<HeroProps> = ({ href }) => {
+const Hero: React.FC<HeroProps> = () => {
 	const { classes } = useStyles()
 	return (
 		<Box className={classes.root}>
-			<LeftSection href={href} />
+			<LeftSection />
 			<Scene />
 		</Box>
 	)

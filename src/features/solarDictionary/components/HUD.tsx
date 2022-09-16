@@ -16,8 +16,8 @@ const useStyles = createStyles((theme) => ({
 	},
 	container: {
 		position: "absolute",
-		top: "7.5vw",
-		left: "10vw",
+		top: "10vw",
+		left: "5vw",
 		fontFamily: "arial",
 		width: "20%",
 		display: "flex",
@@ -90,13 +90,33 @@ const HUD: React.FC<HUDProps> = ({
 }) => {
 	const { classes, cx } = useStyles()
 
-	const requiredLabels = ["name"]
+	const requiredLabelsSun = ["name", "diameter", "gravity", "avgTemp"]
 
-	const labels = useGetHUDLabels(solarDict[activeEntityIndex], requiredLabels)
+	const requiredLabels = [
+		"name",
+		"diameter",
+		"lengthOfDay",
+		"orbitalPeriod",
+		"gravity",
+		"avgTemp",
+	]
+
+	const labels = useGetHUDLabels(
+		solarDict[activeEntityIndex],
+		!activeEntityIndex ? requiredLabelsSun : requiredLabels
+	)
 	const HUDLabels = labels.map((label) =>
 		Object.entries(label).map(
 			([key, value], i) =>
-				value && <HUDLabel key={key} label={key} text={value} small={!!i} />
+				value && (
+					<HUDLabel
+						key={key}
+						label={key}
+						text={value[0]}
+						extra={activeEntityIndex === 3 ? null : value[1]}
+						small={!/name/i.test(key)}
+					/>
+				)
 		)
 	)
 
