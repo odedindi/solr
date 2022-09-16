@@ -11,10 +11,6 @@ import {
 
 import ScaleInOut from "@/GSAPAnimation/ScaleInOut"
 
-export type HeroProps = {
-	href: string
-}
-
 const useStyles = createStyles((theme) => ({
 	inner: {
 		display: "flex",
@@ -24,6 +20,9 @@ const useStyles = createStyles((theme) => ({
 	content: {
 		paddingTop: theme.spacing.xl * 2,
 		paddingBottom: theme.spacing.xl * 2,
+
+		display: "flex",
+		flexDirection: "column",
 	},
 
 	title: {
@@ -41,16 +40,16 @@ const useStyles = createStyles((theme) => ({
 		maxWidth: 500,
 	},
 
-	control: {
+	button: {
 		paddingLeft: 50,
 		paddingRight: 50,
 		fontFamily: `Greycliff CF, ${theme.fontFamily}`,
 		fontSize: 22,
 	},
 }))
-export type LeftSectionProps = { href: string }
+export type LeftSectionProps = {}
 
-const LeftSection: React.FC<LeftSectionProps> = ({ href }) => {
+const LeftSection: React.FC<LeftSectionProps> = () => {
 	const { classes } = useStyles()
 
 	return (
@@ -85,21 +84,32 @@ const LeftSection: React.FC<LeftSectionProps> = ({ href }) => {
 						Made with great love and passion for the stars
 					</Text>
 					<Text className={classes.description}>Jan Hric & Oded Winberger</Text>
-
-					<Link href={href}>
-						<Button
-							variant="gradient"
-							gradient={{ from: "yellow", to: "red" }}
-							size="xl"
-							className={classes.control}
-							mt={40}
-						>
-							Get started
-						</Button>
-					</Link>
+					<OurButton href="/solar_dictionary" label="Solar Dictionary" />
+					<OurButton href="/solar_system" label="Solar System" />
 				</Box>
 			</Box>
 		</Container>
 	)
 }
 export default LeftSection
+
+const OurButton: React.FC<{ href: string; label: string }> = ({
+	href,
+	label,
+}) => {
+	const { classes } = useStyles()
+
+	return (
+		<Link href={href}>
+			<Button
+				variant="gradient"
+				gradient={{ from: "yellow", to: "red" }}
+				size="xl"
+				className={classes.button}
+				mt={40}
+			>
+				{label}
+			</Button>
+		</Link>
+	)
+}

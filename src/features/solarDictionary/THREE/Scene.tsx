@@ -21,7 +21,7 @@ export const Scene: React.FC<SceneProps> = ({ baseTexture }) => {
 				autoRotate
 				autoRotateSpeed={2}
 				enablePan={false}
-				enableZoom={false}
+				enableZoom={true}
 			/>
 		</Canvas>
 	)

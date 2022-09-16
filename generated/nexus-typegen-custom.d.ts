@@ -67,6 +67,7 @@ export interface NexusGenObjects {
   }
   SolarDictionaryItem: { // root type
     alternativeName?: string | null; // String
+    aphelion?: number | null; // Float
     avgTemp?: string | null; // String
     axialTilt?: number | null; // Float
     composition?: NexusGenRootTypes['Composition'] | null; // Composition
@@ -75,6 +76,7 @@ export interface NexusGenObjects {
     dimension?: number | null; // Float
     discoveredBy?: string | null; // String
     discoveryDate?: string | null; // String
+    eccentricity?: number | null; // Float
     gravity?: number | null; // Float
     id: number; // Int!
     lengthOfDay?: number | null; // Float
@@ -84,6 +86,8 @@ export interface NexusGenObjects {
     orbitalInclination?: number | null; // Float
     orbitalPeriod?: number | null; // Float
     orbitalVelocity?: number | null; // Float
+    perihelion?: number | null; // Float
+    semimajorAxis?: number | null; // Float
     textures?: NexusGenRootTypes['Textures'] | null; // Textures
   }
   Textures: { // root type
@@ -153,6 +157,7 @@ export interface NexusGenFieldTypes {
   }
   SolarDictionaryItem: { // field return type
     alternativeName: string | null; // String
+    aphelion: number | null; // Float
     avgTemp: string | null; // String
     axialTilt: number | null; // Float
     composition: NexusGenRootTypes['Composition'] | null; // Composition
@@ -161,6 +166,7 @@ export interface NexusGenFieldTypes {
     dimension: number | null; // Float
     discoveredBy: string | null; // String
     discoveryDate: string | null; // String
+    eccentricity: number | null; // Float
     gravity: number | null; // Float
     id: number; // Int!
     lengthOfDay: number | null; // Float
@@ -170,6 +176,8 @@ export interface NexusGenFieldTypes {
     orbitalInclination: number | null; // Float
     orbitalPeriod: number | null; // Float
     orbitalVelocity: number | null; // Float
+    perihelion: number | null; // Float
+    semimajorAxis: number | null; // Float
     textures: NexusGenRootTypes['Textures'] | null; // Textures
   }
   Textures: { // field return type
@@ -229,6 +237,7 @@ export interface NexusGenFieldTypeNames {
   }
   SolarDictionaryItem: { // field return type name
     alternativeName: 'String'
+    aphelion: 'Float'
     avgTemp: 'String'
     axialTilt: 'Float'
     composition: 'Composition'
@@ -237,6 +246,7 @@ export interface NexusGenFieldTypeNames {
     dimension: 'Float'
     discoveredBy: 'String'
     discoveryDate: 'String'
+    eccentricity: 'Float'
     gravity: 'Float'
     id: 'Int'
     lengthOfDay: 'Float'
@@ -246,6 +256,8 @@ export interface NexusGenFieldTypeNames {
     orbitalInclination: 'Float'
     orbitalPeriod: 'Float'
     orbitalVelocity: 'Float'
+    perihelion: 'Float'
+    semimajorAxis: 'Float'
     textures: 'Textures'
   }
   Textures: { // field return type name

@@ -38,7 +38,7 @@
 			"bodyType": "Star",
 			"gravity": 274,
 			"density": 1408,
-			"avgTemp": "5778 K",
+			"avgTemp": 5778,
 			"composition": {
 				"majorElements": [
 					{

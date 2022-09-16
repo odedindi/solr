@@ -23,10 +23,13 @@ const useStyles = createStyles(() => ({
 		fontSize: "30px",
 		color: "white",
 		fontWeight: "bold",
-		padding: "20px 0 30px",
+		padding: "5px 0 5px",
 		letterSpacing: "1px",
 		opacity: "1",
 		animation: `${blurUpIn} 0.8s`,
+	},
+	extra: {
+		padding: "0 0 30px",
 	},
 	smallText: {
 		fontSize: "20px",
@@ -36,10 +39,11 @@ const useStyles = createStyles(() => ({
 export type HUDLabelProps = {
 	label?: string | number | null
 	text?: string | number | null
+	extra?: string | null
 	small?: boolean
 }
 
-const HUDLabel: React.FC<HUDLabelProps> = ({ label, text, small }) => {
+const HUDLabel: React.FC<HUDLabelProps> = ({ label, text, extra, small }) => {
 	const { classes, cx } = useStyles()
 	if (!label && !text) return null
 	return (
@@ -53,6 +57,7 @@ const HUDLabel: React.FC<HUDLabelProps> = ({ label, text, small }) => {
 			<Text className={cx(classes.text, { [classes.smallText]: !!small })}>
 				{text}
 			</Text>
+			{extra ? <Text className={classes.extra}>{extra}</Text> : null}
 		</Box>
 	)
 }
