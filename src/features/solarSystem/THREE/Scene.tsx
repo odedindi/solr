@@ -22,11 +22,11 @@ type SceneProps = {
 
 export const Scene: React.FC<SceneProps> = ({
 	planets,
-	planetsScale = 1,
+	planetsScale,
 	showOrbits,
 	showPlanets,
 	showSun,
-	sunScale = 1,
+	sunScale,
 }) => {
 	const sun = planets[0]
 	const scaleBase = sun.diameter
