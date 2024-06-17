@@ -1,23 +1,16 @@
-import * as React from "react"
-import {
-	Box,
-	Center,
-	Checkbox,
-	Container,
-	createStyles,
-	Anchor,
-	Text,
-} from "@mantine/core"
+import { type FC, useState } from "react"
+import { Box, Center, Container, createStyles } from "@mantine/core"
 import { useSolarDictionaryQuery } from "generated/graphql"
 import Loader from "@/primitives/Loader"
 import Scene from "./THREE/Scene"
-import { useState } from "react"
 
 import { Slider } from "@mantine/core"
 
-import { Planet, Sun, CircleDashed, InfoCircle } from "tabler-icons-react"
+import { Planet, Sun, CircleDashed } from "tabler-icons-react"
+import dynamic from "next/dynamic"
+import Checkbox from "./components/Checkbox"
 
-export type SolarSystemProps = {}
+const RedGiantsMark = dynamic(() => import("./components/RedGiantMark"))
 
 const useStyles = createStyles(() => ({
 	base: {
@@ -50,14 +43,14 @@ const plantsScaleMarks = [
 	{ value: 500, label: 500 },
 ]
 
-const SolarSystem: React.FC<SolarSystemProps> = () => {
+const SolarSystem: FC = () => {
 	const { classes } = useStyles()
 	const { data, loading } = useSolarDictionaryQuery()
 	const solarDict = data?.solarDictionary
 	const [showSun, setShowSun] = useState(true)
 	const [showPlanets, setShowPlanets] = useState(true)
 	const [showOrbits, setShowOrbits] = useState(true)
-	const [planetsScale, setPlanetScale] = useState(1)
+	const [planetsScale, setPlanetScale] = useState(100)
 	const [sunScale, setSunScale] = useState(1)
 
 	if (!solarDict || loading) return <Loader />
@@ -69,54 +62,30 @@ const SolarSystem: React.FC<SolarSystemProps> = () => {
 						icon={({ className }) => <Sun className={className} />}
 						checked={showSun}
 						onChange={() => setShowSun(!showSun)}
-						size={"lg"}
-						color={"orange.7"}
 					/>
 					<Checkbox
 						icon={({ className }) => <Planet className={className} />}
 						checked={showPlanets}
 						onChange={() => setShowPlanets(!showPlanets)}
-						size={"lg"}
-						color={"orange.7"}
 					/>
 					<Checkbox
 						icon={({ className }) => <CircleDashed className={className} />}
 						checked={showOrbits}
 						onChange={() => setShowOrbits(!showOrbits)}
-						size={"lg"}
-						color={"orange.7"}
 					/>
 				</Container>
 			</Center>
 
 			<Container fluid className={classes.sliderContainer}>
 				<Slider
-					onChange={(value: number) => setSunScale(value)}
+					value={sunScale}
+					onChange={setSunScale}
 					min={1}
 					max={50}
 					marks={[
 						{
 							value: 20,
-							label: (
-								<Text sx={{ textAlign: "center" }}>
-									Red Giant
-									<br />
-									{sunScale === 20 ? (
-										<Anchor
-											href="https://bigthink.com/starts-with-a-bang/big-sun-grow/"
-											target="_blank"
-											rel="noopener noreferrer"
-											color="orange"
-											sx={{
-												position: "relative",
-												top: "-5.5rem",
-											}}
-										>
-											<InfoCircle size={24} />
-										</Anchor>
-									) : null}
-								</Text>
-							),
+							label: <RedGiantsMark showMark={sunScale === 20} />,
 						},
 					]}
 					thumbSize={36}
@@ -124,9 +93,11 @@ const SolarSystem: React.FC<SolarSystemProps> = () => {
 					size={"lg"}
 					mb={"3rem"}
 					color={"orange.7"}
+					label={sunScale === 20 ? null : undefined}
 				/>
 				<Slider
-					onChange={(value: number) => setPlanetScale(value)}
+					value={planetsScale}
+					onChange={setPlanetScale}
 					min={1}
 					max={500}
 					marks={plantsScaleMarks}
