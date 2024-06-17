@@ -34,10 +34,10 @@ const Button = styled.button<ButtonProps>`
 		prev
 			? css`
 					left: 1rem;
-			  `
+				`
 			: css`
 					right: 1rem;
-			  `}
+				`}
 `
 
 const Inner = styled.div`

@@ -32,7 +32,7 @@ export const getAllSolarDictionaryItems = (
 					id === 0
 						? getSolarDictItems(suns)
 						: getSolarDictItems(planets.filter((p) => p.id === id)),
-			  )
+				)
 			: []
 
 		const getItemByName = (entityName: string) => {
