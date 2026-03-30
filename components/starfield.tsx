@@ -91,7 +91,7 @@ function NebulaGlow() {
 export function Starfield() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 50], fov: 60 }}>
+      <Canvas camera={{ position: [0, 0, 50], fov: 60 }} dpr={[1, 1.5]}>
         <Stars />
         <NebulaGlow />
         {/* Ambient space lighting */}

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { use, useState } from "react"
-import { notFound } from "next/navigation"
-import Link from "next/link"
+import { use, useState, useMemo } from "react";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 import {
   ArrowLeft,
   ChevronRight,
@@ -17,14 +17,26 @@ import {
   RotateCcw,
   Gauge,
   MoonIcon,
-} from "lucide-react"
-import { planets, dwarfPlanets, formatNumber, type Planet } from "@/lib/planet-data"
-import { Planet3D } from "@/components/planet-3d"
-import { PlanetComparison } from "@/components/planet-comparison"
+} from "lucide-react";
+import {
+  planets,
+  dwarfPlanets,
+  formatNumber,
+  type Planet,
+} from "@/lib/planet-data";
+import { Planet3D } from "@/components/planet-3d";
+import { PlanetComparison } from "@/components/planet-comparison";
 
-const allBodies = [...planets, ...dwarfPlanets]
+const allBodies = [...planets, ...dwarfPlanets];
 
-type Tab = "overview" | "physical" | "orbital" | "atmosphere" | "moons" | "missions" | "compare"
+type Tab =
+  | "overview"
+  | "physical"
+  | "orbital"
+  | "atmosphere"
+  | "moons"
+  | "missions"
+  | "compare";
 
 const tabs: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
@@ -34,18 +46,28 @@ const tabs: { id: Tab; label: string }[] = [
   { id: "moons", label: "Moons" },
   { id: "missions", label: "Missions" },
   { id: "compare", label: "Compare" },
-]
+];
 
-function DataRow({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ComponentType<{ className?: string }> }) {
+function DataRow({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  icon?: React.ComponentType<{ className?: string }>;
+}) {
   return (
     <div className="flex items-center justify-between border-b border-border/30 py-3">
       <span className="flex items-center gap-2 text-sm text-muted-foreground">
         {Icon && <Icon className="h-4 w-4" />}
         {label}
       </span>
-      <span className="font-mono text-sm font-medium text-foreground">{value}</span>
+      <span className="font-mono text-sm font-medium text-foreground">
+        {value}
+      </span>
     </div>
-  )
+  );
 }
 
 function OverviewTab({ planet }: { planet: Planet }) {
@@ -58,7 +80,9 @@ function OverviewTab({ planet }: { planet: Planet }) {
         <h4 className="mb-1 text-xs font-semibold uppercase tracking-wider text-accent">
           Fun Fact
         </h4>
-        <p className="text-sm leading-relaxed text-foreground">{planet.funFact}</p>
+        <p className="text-sm leading-relaxed text-foreground">
+          {planet.funFact}
+        </p>
       </div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div className="rounded-lg border border-border/50 bg-secondary/30 p-4">
@@ -107,7 +131,7 @@ function OverviewTab({ planet }: { planet: Planet }) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function PhysicalTab({ planet }: { planet: Planet }) {
@@ -116,12 +140,32 @@ function PhysicalTab({ planet }: { planet: Planet }) {
       <h3 className="mb-4 font-sans text-lg font-semibold text-foreground">
         Physical Characteristics
       </h3>
-      <DataRow label="Diameter" value={`${formatNumber(planet.diameter)} km`} icon={Scale} />
+      <DataRow
+        label="Diameter"
+        value={`${formatNumber(planet.diameter)} km`}
+        icon={Scale}
+      />
       <DataRow label="Mass (Earth = 1)" value={planet.mass} icon={Globe2} />
-      <DataRow label="Surface Gravity" value={`${planet.gravity} m/s²`} icon={Gauge} />
-      <DataRow label="Escape Velocity" value={`${planet.escapeVelocity} km/s`} icon={Zap} />
-      <DataRow label="Surface Area" value={`${planet.surfaceArea} million km²`} icon={Globe2} />
-      <DataRow label="Mean Temperature" value={`${planet.meanTemp}°C`} icon={Thermometer} />
+      <DataRow
+        label="Surface Gravity"
+        value={`${planet.gravity} m/s²`}
+        icon={Gauge}
+      />
+      <DataRow
+        label="Escape Velocity"
+        value={`${planet.escapeVelocity} km/s`}
+        icon={Zap}
+      />
+      <DataRow
+        label="Surface Area"
+        value={`${planet.surfaceArea} million km²`}
+        icon={Globe2}
+      />
+      <DataRow
+        label="Mean Temperature"
+        value={`${planet.meanTemp}°C`}
+        icon={Thermometer}
+      />
 
       <h3 className="mb-4 mt-8 font-sans text-lg font-semibold text-foreground">
         Composition & Structure
@@ -129,9 +173,13 @@ function PhysicalTab({ planet }: { planet: Planet }) {
       <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
         {planet.composition}
       </p>
-      <DataRow label="Magnetic Field" value={planet.magneticField} icon={Shield} />
+      <DataRow
+        label="Magnetic Field"
+        value={planet.magneticField}
+        icon={Shield}
+      />
     </div>
-  )
+  );
 }
 
 function OrbitalTab({ planet }: { planet: Planet }) {
@@ -175,14 +223,15 @@ function OrbitalTab({ planet }: { planet: Planet }) {
           Light Travel Time from Sun
         </h4>
         <p className="font-mono text-lg font-bold text-primary">
-          {((planet.distanceFromSun * 1e6) / 299792.458 / 60).toFixed(1)} minutes
+          {((planet.distanceFromSun * 1e6) / 299792.458 / 60).toFixed(1)}{" "}
+          minutes
         </p>
         <p className="text-xs text-muted-foreground">
           At the speed of light (299,792 km/s)
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 function AtmosphereTab({ planet }: { planet: Planet }) {
@@ -194,8 +243,8 @@ function AtmosphereTab({ planet }: { planet: Planet }) {
       {planet.atmosphere.length > 0 ? (
         <div className="flex flex-col gap-3">
           {planet.atmosphere.map((gas, i) => {
-            const match = gas.match(/\(([^)]+)\)/)
-            const percentage = match ? parseFloat(match[1]) : null
+            const match = gas.match(/\(([^)]+)\)/);
+            const percentage = match ? parseFloat(match[1]) : null;
             return (
               <div key={i}>
                 <div className="mb-1 flex items-center justify-between text-sm">
@@ -218,7 +267,7 @@ function AtmosphereTab({ planet }: { planet: Planet }) {
                   </div>
                 )}
               </div>
-            )
+            );
           })}
         </div>
       ) : (
@@ -227,7 +276,7 @@ function AtmosphereTab({ planet }: { planet: Planet }) {
         </p>
       )}
     </div>
-  )
+  );
 }
 
 function MoonsTab({ planet }: { planet: Planet }) {
@@ -260,7 +309,9 @@ function MoonsTab({ planet }: { planet: Planet }) {
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Orbital Period</p>
+                  <p className="text-xs text-muted-foreground">
+                    Orbital Period
+                  </p>
                   <p className="font-mono text-xs font-medium text-foreground">
                     {Math.abs(moon.orbitalPeriod).toFixed(2)} days
                     {moon.orbitalPeriod < 0 ? " (retro)" : ""}
@@ -282,7 +333,7 @@ function MoonsTab({ planet }: { planet: Planet }) {
         </p>
       )}
     </div>
-  )
+  );
 }
 
 function MissionsTab({ planet }: { planet: Planet }) {
@@ -298,7 +349,9 @@ function MissionsTab({ planet }: { planet: Planet }) {
             className="flex items-center gap-3 rounded-lg border border-border/50 bg-secondary/30 px-4 py-3"
           >
             <Rocket className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-foreground">{mission}</span>
+            <span className="text-sm font-medium text-foreground">
+              {mission}
+            </span>
           </div>
         ))}
       </div>
@@ -306,35 +359,43 @@ function MissionsTab({ planet }: { planet: Planet }) {
         Source: NASA JPL Mission Database, ESA Science Programme
       </p>
     </div>
-  )
+  );
 }
 
 export default function PlanetDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params)
-  const planet = allBodies.find((p) => p.id === id)
-  const [activeTab, setActiveTab] = useState<Tab>("overview")
-  const [showMoonOrbits, setShowMoonOrbits] = useState(true)
+  const { id } = use(params);
+  const planet = allBodies.find((p) => p.id === id);
+  const [activeTab, setActiveTab] = useState<Tab>("overview");
+  const [showMoonOrbits, setShowMoonOrbits] = useState(true);
+
+  const planet3DElement = useMemo(
+    () => <Planet3D planet={planet!} showMoonOrbits={showMoonOrbits} />,
+    [planet, showMoonOrbits],
+  );
 
   if (!planet) {
-    notFound()
+    notFound();
   }
 
   // Get previous and next planet for navigation
-  const currentIndex = allBodies.findIndex((p) => p.id === id)
-  const prevPlanet = currentIndex > 0 ? allBodies[currentIndex - 1] : null
+  const currentIndex = allBodies.findIndex((p) => p.id === id);
+  const prevPlanet = currentIndex > 0 ? allBodies[currentIndex - 1] : null;
   const nextPlanet =
-    currentIndex < allBodies.length - 1 ? allBodies[currentIndex + 1] : null
+    currentIndex < allBodies.length - 1 ? allBodies[currentIndex + 1] : null;
 
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
       <div className="border-b border-border/50">
         <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 text-sm text-muted-foreground lg:px-8">
-          <Link href="/planets" className="hover:text-foreground transition-colors">
+          <Link
+            href="/planets"
+            className="hover:text-foreground transition-colors"
+          >
             Planets
           </Link>
           <ChevronRight className="h-3.5 w-3.5" />
@@ -367,7 +428,8 @@ export default function PlanetDetailPage({
             </h1>
             <p className="text-sm capitalize text-muted-foreground">
               {planet.type.replace("-", " ")} planet
-              {planet.discoveredBy && ` \u2022 Discovered ${planet.discoveryYear}`}
+              {planet.discoveredBy &&
+                ` \u2022 Discovered ${planet.discoveryYear}`}
             </p>
           </div>
         </div>
@@ -376,7 +438,7 @@ export default function PlanetDetailPage({
         <div className="grid gap-8 lg:grid-cols-2">
           {/* 3D Model */}
           <div className="relative aspect-square overflow-hidden rounded-xl border border-border/50 bg-card/50 lg:sticky lg:top-24 lg:aspect-auto lg:h-[calc(100vh-10rem)]">
-            <Planet3D planet={planet} showMoonOrbits={showMoonOrbits} />
+            {planet3DElement}
             {planet.moons.length > 0 && (
               <div className="absolute bottom-4 left-4 z-10">
                 <button
@@ -419,7 +481,9 @@ export default function PlanetDetailPage({
               {activeTab === "atmosphere" && <AtmosphereTab planet={planet} />}
               {activeTab === "moons" && <MoonsTab planet={planet} />}
               {activeTab === "missions" && <MissionsTab planet={planet} />}
-              {activeTab === "compare" && <PlanetComparison planetId={planet.id} />}
+              {activeTab === "compare" && (
+                <PlanetComparison planetId={planet.id} />
+              )}
             </div>
 
             {/* Navigation */}
@@ -456,5 +520,5 @@ export default function PlanetDetailPage({
         </div>
       </div>
     </div>
-  )
+  );
 }

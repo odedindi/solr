@@ -162,7 +162,7 @@ function HeroPlanet({
             <meshBasicMaterial
               color={atmoColor}
               transparent
-              opacity={0.1}
+              opacity={0.3}
               side={THREE.BackSide}
             />
           </mesh>
@@ -222,7 +222,7 @@ function HeroStars({ count = 2000 }: { count?: number }) {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.15} />
+      <ambientLight intensity={0.3} />
       <Sun />
       <HeroPlanet
         radius={3}
@@ -300,6 +300,7 @@ export function HeroScene() {
       <Canvas
         camera={{ position: [12, 10, 18], fov: 50 }}
         gl={{ antialias: true }}
+        dpr={[1, 1.5]}
       >
         <Scene />
       </Canvas>

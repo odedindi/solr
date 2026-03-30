@@ -143,7 +143,7 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
 
   return (
     <>
-      <ambientLight intensity={0.15} />
+      <ambientLight intensity={0.35} />
       <directionalLight
         position={[sunDir.x * 20, sunDir.y * 20, sunDir.z * 20]}
         intensity={2}
@@ -155,8 +155,8 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
           {diffuseTex ? (
             <meshStandardMaterial
               map={diffuseTex}
-              roughness={0.8}
-              metalness={0.05}
+              roughness={config?.surfaceRoughness ?? 0.8}
+              metalness={config?.surfaceMetalness ?? 0.05}
             />
           ) : (
             <meshStandardMaterial
@@ -348,6 +348,7 @@ export function PlanetComparison({ planetId }: { planetId: string }) {
             camera={{ position: [4, 2, 5], fov: 45 }}
             gl={{ antialias: true }}
             style={{ pointerEvents: "none" }}
+            dpr={[1, 1.5]}
           >
             <ComparisonPlanet planetId={planetId} />
           </Canvas>

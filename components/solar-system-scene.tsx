@@ -174,7 +174,7 @@ function MiniAtmosphere({
       <meshBasicMaterial
         color={color}
         transparent
-        opacity={config.atmosphereIntensity * 0.15}
+        opacity={config.atmosphereIntensity * 0.4}
         side={THREE.BackSide}
       />
     </mesh>
@@ -429,7 +429,7 @@ function SolarSystemInner({
 
   return (
     <>
-      <ambientLight intensity={0.08} />
+      <ambientLight intensity={0.25} />
       <SunBody />
       <AsteroidBelt />
       {allPlanets.map((planet) => {
@@ -475,6 +475,7 @@ export function SolarSystemScene({
       camera={{ position: [15, 12, 25], fov: 50 }}
       gl={{ antialias: true }}
       className="!absolute inset-0"
+      dpr={[1, 1.5]}
     >
       <SolarSystemInner
         showOrbits={showOrbits}

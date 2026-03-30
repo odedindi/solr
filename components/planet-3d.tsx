@@ -9,12 +9,7 @@ import {
   getTextureConfig,
   type PlanetTextureConfig,
 } from "@/lib/texture-config";
-import {
-  Info,
-  Layers,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Info, Layers, ChevronDown, ChevronUp } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Custom Atmosphere Shader Material
@@ -162,6 +157,8 @@ function TexturedPlanetSurface({
   );
   const surfaceAltLayer = config.layers.find((l) => l.type === "surface-alt");
   const bumpLayer = config.layers.find((l) => l.type === "bump");
+  const normalLayer = config.layers.find((l) => l.type === "normal");
+  const specularLayer = config.layers.find((l) => l.type === "specular");
 
   // Venus cloud-penetration toggle: if surface-alt is enabled and main diffuse disabled
   const showAlt =
@@ -172,7 +169,9 @@ function TexturedPlanetSurface({
   // For Venus: the main "diffuse" is actually clouds, the surface-alt is radar surface
   const isVenusClouds =
     config.planetId === "venus" && diffuseLayer?.id === "clouds";
-  const activeUrl = showAlt ? surfaceAltLayer!.url : diffuseLayer?.url || "";
+  const activeUrl = showAlt
+    ? surfaceAltLayer!.url
+    : diffuseLayer?.urlHiRes || diffuseLayer?.url || "";
 
   const surfaceEnabled = diffuseLayer
     ? (layerStates[diffuseLayer.id]?.enabled ?? true)
@@ -180,15 +179,44 @@ function TexturedPlanetSurface({
   const bumpEnabled = bumpLayer
     ? (layerStates[bumpLayer.id]?.enabled ?? true)
     : false;
+  const normalEnabled = normalLayer
+    ? (layerStates[normalLayer.id]?.enabled ?? true)
+    : false;
+  const specularEnabled = specularLayer
+    ? (layerStates[specularLayer.id]?.enabled ?? true)
+    : false;
 
   const diffuseTex = useLoadTexture(
     surfaceEnabled || isVenusClouds ? activeUrl : null,
   );
-  const bumpTex = useLoadTexture(bumpEnabled ? bumpLayer?.url : null, false);
+  const bumpTex = useLoadTexture(
+    bumpEnabled ? bumpLayer?.urlHiRes || bumpLayer?.url : null,
+    false,
+  );
+  const normalTex = useLoadTexture(
+    normalEnabled ? normalLayer?.urlHiRes || normalLayer?.url : null,
+    false,
+  );
+  const specularTex = useLoadTexture(
+    specularEnabled ? specularLayer?.urlHiRes || specularLayer?.url : null,
+    false,
+  );
 
   const bumpOpacity = bumpLayer
     ? (layerStates[bumpLayer.id]?.opacity ?? 0.5)
     : 0.5;
+  const normalOpacity = normalLayer
+    ? (layerStates[normalLayer.id]?.opacity ?? 1.0)
+    : 1.0;
+
+  const normalScale = useMemo(
+    () =>
+      new THREE.Vector2(
+        normalOpacity * multi.bumpScale,
+        normalOpacity * multi.bumpScale,
+      ),
+    [normalOpacity, multi.bumpScale],
+  );
 
   useFrame(() => {
     if (meshRef.current) {
@@ -204,8 +232,12 @@ function TexturedPlanetSurface({
           map={diffuseTex}
           bumpMap={bumpTex}
           bumpScale={bumpOpacity * 0.05 * multi.bumpScale}
-          roughness={0.8}
-          metalness={0.05}
+          normalMap={normalTex}
+          normalScale={normalTex ? normalScale : undefined}
+          metalnessMap={specularTex}
+          roughnessMap={specularTex}
+          roughness={config.surfaceRoughness ?? 0.8}
+          metalness={config.surfaceMetalness ?? 0.05}
         />
       ) : (
         <meshStandardMaterial
@@ -239,7 +271,9 @@ function CloudLayer({
   const isEnabled = cloudLayer
     ? (layerStates[cloudLayer.id]?.enabled ?? true)
     : false;
-  const texture = useLoadTexture(isEnabled ? cloudLayer?.url : null);
+  const texture = useLoadTexture(
+    isEnabled ? cloudLayer?.urlHiRes || cloudLayer?.url : null,
+  );
 
   const opacity = Math.min(
     1,
@@ -292,7 +326,9 @@ function NightLightsLayer({
   const isEnabled = emissiveLayer
     ? (layerStates[emissiveLayer.id]?.enabled ?? true)
     : false;
-  const texture = useLoadTexture(isEnabled ? emissiveLayer?.url : null);
+  const texture = useLoadTexture(
+    isEnabled ? emissiveLayer?.urlHiRes || emissiveLayer?.url : null,
+  );
 
   const intensity =
     (layerStates[emissiveLayer?.id || ""]?.opacity ?? 0.6) *
@@ -359,7 +395,7 @@ function AtmosphereGlow({
     ? (layerStates[atmosphereLayer.id]?.opacity ?? config.atmosphereIntensity)
     : config.atmosphereIntensity;
 
-  const finalIntensity = baseOpacity * multi.atmosphereIntensity * 2;
+  const finalIntensity = baseOpacity * multi.atmosphereIntensity * 3;
 
   // Update uniforms reactively every frame
   useFrame(() => {
@@ -373,7 +409,7 @@ function AtmosphereGlow({
 
   const color = new THREE.Color(config.atmosphereColor);
   const scale =
-    1 + config.atmosphereThickness * (viewMode === "enhanced" ? 2.0 : 1.0);
+    1 + config.atmosphereThickness * (viewMode === "enhanced" ? 3.0 : 1.5);
 
   return (
     <mesh scale={[scale, scale, scale]}>
@@ -538,7 +574,7 @@ function DetailStars({ count = 2000 }: { count?: number }) {
 function SunLight({ direction }: { direction: THREE.Vector3 }) {
   return (
     <>
-      <ambientLight intensity={0.15} />
+      <ambientLight intensity={0.35} />
       <directionalLight
         position={[direction.x * 20, direction.y * 20, direction.z * 20]}
         intensity={2}
@@ -882,6 +918,7 @@ export function Planet3D({
       <Canvas
         camera={{ position: [5, 3, 7], fov: 45 }}
         gl={{ antialias: true }}
+        dpr={[1, 1.5]}
       >
         <PlanetScene
           planet={planet}
