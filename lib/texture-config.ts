@@ -49,6 +49,8 @@ export interface PlanetTextureConfig {
   ringOpacity?: number;
   baseColor?: string;
   specialFeatures?: string[];
+  surfaceRoughness?: number;
+  surfaceMetalness?: number;
 }
 
 // Earth - full multi-layer showcase with best available textures
@@ -192,7 +194,6 @@ const venusLayers: TextureLayer[] = [
     label: "Cloud Layer (Visible)",
     type: "diffuse",
     url: `${T}/venus/venus_atmosphere_4k.jpg`,
-    urlHiRes: `${T}/venus/venus_surface_8k.jpg`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -464,6 +465,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereThickness: 0,
     hasRings: false,
     baseColor: "#8c7853",
+    surfaceRoughness: 0.9,
+    surfaceMetalness: 0.05,
   },
   venus: {
     planetId: "venus",
@@ -475,6 +478,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     hasRings: false,
     baseColor: "#c4a35a",
     specialFeatures: ["cloud-penetration-toggle"],
+    surfaceRoughness: 0.5,
+    surfaceMetalness: 0.02,
   },
   earth: {
     planetId: "earth",
@@ -491,6 +496,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
       "night-lights",
       "day-night-cycle",
     ],
+    surfaceRoughness: 0.7,
+    surfaceMetalness: 0.05,
   },
   mars: {
     planetId: "mars",
@@ -502,6 +509,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     hasRings: false,
     baseColor: "#c1440e",
     specialFeatures: ["dust-storms"],
+    surfaceRoughness: 0.85,
+    surfaceMetalness: 0.03,
   },
   jupiter: {
     planetId: "jupiter",
@@ -516,6 +525,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     ringOuterRadius: 1.15,
     ringOpacity: 0.1,
     baseColor: "#c9b896",
+    surfaceRoughness: 0.95,
+    surfaceMetalness: 0.01,
   },
   saturn: {
     planetId: "saturn",
@@ -530,6 +541,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     ringOuterRadius: 2.3,
     ringOpacity: 0.7,
     baseColor: "#d4b483",
+    surfaceRoughness: 0.95,
+    surfaceMetalness: 0.01,
   },
   uranus: {
     planetId: "uranus",
@@ -543,6 +556,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     ringOuterRadius: 1.8,
     ringOpacity: 0.2,
     baseColor: "#7ec8c8",
+    surfaceRoughness: 0.6,
+    surfaceMetalness: 0.02,
   },
   neptune: {
     planetId: "neptune",
@@ -556,6 +571,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     ringOuterRadius: 1.3,
     ringOpacity: 0.05,
     baseColor: "#3f54ba",
+    surfaceRoughness: 0.6,
+    surfaceMetalness: 0.02,
   },
   pluto: {
     planetId: "pluto",
@@ -566,6 +583,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereThickness: 0.02,
     hasRings: false,
     baseColor: "#c4a882",
+    surfaceRoughness: 0.9,
+    surfaceMetalness: 0.02,
   },
   moon: {
     planetId: "moon",
@@ -576,6 +595,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereThickness: 0,
     hasRings: false,
     baseColor: "#888888",
+    surfaceRoughness: 0.95,
+    surfaceMetalness: 0.02,
   },
 };
 
