@@ -13,6 +13,8 @@ import {
 import { textureConfigs } from "@/lib/texture-config";
 import { useRouter } from "next/navigation";
 
+THREE.Cache.enabled = true;
+
 // ---------------------------------------------------------------------------
 // Texture-loading planet sphere for the overview scene (smaller, simpler)
 // ---------------------------------------------------------------------------
@@ -181,6 +183,69 @@ function MiniAtmosphere({
   );
 }
 
+function MiniRing({ planetId, size }: { planetId: string; size: number }) {
+  const config = textureConfigs[planetId];
+  const [ringTex, setRingTex] = useState<THREE.Texture | null>(null);
+
+  useEffect(() => {
+    if (!config?.ringTexture) return;
+    const loader = new THREE.TextureLoader();
+    loader.crossOrigin = "anonymous";
+    let disposed = false;
+    loader.load(
+      config.ringTexture,
+      (tex) => {
+        if (disposed) {
+          tex.dispose();
+          return;
+        }
+        tex.colorSpace = THREE.SRGBColorSpace;
+        setRingTex(tex);
+      },
+      undefined,
+      () => {},
+    );
+    return () => {
+      disposed = true;
+      setRingTex((prev) => {
+        prev?.dispose();
+        return null;
+      });
+    };
+  }, [config?.ringTexture]);
+
+  if (!config?.hasRings) return null;
+
+  const inner = size * (config.ringInnerRadius || 1.3);
+  const outer = size * (config.ringOuterRadius || 2.2);
+  const opacity = config.ringOpacity || 0.5;
+
+  let rotation: [number, number, number] = [Math.PI / 2.5, 0, 0];
+  if (planetId === "uranus") rotation = [0.1, 0, Math.PI / 2];
+  else if (planetId === "jupiter" || planetId === "neptune")
+    rotation = [Math.PI / 2, 0, 0];
+
+  const ringColors: Record<string, string> = {
+    saturn: "#d4c090",
+    uranus: "#a0c8c8",
+    jupiter: "#8b7355",
+    neptune: "#4a5a8a",
+  };
+
+  return (
+    <mesh rotation={rotation}>
+      <ringGeometry args={[inner, outer, 128]} />
+      <meshStandardMaterial
+        map={ringTex}
+        color={ringColors[planetId] || "#cccccc"}
+        side={THREE.DoubleSide}
+        transparent
+        opacity={opacity}
+      />
+    </mesh>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Planet Body in orbital scene
 // ---------------------------------------------------------------------------
@@ -217,8 +282,6 @@ function PlanetBody({
     }
   });
 
-  const _config = textureConfigs[planet.id];
-
   return (
     <>
       <OrbitLine
@@ -236,29 +299,8 @@ function PlanetBody({
           <MiniAtmosphere size={params.size} planetId={planet.id} />
         </group>
 
-        {/* Ring for Saturn */}
-        {planet.id === "saturn" && (
-          <mesh rotation={[Math.PI / 3, 0, 0]}>
-            <ringGeometry args={[params.size * 1.4, params.size * 2.2, 64]} />
-            <meshStandardMaterial
-              color="#d4c090"
-              side={THREE.DoubleSide}
-              transparent
-              opacity={0.5}
-            />
-          </mesh>
-        )}
-        {/* Ring for Uranus */}
-        {planet.id === "uranus" && (
-          <mesh rotation={[0.1, 0, Math.PI / 2]}>
-            <ringGeometry args={[params.size * 1.5, params.size * 1.8, 64]} />
-            <meshStandardMaterial
-              color="#a0c8c8"
-              side={THREE.DoubleSide}
-              transparent
-              opacity={0.3}
-            />
-          </mesh>
+        {textureConfigs[planet.id]?.hasRings && (
+          <MiniRing planetId={planet.id} size={params.size} />
         )}
 
         {/* Click handler - invisible sphere slightly larger */}

@@ -42,6 +42,8 @@ export interface PlanetTextureConfig {
   atmosphereColor: string;
   atmosphereIntensity: number;
   atmosphereThickness: number;
+  atmosphereFalloff?: number;
+  atmosphereDensity?: number;
   hasRings: boolean;
   ringTexture?: string;
   ringInnerRadius?: number;
@@ -475,6 +477,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereColor: "#e6c87a",
     atmosphereIntensity: 0.6,
     atmosphereThickness: 0.08,
+    atmosphereFalloff: 2.5,
+    atmosphereDensity: 0.8,
     hasRings: false,
     baseColor: "#c4a35a",
     specialFeatures: ["cloud-penetration-toggle"],
@@ -488,6 +492,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereColor: "#6ba4ff",
     atmosphereIntensity: 0.8,
     atmosphereThickness: 0.05,
+    atmosphereFalloff: 3.0,
+    atmosphereDensity: 0.6,
     hasRings: false,
     baseColor: "#1a4d2e",
     specialFeatures: [
@@ -506,6 +512,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereColor: "#d4875e",
     atmosphereIntensity: 0.3,
     atmosphereThickness: 0.03,
+    atmosphereFalloff: 4.0,
+    atmosphereDensity: 0.3,
     hasRings: false,
     baseColor: "#c1440e",
     specialFeatures: ["dust-storms"],
@@ -519,6 +527,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereColor: "#c8a060",
     atmosphereIntensity: 0.3,
     atmosphereThickness: 0.04,
+    atmosphereFalloff: 2.0,
+    atmosphereDensity: 0.7,
     hasRings: true,
     ringTexture: `${T}/jupiter/rings/rings_color_map.png`,
     ringInnerRadius: 1.05,
@@ -535,6 +545,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereColor: "#e8d5a3",
     atmosphereIntensity: 0.3,
     atmosphereThickness: 0.04,
+    atmosphereFalloff: 2.5,
+    atmosphereDensity: 0.5,
     hasRings: true,
     ringTexture: `${T}/saturn/rings/saturn_ring_alpha_8k.png`,
     ringInnerRadius: 1.3,
@@ -551,6 +563,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereColor: "#7ec8c8",
     atmosphereIntensity: 0.4,
     atmosphereThickness: 0.04,
+    atmosphereFalloff: 3.0,
+    atmosphereDensity: 0.4,
     hasRings: true,
     ringInnerRadius: 1.5,
     ringOuterRadius: 1.8,
@@ -566,6 +580,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereColor: "#3f54ba",
     atmosphereIntensity: 0.4,
     atmosphereThickness: 0.04,
+    atmosphereFalloff: 2.5,
+    atmosphereDensity: 0.6,
     hasRings: true,
     ringInnerRadius: 1.1,
     ringOuterRadius: 1.3,

@@ -9,66 +9,17 @@ import {
   getTextureConfig,
   type PlanetTextureConfig,
 } from "@/lib/texture-config";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Info, Layers, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  AtmosphereVertexShader,
+  AtmosphereFragmentShader,
+  NightLightsVertexShader,
+  NightLightsFragmentShader,
+} from "@/lib/shaders";
 
-// ---------------------------------------------------------------------------
-// Custom Atmosphere Shader Material
-// ---------------------------------------------------------------------------
-const AtmosphereVertexShader = `
-  varying vec3 vNormal;
-  varying vec3 vPosition;
-  void main() {
-    vNormal = normalize(normalMatrix * normal);
-    vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-const AtmosphereFragmentShader = `
-  uniform vec3 uColor;
-  uniform float uIntensity;
-  uniform vec3 uSunDirection;
-  varying vec3 vNormal;
-  varying vec3 vPosition;
-  void main() {
-    vec3 viewDir = normalize(-vPosition);
-    float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);
-    float glow = pow(rim, 3.0) * uIntensity;
-    float sunFactor = max(dot(vNormal, uSunDirection), 0.0) * 0.3 + 0.7;
-    gl_FragColor = vec4(uColor, glow * sunFactor);
-  }
-`;
-
-// ---------------------------------------------------------------------------
-// Night lights shader - only visible on the dark side
-// ---------------------------------------------------------------------------
-const NightLightsVertexShader = `
-  varying vec2 vUv;
-  varying vec3 vNormal;
-  varying vec3 vWorldNormal;
-  void main() {
-    vUv = uv;
-    vNormal = normalize(normalMatrix * normal);
-    vWorldNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-const NightLightsFragmentShader = `
-  uniform sampler2D uNightMap;
-  uniform float uIntensity;
-  uniform vec3 uSunDirection;
-  varying vec2 vUv;
-  varying vec3 vNormal;
-  varying vec3 vWorldNormal;
-  void main() {
-    vec4 nightColor = texture2D(uNightMap, vUv);
-    float sunDot = dot(vWorldNormal, uSunDirection);
-    float nightFactor = smoothstep(0.1, -0.3, sunDot);
-    float alpha = nightColor.r * nightFactor * uIntensity;
-    gl_FragColor = vec4(nightColor.rgb * 1.5, alpha);
-  }
-`;
+// Enable shared texture cache
+THREE.Cache.enabled = true;
 
 // ---------------------------------------------------------------------------
 // Texture hook: loads a texture from URL, handles errors gracefully
@@ -78,6 +29,11 @@ function useLoadTexture(url: string | undefined | null, srgb = true) {
 
   useEffect(() => {
     if (!url) {
+      setTex(null);
+      return;
+    }
+    // Guard: skip .tif files that Three.js cannot decode
+    if (url.endsWith(".tif") || url.endsWith(".tiff")) {
       setTex(null);
       return;
     }
@@ -197,7 +153,7 @@ function TexturedPlanetSurface({
     normalEnabled ? normalLayer?.urlHiRes || normalLayer?.url : null,
     false,
   );
-  const specularTex = useLoadTexture(
+  const _specularTex = useLoadTexture(
     specularEnabled ? specularLayer?.urlHiRes || specularLayer?.url : null,
     false,
   );
@@ -234,8 +190,6 @@ function TexturedPlanetSurface({
           bumpScale={bumpOpacity * 0.05 * multi.bumpScale}
           normalMap={normalTex}
           normalScale={normalTex ? normalScale : undefined}
-          metalnessMap={specularTex}
-          roughnessMap={specularTex}
           roughness={config.surfaceRoughness ?? 0.8}
           metalness={config.surfaceMetalness ?? 0.05}
         />
@@ -422,6 +376,8 @@ function AtmosphereGlow({
           uColor: { value: color },
           uIntensity: { value: finalIntensity },
           uSunDirection: { value: sunDirection.clone() },
+          uFalloff: { value: config.atmosphereFalloff ?? 3.0 },
+          uDensity: { value: config.atmosphereDensity ?? 0.5 },
         }}
         transparent
         depthWrite={false}
@@ -659,6 +615,14 @@ function PlanetScene({
         autoRotate
         autoRotateSpeed={0.3}
       />
+      <EffectComposer enableNormalPass={false}>
+        <Bloom
+          luminanceThreshold={0.8}
+          luminanceSmoothing={0.3}
+          intensity={0.5}
+          mipmapBlur
+        />
+      </EffectComposer>
     </>
   );
 }

@@ -6,6 +6,8 @@ import { OrbitControls, Line } from "@react-three/drei";
 import * as THREE from "three";
 import { textureConfigs } from "@/lib/texture-config";
 
+THREE.Cache.enabled = true;
+
 // ---------------------------------------------------------------------------
 // Textured Sun
 // ---------------------------------------------------------------------------

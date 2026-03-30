@@ -7,6 +7,13 @@ import * as THREE from "three";
 import { getTextureConfig } from "@/lib/texture-config";
 import { planets } from "@/lib/planet-data";
 import { SplitSquareHorizontal, GripVertical, Camera, Box } from "lucide-react";
+import {
+  AtmosphereVertexShader,
+  AtmosphereFragmentShader,
+} from "@/lib/shaders";
+
+// Enable shared texture cache
+THREE.Cache.enabled = true;
 
 // Reuse the texture loading hook
 function useLoadTexture(url: string | undefined | null, srgb = true) {
@@ -91,29 +98,6 @@ const realPhotoUrls: Record<
 };
 
 // ---------------------------------------------------------------------------
-// Atmosphere shader (reused from planet-3d)
-// ---------------------------------------------------------------------------
-const AtmoVS = `
-  varying vec3 vNormal; varying vec3 vPosition;
-  void main() {
-    vNormal = normalize(normalMatrix * normal);
-    vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-const AtmoFS = `
-  uniform vec3 uColor; uniform float uIntensity; uniform vec3 uSunDirection;
-  varying vec3 vNormal; varying vec3 vPosition;
-  void main() {
-    vec3 viewDir = normalize(-vPosition);
-    float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);
-    float glow = pow(rim, 3.0) * uIntensity;
-    float sunFactor = max(dot(vNormal, uSunDirection), 0.0) * 0.3 + 0.7;
-    gl_FragColor = vec4(uColor, glow * sunFactor);
-  }
-`;
-
-// ---------------------------------------------------------------------------
 // Minimal 3D planet for the comparison right side
 // ---------------------------------------------------------------------------
 function ComparisonPlanet({ planetId }: { planetId: string }) {
@@ -188,12 +172,14 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
           >
             <sphereGeometry args={[size * 1.015, 64, 64]} />
             <shaderMaterial
-              vertexShader={AtmoVS}
-              fragmentShader={AtmoFS}
+              vertexShader={AtmosphereVertexShader}
+              fragmentShader={AtmosphereFragmentShader}
               uniforms={{
                 uColor: { value: atmoColor },
                 uIntensity: { value: (config.atmosphereIntensity || 0.5) * 2 },
                 uSunDirection: { value: sunDir.clone() },
+                uFalloff: { value: config.atmosphereFalloff ?? 3.0 },
+                uDensity: { value: config.atmosphereDensity ?? 0.5 },
               }}
               transparent
               depthWrite={false}
