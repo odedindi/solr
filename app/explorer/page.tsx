@@ -1,16 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import {
-  Eye,
-  EyeOff,
-  Tag,
-  Gauge,
-  Search,
-  X,
-  ChevronRight,
-  Info,
-} from "lucide-react";
+import { Eye, EyeOff, Tag, Search, X, ChevronRight, Info } from "lucide-react";
 import { SolarSystemScene } from "@/components/solar-system-scene";
 import {
   planets,
@@ -18,6 +9,7 @@ import {
   type Planet,
   formatNumber,
 } from "@/lib/planet-data";
+import { TimeControls } from "@/components/time-controls";
 import Link from "next/link";
 
 const allBodies = [...planets, ...dwarfPlanets];
@@ -32,7 +24,6 @@ const _presetViews = [
 export default function ExplorerPage() {
   const [showOrbits, setShowOrbits] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
-  const [speedMultiplier, setSpeedMultiplier] = useState(1);
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showControls, setShowControls] = useState(true);
@@ -52,7 +43,6 @@ export default function ExplorerPage() {
       <SolarSystemScene
         showOrbits={showOrbits}
         showLabels={showLabels}
-        speedMultiplier={speedMultiplier}
         selectedPlanet={selectedPlanet}
         onSelectPlanet={handleSelectPlanet}
       />
@@ -63,6 +53,7 @@ export default function ExplorerPage() {
           <h1 className="rounded-lg bg-card/80 px-4 py-2 font-sans text-sm font-semibold text-foreground backdrop-blur-sm border border-border/50">
             Solar System Explorer
           </h1>
+          <TimeControls />
         </div>
         <div className="flex items-center gap-2">
           {/* Search toggle */}
@@ -173,28 +164,6 @@ export default function ExplorerPage() {
                 />
               </button>
             </label>
-          </div>
-
-          {/* Speed control */}
-          <div className="mb-4">
-            <label className="mb-2 flex items-center justify-between text-sm text-foreground">
-              <span className="flex items-center gap-2">
-                <Gauge className="h-3.5 w-3.5 text-muted-foreground" />
-                Speed
-              </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                {speedMultiplier}x
-              </span>
-            </label>
-            <input
-              type="range"
-              min={0}
-              max={10}
-              step={0.5}
-              value={speedMultiplier}
-              onChange={(e) => setSpeedMultiplier(Number(e.target.value))}
-              className="w-full accent-primary"
-            />
           </div>
 
           {/* Presets */}

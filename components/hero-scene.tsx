@@ -2,7 +2,12 @@
 
 import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Line } from "@react-three/drei";
+import {
+  OrbitControls,
+  Line,
+  AdaptiveDpr,
+  PerformanceMonitor,
+} from "@react-three/drei";
 import * as THREE from "three";
 import { textureConfigs } from "@/lib/texture-config";
 
@@ -224,6 +229,8 @@ function HeroStars({ count = 2000 }: { count?: number }) {
 function Scene() {
   return (
     <>
+      <PerformanceMonitor />
+      <AdaptiveDpr pixelated />
       <ambientLight intensity={0.3} />
       <Sun />
       <HeroPlanet

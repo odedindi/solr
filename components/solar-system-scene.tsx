@@ -1,8 +1,15 @@
 "use client";
 
-import { useRef, useMemo, useState, useEffect } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Html, Line } from "@react-three/drei";
+import { useRef, useMemo, useState, useEffect, useCallback } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import {
+  OrbitControls,
+  Html,
+  Line,
+  Detailed,
+  AdaptiveDpr,
+  PerformanceMonitor,
+} from "@react-three/drei";
 import * as THREE from "three";
 import {
   planets,
@@ -12,8 +19,19 @@ import {
 } from "@/lib/planet-data";
 import { textureConfigs } from "@/lib/texture-config";
 import { useRouter } from "next/navigation";
+import { useTimeStore } from "@/lib/time-store";
 
 THREE.Cache.enabled = true;
+
+// ---------------------------------------------------------------------------
+// Frame-level time ticker — advances the zustand time store each frame
+// ---------------------------------------------------------------------------
+function TimeTicker() {
+  useFrame((_, delta) => {
+    useTimeStore.getState().tick(delta);
+  });
+  return null;
+}
 
 // ---------------------------------------------------------------------------
 // Texture-loading planet sphere for the overview scene (smaller, simpler)
@@ -27,7 +45,7 @@ function TexturedMiniPlanet({
   size: number;
   planetId: string;
 }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const lodRef = useRef<THREE.LOD>(null);
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
 
   useEffect(() => {
@@ -53,15 +71,27 @@ function TexturedMiniPlanet({
     };
   }, [planetId]);
 
+  const material = texture ? (
+    <meshStandardMaterial map={texture} roughness={0.7} metalness={0.05} />
+  ) : (
+    <meshStandardMaterial color={color} roughness={0.6} />
+  );
+
   return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[size, 32, 32]} />
-      {texture ? (
-        <meshStandardMaterial map={texture} roughness={0.7} metalness={0.05} />
-      ) : (
-        <meshStandardMaterial color={color} roughness={0.6} />
-      )}
-    </mesh>
+    <Detailed ref={lodRef} distances={[0, 20, 50]}>
+      <mesh>
+        <sphereGeometry args={[size, 64, 64]} />
+        {material}
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[size, 32, 32]} />
+        {material}
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[size, 16, 16]} />
+        {material}
+      </mesh>
+    </Detailed>
   );
 }
 
@@ -88,9 +118,9 @@ function SunBody() {
     };
   }, []);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.05;
+      meshRef.current.rotation.y = useTimeStore.getState().elapsedTime * 0.05;
     }
   });
 
@@ -252,30 +282,34 @@ function MiniRing({ planetId, size }: { planetId: string; size: number }) {
 function PlanetBody({
   planet,
   params,
-  speedMultiplier,
   showOrbits,
   showLabels,
   onSelect,
   isSelected,
+  onPositionUpdate,
 }: {
   planet: Planet;
   params: { radius: number; speed: number; size: number; inclination: number };
-  speedMultiplier: number;
   showOrbits: boolean;
   showLabels: boolean;
   onSelect: (planet: Planet) => void;
   isSelected: boolean;
+  onPositionUpdate?: (id: string, pos: THREE.Vector3) => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const planetMeshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const router = useRouter();
 
-  useFrame((state) => {
+  useFrame(() => {
     if (groupRef.current) {
-      const t = state.clock.elapsedTime * params.speed * speedMultiplier * 0.3;
+      const t = useTimeStore.getState().elapsedTime * params.speed * 0.3;
       groupRef.current.position.x = Math.cos(t) * params.radius;
       groupRef.current.position.z = Math.sin(t) * params.radius;
+
+      if (isSelected && onPositionUpdate) {
+        onPositionUpdate(planet.id, groupRef.current.position);
+      }
     }
     if (planetMeshRef.current) {
       planetMeshRef.current.rotation.y += 0.01;
@@ -425,12 +459,25 @@ function SceneStars({ count = 4000 }: { count?: number }) {
 // ---------------------------------------------------------------------------
 // Camera Controller
 // ---------------------------------------------------------------------------
-function CameraController({ target }: { target: THREE.Vector3 | null }) {
+function CameraController({
+  target,
+  cameraPosition,
+}: {
+  target: THREE.Vector3 | null;
+  cameraPosition: THREE.Vector3 | null;
+}) {
   const controlsRef = useRef<any>(null);
+  const { camera } = useThree();
 
   useFrame(() => {
-    if (target && controlsRef.current) {
-      controlsRef.current.target.lerp(target, 0.03);
+    if (controlsRef.current) {
+      if (target) {
+        controlsRef.current.target.lerp(target, 0.03);
+      }
+      if (cameraPosition) {
+        camera.position.lerp(cameraPosition, 0.03);
+      }
+      controlsRef.current.update();
     }
   });
 
@@ -452,25 +499,54 @@ function CameraController({ target }: { target: THREE.Vector3 | null }) {
 function SolarSystemInner({
   showOrbits,
   showLabels,
-  speedMultiplier,
   selectedPlanet,
   onSelectPlanet,
 }: {
   showOrbits: boolean;
   showLabels: boolean;
-  speedMultiplier: number;
   selectedPlanet: Planet | null;
   onSelectPlanet: (planet: Planet) => void;
 }) {
+  const planetPositions = useRef<Record<string, THREE.Vector3>>({});
+
+  const handlePositionUpdate = useCallback((id: string, pos: THREE.Vector3) => {
+    if (!planetPositions.current[id]) {
+      planetPositions.current[id] = new THREE.Vector3();
+    }
+    planetPositions.current[id].copy(pos);
+  }, []);
+
   const cameraTarget = useMemo(() => {
     if (!selectedPlanet) return null;
-    return new THREE.Vector3(0, 0, 0);
+    return (
+      planetPositions.current[selectedPlanet.id] ?? new THREE.Vector3(0, 0, 0)
+    );
+  }, [selectedPlanet]);
+
+  const cameraPosition = useMemo(() => {
+    if (!selectedPlanet) return null;
+    const params =
+      orbitalParams[selectedPlanet.id as keyof typeof orbitalParams];
+    if (!params) return null;
+    const offset = params.size * 4 + 3;
+    const pos = planetPositions.current[selectedPlanet.id];
+    if (pos) {
+      return new THREE.Vector3(
+        pos.x + offset * 0.5,
+        offset * 0.6,
+        pos.z + offset * 0.5,
+      );
+    }
+    return new THREE.Vector3(offset, offset * 0.6, offset);
   }, [selectedPlanet]);
 
   const allPlanets = [...planets, ...dwarfPlanets];
 
   return (
     <>
+      <PerformanceMonitor />
+      <AdaptiveDpr pixelated />
+      <TimeTicker />
       <ambientLight intensity={0.25} />
       <SunBody />
       <AsteroidBelt />
@@ -482,16 +558,16 @@ function SolarSystemInner({
             key={planet.id}
             planet={planet}
             params={params}
-            speedMultiplier={speedMultiplier}
             showOrbits={showOrbits}
             showLabels={showLabels}
             onSelect={onSelectPlanet}
             isSelected={selectedPlanet?.id === planet.id}
+            onPositionUpdate={handlePositionUpdate}
           />
         );
       })}
       <SceneStars />
-      <CameraController target={cameraTarget} />
+      <CameraController target={cameraTarget} cameraPosition={cameraPosition} />
     </>
   );
 }
@@ -502,13 +578,11 @@ function SolarSystemInner({
 export function SolarSystemScene({
   showOrbits,
   showLabels,
-  speedMultiplier,
   selectedPlanet,
   onSelectPlanet,
 }: {
   showOrbits: boolean;
   showLabels: boolean;
-  speedMultiplier: number;
   selectedPlanet: Planet | null;
   onSelectPlanet: (planet: Planet) => void;
 }) {
@@ -522,7 +596,6 @@ export function SolarSystemScene({
       <SolarSystemInner
         showOrbits={showOrbits}
         showLabels={showLabels}
-        speedMultiplier={speedMultiplier}
         selectedPlanet={selectedPlanet}
         onSelectPlanet={onSelectPlanet}
       />
