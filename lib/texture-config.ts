@@ -46,6 +46,7 @@ export interface PlanetTextureConfig {
   atmosphereDensity?: number;
   hasRings: boolean;
   ringTexture?: string;
+  ringAlphaTexture?: string;
   ringInnerRadius?: number;
   ringOuterRadius?: number;
   ringOpacity?: number;
@@ -548,7 +549,8 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereFalloff: 2.5,
     atmosphereDensity: 0.5,
     hasRings: true,
-    ringTexture: `${T}/saturn/rings/saturn_ring_alpha_8k.png`,
+    ringTexture: `${T}/saturn/rings/saturn_rings_color_map.png`,
+    ringAlphaTexture: `${T}/saturn/rings/saturn_ring_alpha_8k.png`,
     ringInnerRadius: 1.3,
     ringOuterRadius: 2.3,
     ringOpacity: 0.7,

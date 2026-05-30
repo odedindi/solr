@@ -24,7 +24,11 @@ THREE.Cache.enabled = true;
 // ---------------------------------------------------------------------------
 // Texture hook: loads a texture from URL, handles errors gracefully
 // ---------------------------------------------------------------------------
-function useLoadTexture(url: string | undefined | null, srgb = true) {
+function useLoadTexture(
+  url: string | undefined | null,
+  srgb = true,
+  fallbackUrl?: string | string[] | null,
+) {
   const [tex, setTex] = useState<THREE.Texture | null>(null);
 
   useEffect(() => {
@@ -32,7 +36,6 @@ function useLoadTexture(url: string | undefined | null, srgb = true) {
       setTex(null);
       return;
     }
-    // Guard: skip .tif files that Three.js cannot decode
     if (url.endsWith(".tif") || url.endsWith(".tiff")) {
       setTex(null);
       return;
@@ -40,29 +43,42 @@ function useLoadTexture(url: string | undefined | null, srgb = true) {
     let disposed = false;
     const loader = new THREE.TextureLoader();
     loader.crossOrigin = "anonymous";
-    loader.load(
-      url,
-      (t) => {
-        if (disposed) {
-          t.dispose();
-          return;
+
+    const apply = (t: THREE.Texture) => {
+      if (disposed) return;
+      if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = 8;
+      setTex(t);
+    };
+
+    const fallbacks = Array.isArray(fallbackUrl)
+      ? fallbackUrl.filter(Boolean) as string[]
+      : fallbackUrl
+      ? [fallbackUrl]
+      : [];
+
+    // Attempt to load `url`, then any fallbacks in order.
+    let idx = 0;
+    const tryLoad = (candidate: string) => {
+      loader.load(candidate, apply, undefined, () => {
+        if (disposed) return;
+        idx += 1;
+        if (idx - 1 < fallbacks.length) {
+          // next fallback is at fallbacks[idx-1]
+          tryLoad(fallbacks[idx - 1]);
+        } else {
+          setTex(null);
         }
-        if (srgb) t.colorSpace = THREE.SRGBColorSpace;
-        setTex(t);
-      },
-      undefined,
-      () => {
-        if (!disposed) setTex(null);
-      },
-    );
-    return () => {
-      disposed = true;
-      setTex((prev) => {
-        prev?.dispose();
-        return null;
       });
     };
-  }, [url, srgb]);
+
+    tryLoad(url);
+
+    return () => {
+      disposed = true;
+      setTex(null);
+    };
+  }, [url, srgb, fallbackUrl]);
 
   return tex;
 }
@@ -144,13 +160,24 @@ function TexturedPlanetSurface({
 
   const diffuseTex = useLoadTexture(
     surfaceEnabled || isVenusClouds ? activeUrl : null,
+    true,
+    diffuseLayer?.url && diffuseLayer.urlHiRes
+      ? diffuseLayer.url
+      : undefined,
   );
   const bumpTex = useLoadTexture(
     bumpEnabled ? bumpLayer?.urlHiRes || bumpLayer?.url : null,
     false,
+    bumpLayer?.url,
   );
-  const normalTex = useLoadTexture(
-    normalEnabled ? normalLayer?.urlHiRes || normalLayer?.url : null,
+  // NOTE: Project ships "normal" layers as grayscale heightmaps (e.g. earth_topo,
+  // mars_topo), not true tangent-space normal maps. Bind them to bumpMap so the
+  // shader derives sane normals from height derivatives instead of treating
+  // greyscale values as normal vectors (which produced an unlit, black surface).
+  const heightFromNormalTex = useLoadTexture(
+    normalEnabled && !bumpLayer
+      ? normalLayer?.urlHiRes || normalLayer?.url
+      : null,
     false,
   );
   const _specularTex = useLoadTexture(
@@ -160,19 +187,10 @@ function TexturedPlanetSurface({
 
   const bumpOpacity = bumpLayer
     ? (layerStates[bumpLayer.id]?.opacity ?? 0.5)
-    : 0.5;
-  const normalOpacity = normalLayer
-    ? (layerStates[normalLayer.id]?.opacity ?? 1.0)
-    : 1.0;
-
-  const normalScale = useMemo(
-    () =>
-      new THREE.Vector2(
-        normalOpacity * multi.bumpScale,
-        normalOpacity * multi.bumpScale,
-      ),
-    [normalOpacity, multi.bumpScale],
-  );
+    : normalLayer
+      ? (layerStates[normalLayer.id]?.opacity ?? 1.0)
+      : 0.5;
+  const effectiveBumpMap = bumpTex ?? heightFromNormalTex;
 
   useFrame(() => {
     if (meshRef.current) {
@@ -184,15 +202,7 @@ function TexturedPlanetSurface({
     <mesh ref={meshRef}>
       <sphereGeometry args={[size, 64, 64]} />
       {diffuseTex ? (
-        <meshStandardMaterial
-          map={diffuseTex}
-          bumpMap={bumpTex}
-          bumpScale={bumpOpacity * 0.05 * multi.bumpScale}
-          normalMap={normalTex}
-          normalScale={normalTex ? normalScale : undefined}
-          roughness={config.surfaceRoughness ?? 0.8}
-          metalness={config.surfaceMetalness ?? 0.05}
-        />
+        <meshBasicMaterial map={diffuseTex} />
       ) : (
         <meshStandardMaterial
           color={planet.color}
@@ -349,7 +359,7 @@ function AtmosphereGlow({
     ? (layerStates[atmosphereLayer.id]?.opacity ?? config.atmosphereIntensity)
     : config.atmosphereIntensity;
 
-  const finalIntensity = baseOpacity * multi.atmosphereIntensity * 3;
+  const finalIntensity = baseOpacity * multi.atmosphereIntensity * 1.4;
 
   // Update uniforms reactively every frame
   useFrame(() => {
@@ -362,12 +372,16 @@ function AtmosphereGlow({
   if (!config.hasAtmosphere || !isEnabled) return null;
 
   const color = new THREE.Color(config.atmosphereColor);
-  const scale =
-    1 + config.atmosphereThickness * (viewMode === "enhanced" ? 3.0 : 1.5);
+  // Single source of truth for shell radius — no double scaling.
+  const shellRadius =
+    size *
+    (1 +
+      Math.max(0.015, config.atmosphereThickness) *
+        (viewMode === "enhanced" ? 2.2 : 1.4));
 
   return (
-    <mesh scale={[scale, scale, scale]}>
-      <sphereGeometry args={[size * 1.015, 64, 64]} />
+    <mesh>
+      <sphereGeometry args={[shellRadius, 64, 64]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={AtmosphereVertexShader}
@@ -381,6 +395,7 @@ function AtmosphereGlow({
         }}
         transparent
         depthWrite={false}
+        blending={THREE.AdditiveBlending}
         side={THREE.BackSide}
       />
     </mesh>
@@ -402,12 +417,33 @@ function RingSystem({
   const ringTexture = useLoadTexture(
     config.hasRings ? config.ringTexture : null,
   );
-
-  if (!config.hasRings) return null;
+  const ringAlpha = useLoadTexture(
+    config.hasRings ? config.ringAlphaTexture ?? null : null,
+    false,
+  );
 
   const inner = size * (config.ringInnerRadius || 1.3);
   const outer = size * (config.ringOuterRadius || 2.2);
   const opacity = config.ringOpacity || 0.5;
+
+  // Custom ring geometry with radial UVs so the texture is sampled across
+  // the ring band (default RingGeometry uses sector UVs which look wrong).
+  const geometry = useMemo(() => {
+    const geo = new THREE.RingGeometry(inner, outer, 256, 1);
+    const pos = geo.attributes.position;
+    const uv = geo.attributes.uv;
+    const v3 = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {
+      v3.fromBufferAttribute(pos, i);
+      const r = v3.length();
+      const u = (r - inner) / (outer - inner);
+      uv.setXY(i, u, 0.5);
+    }
+    uv.needsUpdate = true;
+    return geo;
+  }, [inner, outer]);
+
+  if (!config.hasRings) return null;
 
   let rotation: [number, number, number] = [Math.PI / 2.5, 0, 0];
   if (planetId === "uranus") rotation = [0.1, 0, Math.PI / 2];
@@ -415,21 +451,22 @@ function RingSystem({
     rotation = [Math.PI / 2, 0, 0];
 
   const ringColors: Record<string, string> = {
-    saturn: "#d4c090",
+    saturn: "#ffffff",
     uranus: "#a0c8c8",
     jupiter: "#8b7355",
     neptune: "#4a5a8a",
   };
 
   return (
-    <mesh rotation={rotation}>
-      <ringGeometry args={[inner, outer, 128]} />
-      <meshStandardMaterial
+    <mesh rotation={rotation} geometry={geometry}>
+      <meshBasicMaterial
         map={ringTexture}
+        alphaMap={ringAlpha ?? undefined}
         color={ringColors[planetId] || "#cccccc"}
         side={THREE.DoubleSide}
         transparent
         opacity={opacity}
+        depthWrite={false}
       />
     </mesh>
   );
@@ -442,10 +479,12 @@ function MoonOrbit({
   moon,
   index,
   showMoonOrbits,
+  planetId,
 }: {
   moon: Moon;
   index: number;
   showMoonOrbits: boolean;
+  planetId: string;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const radius = 3 + index * 1.2;
@@ -482,12 +521,83 @@ function MoonOrbit({
         />
       )}
       <group ref={groupRef}>
-        <mesh>
-          <sphereGeometry args={[moonSize, 16, 16]} />
-          <meshStandardMaterial color="#aaaaaa" roughness={0.8} />
-        </mesh>
+        <MoonBody
+          size={moonSize}
+          moonName={moon.name}
+          parentPlanetId={planetId}
+        />
       </group>
     </>
+  );
+}
+
+// Start with any auto-indexed satellite textures, then overlay curated entries.
+const _AUTO_SATELLITE_INDEX: Record<string, string> =
+  (typeof satelliteIndex === 'object' && satelliteIndex) || {};
+
+const MOON_TEXTURE_URLS: Record<string, string> = {
+  // auto-discovered
+  ...Object.fromEntries(
+    Object.entries(_AUTO_SATELLITE_INDEX).map(([k, v]) => [k.toLowerCase(), v]),
+  ),
+  // curated overrides / high-res preferred
+  moon: "/assets/textures/earth/satellites/moon_4k.jpg",
+  phobos: "/assets/textures/mars/satellites/phobos.jpg",
+  io: "/assets/textures/jupiter/satellites/io.jpg",
+  europa: "/assets/textures/jupiter/satellites/europa.jpg",
+  ganymede: "/assets/textures/jupiter/satellites/ganymede.jpg",
+  dione: "/assets/textures/saturn/satellites/dione.jpg",
+  enceladus: "/assets/textures/saturn/satellites/enceladus.jpg",
+  iapetus: "/assets/textures/saturn/satellites/iapetus.jpg",
+  rhea: "/assets/textures/saturn/satellites/rhea.jpg",
+  tethys: "/assets/textures/saturn/satellites/tethys.jpg",
+};
+
+import satelliteIndex from '@/lib/satellite-index.json';
+
+function MoonBody({
+  size,
+  moonName,
+  parentPlanetId,
+}: {
+  size: number;
+  moonName: string;
+  parentPlanetId?: string;
+}) {
+  const key = moonName.toLowerCase();
+  const mapped = MOON_TEXTURE_URLS[key];
+  const { urlCandidate, fallbacks } = useMemo(() => {
+    const list: string[] = [];
+    // prefer explicit map
+    if (mapped) list.push(mapped);
+    // prefer generated index if present
+    if (satelliteIndex[key]) list.push(satelliteIndex[key]);
+    if (parentPlanetId) {
+      const base = moonName
+        .toLowerCase()
+        .replace(/\s+/g, '_')
+        .replace(/[^a-z0-9_]/g, '');
+      const folder = `/assets/textures/${parentPlanetId}/satellites`;
+      list.push(`${folder}/${base}_4k.jpg`);
+      list.push(`${folder}/${base}_2k.jpg`);
+      list.push(`${folder}/${base}.jpg`);
+      list.push(`${folder}/${base}.png`);
+    }
+    // generic fallback: neutral asteroid/rock texture if nothing else found
+    list.push('/assets/textures/asteroids/asteroid.jpg');
+    return { urlCandidate: list[0] ?? null, fallbacks: list.slice(1) };
+  }, [mapped, parentPlanetId, moonName]);
+
+  const tex = useLoadTexture(urlCandidate, true, fallbacks);
+  return (
+    <mesh>
+      <sphereGeometry args={[size, 32, 32]} />
+      {tex ? (
+        <meshBasicMaterial map={tex} />
+      ) : (
+        <meshStandardMaterial color="#aaaaaa" roughness={0.8} />
+      )}
+    </mesh>
   );
 }
 
@@ -528,19 +638,21 @@ function DetailStars({ count = 2000 }: { count?: number }) {
 // Sunlight
 // ---------------------------------------------------------------------------
 function SunLight({ direction }: { direction: THREE.Vector3 }) {
+  const dirLightRef = useRef<THREE.DirectionalLight>(null);
+  useFrame(() => {
+    if (dirLightRef.current) {
+      dirLightRef.current.position.set(
+        direction.x * 20,
+        direction.y * 20,
+        direction.z * 20,
+      );
+    }
+  });
   return (
     <>
-      <ambientLight intensity={0.35} />
-      <directionalLight
-        position={[direction.x * 20, direction.y * 20, direction.z * 20]}
-        intensity={2}
-        color="#fff5e0"
-      />
-      <pointLight
-        position={[direction.x * -15, direction.y * -5, direction.z * -15]}
-        intensity={0.15}
-        color="#3b82f6"
-      />
+      <ambientLight intensity={0.55} />
+      <hemisphereLight args={["#9ab4dc", "#1a1a2a", 0.35]} />
+      <directionalLight ref={dirLightRef} intensity={2.2} color="#fff5e0" />
     </>
   );
 }
@@ -566,6 +678,12 @@ function PlanetScene({
     () => new THREE.Vector3(1, 0.3, 0.5).normalize(),
     [],
   );
+
+  // Keep the sun roughly behind the camera so the side facing the viewer is
+  // always well lit while still allowing day/night contrast across the globe.
+  useFrame(({ camera }) => {
+    sunDirection.copy(camera.position).normalize();
+  });
 
   return (
     <>
@@ -606,6 +724,7 @@ function PlanetScene({
           moon={moon}
           index={i}
           showMoonOrbits={showMoonOrbits}
+          planetId={planet.id}
         />
       ))}
       <DetailStars />
@@ -615,14 +734,6 @@ function PlanetScene({
         autoRotate
         autoRotateSpeed={0.3}
       />
-      <EffectComposer enableNormalPass={false}>
-        <Bloom
-          luminanceThreshold={0.8}
-          luminanceSmoothing={0.3}
-          intensity={0.5}
-          mipmapBlur
-        />
-      </EffectComposer>
     </>
   );
 }
@@ -820,6 +931,32 @@ function LayerControlPanel({
 // ---------------------------------------------------------------------------
 // Main Export: Planet3D Component
 // ---------------------------------------------------------------------------
+const LAYER_PREFS_STORAGE_KEY = "cosmos:planet-layer-prefs:v1";
+
+type LayerPrefs = {
+  viewMode: "realistic" | "enhanced";
+  layers: Record<string, { enabled: boolean; opacity: number }>;
+};
+
+function loadLayerPrefs(planetId: string): LayerPrefs | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(
+      `${LAYER_PREFS_STORAGE_KEY}:${planetId}`,
+    );
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<LayerPrefs>;
+    if (!parsed || typeof parsed !== "object") return null;
+    const viewMode =
+      parsed.viewMode === "enhanced" ? "enhanced" : "realistic";
+    const layers =
+      parsed.layers && typeof parsed.layers === "object" ? parsed.layers : {};
+    return { viewMode, layers };
+  } catch {
+    return null;
+  }
+}
+
 export function Planet3D({
   planet,
   showMoonOrbits = true,
@@ -847,25 +984,92 @@ export function Planet3D({
     return states;
   });
 
-  const handleToggleLayer = useCallback((id: string) => {
-    setLayerStates((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        enabled: !prev[id]?.enabled,
-      },
-    }));
-  }, []);
+  // Hydrate from localStorage after mount (avoids SSR mismatch)
+  useEffect(() => {
+    const prefs = loadLayerPrefs(planet.id);
+    if (!prefs) return;
+    setViewMode(prefs.viewMode);
+    if (config) {
+      setLayerStates((prev) => {
+        const next = { ...prev };
+        config.layers.forEach((layer) => {
+          const saved = prefs.layers[layer.id];
+          if (
+            saved &&
+            typeof saved.enabled === "boolean" &&
+            typeof saved.opacity === "number"
+          ) {
+            next[layer.id] = {
+              enabled: saved.enabled,
+              opacity: Math.min(1, Math.max(0, saved.opacity)),
+            };
+          }
+        });
+        return next;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planet.id]);
 
-  const handleChangeOpacity = useCallback((id: string, opacity: number) => {
-    setLayerStates((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        opacity,
-      },
-    }));
-  }, []);
+  const persistPrefs = useCallback(
+    (
+      nextViewMode: "realistic" | "enhanced",
+      nextLayers: Record<string, { enabled: boolean; opacity: number }>,
+    ) => {
+      if (typeof window === "undefined") return;
+      try {
+        window.localStorage.setItem(
+          `${LAYER_PREFS_STORAGE_KEY}:${planet.id}`,
+          JSON.stringify({ viewMode: nextViewMode, layers: nextLayers }),
+        );
+      } catch {
+        // localStorage unavailable / quota — silently ignore
+      }
+    },
+    [planet.id],
+  );
+
+  const handleViewModeChange = useCallback(
+    (mode: "realistic" | "enhanced") => {
+      setViewMode(mode);
+      persistPrefs(mode, layerStates);
+    },
+    [layerStates, persistPrefs],
+  );
+
+  const handleToggleLayer = useCallback(
+    (id: string) => {
+      setLayerStates((prev) => {
+        const next = {
+          ...prev,
+          [id]: {
+            ...prev[id],
+            enabled: !prev[id]?.enabled,
+          },
+        };
+        persistPrefs(viewMode, next);
+        return next;
+      });
+    },
+    [viewMode, persistPrefs],
+  );
+
+  const handleChangeOpacity = useCallback(
+    (id: string, opacity: number) => {
+      setLayerStates((prev) => {
+        const next = {
+          ...prev,
+          [id]: {
+            ...prev[id],
+            opacity,
+          },
+        };
+        persistPrefs(viewMode, next);
+        return next;
+      });
+    },
+    [viewMode, persistPrefs],
+  );
 
   const effectiveConfig: PlanetTextureConfig = config || {
     planetId: planet.id,
@@ -881,7 +1085,11 @@ export function Planet3D({
     <div className="relative h-full w-full">
       <Canvas
         camera={{ position: [5, 3, 7], fov: 45 }}
-        gl={{ antialias: true }}
+        gl={{
+          antialias: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.1,
+        }}
         dpr={[1, 1.5]}
       >
         <PlanetScene
@@ -901,7 +1109,7 @@ export function Planet3D({
           onToggleLayer={handleToggleLayer}
           onChangeOpacity={handleChangeOpacity}
           viewMode={viewMode}
-          onViewModeChange={setViewMode}
+          onViewModeChange={handleViewModeChange}
         />
       )}
     </div>

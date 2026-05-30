@@ -1,0 +1,18 @@
+{
+  "moon": "/assets/textures/earth/satellites/moon_1k.jpg",
+  "moon_1k": "/assets/textures/earth/satellites/moon_1k.jpg",
+  "moon_2k": "/assets/textures/earth/satellites/moon_2k.jpg",
+  "moon_4k": "/assets/textures/earth/satellites/moon_4k.jpg",
+  "moon_topo_1k": "/assets/textures/earth/satellites/moon_topo_1k.jpg",
+  "moon_topo_2k": "/assets/textures/earth/satellites/moon_topo_2k.jpg",
+  "moon_topo_4k": "/assets/textures/earth/satellites/moon_topo_4k.jpg",
+  "europa": "/assets/textures/jupiter/satellites/europa.jpg",
+  "ganymede": "/assets/textures/jupiter/satellites/ganymede.jpg",
+  "io": "/assets/textures/jupiter/satellites/io.jpg",
+  "phobos": "/assets/textures/mars/satellites/phobos.jpg",
+  "dione": "/assets/textures/saturn/satellites/dione.jpg",
+  "enceladus": "/assets/textures/saturn/satellites/enceladus.jpg",
+  "iapetus": "/assets/textures/saturn/satellites/iapetus.jpg",
+  "rhea": "/assets/textures/saturn/satellites/rhea.jpg",
+  "tethys": "/assets/textures/saturn/satellites/tethys.jpg"
+}
