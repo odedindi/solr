@@ -570,8 +570,9 @@ function MoonBody({
     const list: string[] = [];
     // prefer explicit map
     if (mapped) list.push(mapped);
-    // prefer generated index if present
-    if (satelliteIndex[key]) list.push(satelliteIndex[key]);
+    // prefer generated index if present (cast JSON to a string->string map for TS)
+    const satelliteIndexMap = satelliteIndex as Record<string, string>;
+    if (satelliteIndexMap[key]) list.push(satelliteIndexMap[key]);
     if (parentPlanetId) {
       const base = moonName
         .toLowerCase()
