@@ -4,15 +4,18 @@
  */
 
 // ---------------------------------------------------------------------------
-// Improved Multi-Layer Atmosphere Shader
+// Atmosphere Shader — Fresnel limb glow with sun-side forward scattering.
+// Renders on a BackSide sphere slightly larger than the planet.
+// All vectors are in world space for stable lighting.
 // ---------------------------------------------------------------------------
 export const AtmosphereVertexShader = `
-  varying vec3 vNormal;
-  varying vec3 vPosition;
+  varying vec3 vWorldNormal;
+  varying vec3 vWorldPos;
   void main() {
-    vNormal = normalize(normalMatrix * normal);
-    vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vWorldNormal = normalize(mat3(modelMatrix) * normal);
+    vec4 wp = modelMatrix * vec4(position, 1.0);
+    vWorldPos = wp.xyz;
+    gl_Position = projectionMatrix * viewMatrix * wp;
   }
 `;
 
@@ -22,19 +25,31 @@ export const AtmosphereFragmentShader = `
   uniform vec3 uSunDirection;
   uniform float uFalloff;
   uniform float uDensity;
-  varying vec3 vNormal;
-  varying vec3 vPosition;
+  varying vec3 vWorldNormal;
+  varying vec3 vWorldPos;
   void main() {
-    vec3 viewDir = normalize(-vPosition);
-    float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);
-    float outerGlow = pow(rim, uFalloff) * uIntensity;
-    float innerGlow = pow(rim, uFalloff * 0.4) * uDensity * 0.3;
-    float glow = outerGlow + innerGlow;
-    vec3 scatter = mix(uColor, uColor * vec3(0.6, 0.8, 1.2), pow(rim, 2.0));
-    float sunDot = max(dot(vNormal, uSunDirection), 0.0);
-    float limbBright = smoothstep(-0.1, 0.5, sunDot);
-    float backScatter = 0.15 + 0.85 * limbBright;
-    gl_FragColor = vec4(scatter, glow * backScatter);
+    vec3 viewDir = normalize(cameraPosition - vWorldPos);
+    // Fresnel rim: bright at the limb, soft towards the centre.
+    float fres = 1.0 - max(dot(viewDir, vWorldNormal), 0.0);
+    float rim = pow(fres, uFalloff);
+
+    // Sun-side weighting: limb gets brightest where it faces the sun.
+    float sunDot = dot(vWorldNormal, normalize(uSunDirection));
+    float dayWeight = smoothstep(-0.35, 0.4, sunDot);
+
+    // Forward scattering: halo around the sun (Mie-like) seen from the camera.
+    float vDotS = max(dot(viewDir, normalize(uSunDirection)), 0.0);
+    float forward = pow(vDotS, 8.0) * 0.6 * dayWeight;
+
+    // Color shift towards a slightly warmer tint near the terminator.
+    vec3 limbColor = mix(uColor * 0.5, uColor, dayWeight);
+    vec3 scatter = limbColor + uColor * forward;
+
+    float alpha = clamp(rim * uIntensity * (0.25 + 0.9 * dayWeight) + forward * 0.4, 0.0, 1.0);
+    // Subtle inner haze to avoid a hard edge against the planet silhouette.
+    alpha *= mix(0.6, 1.0, uDensity);
+
+    gl_FragColor = vec4(scatter, alpha);
   }
 `;
 

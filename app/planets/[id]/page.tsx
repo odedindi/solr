@@ -26,6 +26,16 @@ import {
 } from "@/lib/planet-data";
 import { Planet3D } from "@/components/planet-3d";
 import { PlanetComparison } from "@/components/planet-comparison";
+import { textureConfigs } from "@/lib/texture-config";
+
+function planetThumbUrl(planetId: string): string | null {
+  const cfg = textureConfigs[planetId];
+  if (!cfg) return null;
+  const diffuse = cfg.layers.find(
+    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
+  );
+  return diffuse?.url || null;
+}
 
 const allBodies = [...planets, ...dwarfPlanets];
 
@@ -415,13 +425,20 @@ export default function PlanetDetailPage({
 
         {/* Header */}
         <div className="mb-8 flex items-center gap-4">
-          <div
-            className="h-14 w-14 rounded-full lg:h-16 lg:w-16"
-            style={{
-              backgroundColor: planet.color,
-              boxShadow: `0 0 30px ${planet.color}60`,
-            }}
-          />
+          {(() => {
+            const thumb = planetThumbUrl(planet.id);
+            return (
+              <div
+                className="h-14 w-14 rounded-full overflow-hidden border border-border/60 bg-cover bg-center lg:h-16 lg:w-16"
+                style={{
+                  backgroundImage: thumb ? `url(${thumb})` : undefined,
+                  backgroundColor: thumb ? undefined : planet.color,
+                  boxShadow: `0 0 30px ${planet.color}60`,
+                }}
+                aria-hidden
+              />
+            );
+          })()}
           <div>
             <h1 className="font-sans text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
               {planet.name}

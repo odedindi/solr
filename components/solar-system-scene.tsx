@@ -11,6 +11,7 @@ import {
   PerformanceMonitor,
 } from "@react-three/drei";
 import * as THREE from "three";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import {
   planets,
   dwarfPlanets,
@@ -72,9 +73,9 @@ function TexturedMiniPlanet({
   }, [planetId]);
 
   const material = texture ? (
-    <meshStandardMaterial map={texture} roughness={0.7} metalness={0.05} />
+    <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
   ) : (
-    <meshStandardMaterial color={color} roughness={0.6} />
+    <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
   );
 
   return (
@@ -127,24 +128,42 @@ function SunBody() {
   return (
     <group>
       <mesh ref={meshRef}>
-        <sphereGeometry args={[2, 48, 48]} />
+        <sphereGeometry args={[2, 64, 64]} />
         {texture ? (
           <meshStandardMaterial
             map={texture}
-            emissive="#ff8c00"
-            emissiveIntensity={2}
+            emissive="#ffffff"
             emissiveMap={texture}
+            emissiveIntensity={1.2}
           />
         ) : (
-          <meshStandardMaterial
-            color="#ffd700"
-            emissive="#ff8c00"
-            emissiveIntensity={3}
-          />
+          <meshBasicMaterial color="#ffd27a" />
         )}
       </mesh>
-      <pointLight color="#ffd700" intensity={300} distance={200} />
-      <pointLight color="#fff5e6" intensity={100} distance={80} />
+      {/* Inner corona */}
+      <mesh>
+        <sphereGeometry args={[2.18, 32, 32]} />
+        <meshBasicMaterial
+          color="#ffb347"
+          transparent
+          opacity={0.22}
+          side={THREE.BackSide}
+          depthWrite={false}
+        />
+      </mesh>
+      {/* Outer corona glow */}
+      <mesh>
+        <sphereGeometry args={[2.6, 32, 32]} />
+        <meshBasicMaterial
+          color="#ff8c00"
+          transparent
+          opacity={0.07}
+          side={THREE.BackSide}
+          depthWrite={false}
+        />
+      </mesh>
+      <pointLight color="#fff2d6" intensity={4} distance={0} decay={0} />
+      <pointLight color="#ffd27a" intensity={2} distance={150} decay={1.2} />
     </group>
   );
 }
@@ -547,7 +566,8 @@ function SolarSystemInner({
       <PerformanceMonitor />
       <AdaptiveDpr pixelated />
       <TimeTicker />
-      <ambientLight intensity={0.25} />
+      <ambientLight intensity={0.9} />
+      <hemisphereLight args={["#7ea8d6", "#1a1a2a", 0.35]} />
       <SunBody />
       <AsteroidBelt />
       {allPlanets.map((planet) => {
@@ -568,6 +588,14 @@ function SolarSystemInner({
       })}
       <SceneStars />
       <CameraController target={cameraTarget} cameraPosition={cameraPosition} />
+      <EffectComposer enableNormalPass={false}>
+        <Bloom
+          luminanceThreshold={0.9}
+          luminanceSmoothing={0.4}
+          intensity={0.6}
+          mipmapBlur
+        />
+      </EffectComposer>
     </>
   );
 }

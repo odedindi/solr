@@ -2,9 +2,19 @@
 
 import Link from "next/link";
 import { planets, dwarfPlanets, formatNumber } from "@/lib/planet-data";
+import { textureConfigs } from "@/lib/texture-config";
 import { ArrowRight, Thermometer, Scale, Orbit } from "lucide-react";
 
 const _allBodies = [...planets, ...dwarfPlanets];
+
+function planetThumbUrl(planetId: string): string | null {
+  const cfg = textureConfigs[planetId];
+  if (!cfg) return null;
+  const diffuse = cfg.layers.find(
+    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
+  );
+  return diffuse?.url || null;
+}
 
 export default function PlanetsPage() {
   return (
@@ -26,7 +36,9 @@ export default function PlanetsPage() {
           The 8 Planets
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {planets.map((planet) => (
+          {planets.map((planet) => {
+            const thumb = planetThumbUrl(planet.id);
+            return (
             <Link
               key={planet.id}
               href={`/planets/${planet.id}`}
@@ -34,11 +46,13 @@ export default function PlanetsPage() {
             >
               <div className="mb-4 flex items-center gap-3">
                 <div
-                  className="h-10 w-10 rounded-full"
+                  className="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-border/60 bg-cover bg-center"
                   style={{
-                    backgroundColor: planet.color,
-                    boxShadow: `0 0 20px ${planet.color}40`,
+                    backgroundImage: thumb ? `url(${thumb})` : undefined,
+                    backgroundColor: thumb ? undefined : planet.color,
+                    boxShadow: `0 0 22px ${planet.color}55`,
                   }}
+                  aria-hidden
                 />
                 <div>
                   <h3 className="font-sans text-lg font-semibold text-foreground">
@@ -94,7 +108,8 @@ export default function PlanetsPage() {
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -104,7 +119,9 @@ export default function PlanetsPage() {
           Dwarf Planets
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {dwarfPlanets.map((planet) => (
+          {dwarfPlanets.map((planet) => {
+            const thumb = planetThumbUrl(planet.id);
+            return (
             <Link
               key={planet.id}
               href={`/planets/${planet.id}`}
@@ -112,11 +129,13 @@ export default function PlanetsPage() {
             >
               <div className="mb-4 flex items-center gap-3">
                 <div
-                  className="h-10 w-10 rounded-full"
+                  className="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-border/60 bg-cover bg-center"
                   style={{
-                    backgroundColor: planet.color,
-                    boxShadow: `0 0 20px ${planet.color}40`,
+                    backgroundImage: thumb ? `url(${thumb})` : undefined,
+                    backgroundColor: thumb ? undefined : planet.color,
+                    boxShadow: `0 0 22px ${planet.color}55`,
                   }}
+                  aria-hidden
                 />
                 <div>
                   <h3 className="font-sans text-lg font-semibold text-foreground">
@@ -135,7 +154,8 @@ export default function PlanetsPage() {
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

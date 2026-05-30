@@ -9,6 +9,7 @@ import {
   PerformanceMonitor,
 } from "@react-three/drei";
 import * as THREE from "three";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { textureConfigs } from "@/lib/texture-config";
 
 THREE.Cache.enabled = true;
@@ -45,23 +46,30 @@ function Sun() {
   return (
     <group>
       <mesh ref={meshRef}>
-        <sphereGeometry args={[1.2, 32, 32]} />
+        <sphereGeometry args={[1.2, 48, 48]} />
         {texture ? (
           <meshStandardMaterial
             map={texture}
-            emissive="#ff8c00"
-            emissiveIntensity={2}
+            emissive="#ffffff"
             emissiveMap={texture}
+            emissiveIntensity={1.2}
           />
         ) : (
-          <meshStandardMaterial
-            color="#ffd700"
-            emissive="#ff8c00"
-            emissiveIntensity={2}
-          />
+          <meshBasicMaterial color="#ffd27a" />
         )}
       </mesh>
-      <pointLight color="#ffd700" intensity={100} distance={100} />
+      <mesh>
+        <sphereGeometry args={[1.4, 32, 32]} />
+        <meshBasicMaterial
+          color="#ffb347"
+          transparent
+          opacity={0.18}
+          side={THREE.BackSide}
+          depthWrite={false}
+        />
+      </mesh>
+      <pointLight color="#fff2d6" intensity={3} distance={0} decay={0} />
+      <pointLight color="#ffd27a" intensity={1.5} distance={80} decay={1.2} />
     </group>
   );
 }
@@ -151,15 +159,15 @@ function HeroPlanet({
       <OrbitPath radius={radius} />
       <group ref={groupRef}>
         <mesh ref={meshRef}>
-          <sphereGeometry args={[size, 24, 24]} />
+          <sphereGeometry args={[size, 32, 32]} />
           {texture ? (
             <meshStandardMaterial
               map={texture}
-              roughness={0.7}
-              metalness={0.05}
+              roughness={0.85}
+              metalness={0.0}
             />
           ) : (
-            <meshStandardMaterial color={color} roughness={0.7} />
+            <meshStandardMaterial color={color} roughness={0.85} />
           )}
         </mesh>
         {/* Atmosphere glow */}
@@ -231,7 +239,8 @@ function Scene() {
     <>
       <PerformanceMonitor />
       <AdaptiveDpr pixelated />
-      <ambientLight intensity={0.3} />
+      <ambientLight intensity={0.95} />
+      <hemisphereLight args={["#7ea8d6", "#1a1a2a", 0.4]} />
       <Sun />
       <HeroPlanet
         radius={3}
@@ -299,6 +308,14 @@ function Scene() {
         maxPolarAngle={Math.PI / 1.8}
         minPolarAngle={Math.PI / 4}
       />
+      <EffectComposer enableNormalPass={false}>
+        <Bloom
+          luminanceThreshold={0.9}
+          luminanceSmoothing={0.4}
+          intensity={0.5}
+          mipmapBlur
+        />
+      </EffectComposer>
     </>
   );
 }
