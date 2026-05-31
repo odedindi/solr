@@ -1,5 +1,7 @@
 # Explicitly allow specific dependency build scripts to run during CI installs.
 # Approving only needed packages is safer than `pnpm approve-builds --all`.
+packages:
+  - .
 allowBuilds:
   sharp: true
   unrs-resolver: true
