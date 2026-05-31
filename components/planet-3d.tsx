@@ -9,7 +9,6 @@ import {
   getTextureConfig,
   type PlanetTextureConfig,
 } from "@/lib/texture-config";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Info, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import {
   AtmosphereVertexShader,
@@ -127,9 +126,7 @@ function TexturedPlanetSurface({
   const diffuseLayer = config.layers.find(
     (l) => l.type === "diffuse" && l.id === "surface",
   );
-  const surfaceAltLayer = config.layers.find((l) => l.type === "surface-alt");
-  const bumpLayer = config.layers.find((l) => l.type === "bump");
-  const normalLayer = config.layers.find((l) => l.type === "normal");
+  const surfaceAltLayer = config.layers.find((l) => l.type === "surface-alt")
   const specularLayer = config.layers.find((l) => l.type === "specular");
 
   // Venus cloud-penetration toggle: if surface-alt is enabled and main diffuse disabled
@@ -148,12 +145,6 @@ function TexturedPlanetSurface({
   const surfaceEnabled = diffuseLayer
     ? (layerStates[diffuseLayer.id]?.enabled ?? true)
     : true;
-  const bumpEnabled = bumpLayer
-    ? (layerStates[bumpLayer.id]?.enabled ?? true)
-    : false;
-  const normalEnabled = normalLayer
-    ? (layerStates[normalLayer.id]?.enabled ?? true)
-    : false;
   const specularEnabled = specularLayer
     ? (layerStates[specularLayer.id]?.enabled ?? true)
     : false;
@@ -165,32 +156,11 @@ function TexturedPlanetSurface({
       ? diffuseLayer.url
       : undefined,
   );
-  const bumpTex = useLoadTexture(
-    bumpEnabled ? bumpLayer?.urlHiRes || bumpLayer?.url : null,
-    false,
-    bumpLayer?.url,
-  );
-  // NOTE: Project ships "normal" layers as grayscale heightmaps (e.g. earth_topo,
-  // mars_topo), not true tangent-space normal maps. Bind them to bumpMap so the
-  // shader derives sane normals from height derivatives instead of treating
-  // greyscale values as normal vectors (which produced an unlit, black surface).
-  const heightFromNormalTex = useLoadTexture(
-    normalEnabled && !bumpLayer
-      ? normalLayer?.urlHiRes || normalLayer?.url
-      : null,
-    false,
-  );
   const _specularTex = useLoadTexture(
     specularEnabled ? specularLayer?.urlHiRes || specularLayer?.url : null,
     false,
   );
 
-  const bumpOpacity = bumpLayer
-    ? (layerStates[bumpLayer.id]?.opacity ?? 0.5)
-    : normalLayer
-      ? (layerStates[normalLayer.id]?.opacity ?? 1.0)
-      : 0.5;
-  const effectiveBumpMap = bumpTex ?? heightFromNormalTex;
 
   useFrame(() => {
     if (meshRef.current) {
@@ -1009,7 +979,6 @@ export function Planet3D({
         return next;
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planet.id]);
 
   const persistPrefs = useCallback(
