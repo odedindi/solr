@@ -709,7 +709,9 @@ function PlanetScene({
 // ---------------------------------------------------------------------------
 // Layer Control Panel UI
 // ---------------------------------------------------------------------------
+const LAYER_PANEL_EXPANDED_KEY = "Solr:layer-panel-expanded";
 function LayerControlPanel({
+  planetId,
   config,
   layerStates,
   onToggleLayer,
@@ -717,6 +719,7 @@ function LayerControlPanel({
   viewMode,
   onViewModeChange,
 }: {
+  planetId: string;
   config: PlanetTextureConfig;
   layerStates: Record<string, { enabled: boolean; opacity: number }>;
   onToggleLayer: (id: string) => void;
@@ -724,7 +727,15 @@ function LayerControlPanel({
   viewMode: "realistic" | "enhanced";
   onViewModeChange: (mode: "realistic" | "enhanced") => void;
 }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(`${LAYER_PANEL_EXPANDED_KEY}:${planetId}`) === 'true';
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(`${LAYER_PANEL_EXPANDED_KEY}:${planetId}`, String(expanded));
+  }, [expanded, planetId]);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
 
   return (
@@ -1071,6 +1082,7 @@ export function Planet3D({
       {/* Layer Control Panel overlay */}
       {config && config.layers.length > 0 && (
         <LayerControlPanel
+          planetId={planet.id}
           config={effectiveConfig}
           layerStates={layerStates}
           onToggleLayer={handleToggleLayer}
