@@ -1,41 +1,37 @@
 "use client";
 
-import { useRef, useMemo, useState, useEffect } from "react";
+import { Suspense, useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   OrbitControls,
   Line,
   AdaptiveDpr,
   PerformanceMonitor,
+  useTexture,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { textureConfigs } from "@/lib/texture-config";
 
-THREE.Cache.enabled = true;
+const SUN_URL =
+  textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "";
+if (SUN_URL) useTexture.preload(SUN_URL);
+
+const INNER_IDS = ["mercury", "venus", "earth", "mars"] as const;
+for (const id of INNER_IDS) {
+  const cfg = textureConfigs[id];
+  const layer = cfg?.layers.find(
+    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
+  );
+  if (layer?.url) useTexture.preload(layer.url);
+}
 
 // ---------------------------------------------------------------------------
 // Textured Sun
 // ---------------------------------------------------------------------------
 function Sun() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
-
-  useEffect(() => {
-    const config = textureConfigs["sun"];
-    if (!config) return;
-    const diffuse = config.layers.find((l) => l.id === "surface");
-    if (!diffuse?.url) return;
-    const loader = new THREE.TextureLoader();
-    loader.crossOrigin = "anonymous";
-    loader.load(diffuse.url, (tex) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
-      setTexture(tex);
-    });
-    return () => {
-      if (texture) texture.dispose();
-    };
-  }, []);
+  const texture = useTexture(SUN_URL);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -47,16 +43,12 @@ function Sun() {
     <group>
       <mesh ref={meshRef}>
         <sphereGeometry args={[1.2, 48, 48]} />
-        {texture ? (
-          <meshStandardMaterial
-            map={texture}
-            emissive="#ffffff"
-            emissiveMap={texture}
-            emissiveIntensity={1.2}
-          />
-        ) : (
-          <meshBasicMaterial color="#ffd27a" />
-        )}
+        <meshStandardMaterial
+          map={texture}
+          emissive="#ffffff"
+          emissiveMap={texture}
+          emissiveIntensity={1.2}
+        />
       </mesh>
       <mesh>
         <sphereGeometry args={[1.4, 32, 32]} />
@@ -116,27 +108,42 @@ function HeroPlanet({
   planetId: string;
   hasRing?: boolean;
 }) {
+  const config = textureConfigs[planetId];
+  const diffuse = config?.layers.find(
+    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
+  );
+
+  return (
+    <>
+      <OrbitPath radius={radius} />
+      {diffuse?.url ? (
+        <Suspense fallback={<HeroPlanetFallback radius={radius} speed={speed} size={size} color={color} planetId={planetId} hasRing={hasRing} />}>
+          <HeroPlanetTextured radius={radius} speed={speed} size={size} planetId={planetId} url={diffuse.url} hasRing={hasRing} />
+        </Suspense>
+      ) : (
+        <HeroPlanetFallback radius={radius} speed={speed} size={size} color={color} planetId={planetId} hasRing={hasRing} />
+      )}
+    </>
+  );
+}
+
+function HeroPlanetFallback({
+  radius,
+  speed,
+  size,
+  color,
+  planetId,
+  hasRing,
+}: {
+  radius: number;
+  speed: number;
+  size: number;
+  color: string;
+  planetId: string;
+  hasRing?: boolean;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
-
-  useEffect(() => {
-    const config = textureConfigs[planetId];
-    if (!config) return;
-    const diffuse = config.layers.find(
-      (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-    );
-    if (!diffuse?.url) return;
-    const loader = new THREE.TextureLoader();
-    loader.crossOrigin = "anonymous";
-    loader.load(diffuse.url, (tex) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
-      setTexture(tex);
-    });
-    return () => {
-      if (texture) texture.dispose();
-    };
-  }, [planetId]);
 
   useFrame((state) => {
     if (groupRef.current) {
@@ -149,52 +156,105 @@ function HeroPlanet({
     }
   });
 
-  // Mini atmosphere
-  const config = textureConfigs[planetId];
-  const hasAtmo = config?.hasAtmosphere;
-  const atmoColor = config?.atmosphereColor || "#000";
+  const cfg = textureConfigs[planetId];
 
   return (
-    <>
-      <OrbitPath radius={radius} />
-      <group ref={groupRef}>
-        <mesh ref={meshRef}>
-          <sphereGeometry args={[size, 32, 32]} />
-          {texture ? (
-            <meshStandardMaterial
-              map={texture}
-              roughness={0.85}
-              metalness={0.0}
-            />
-          ) : (
-            <meshStandardMaterial color={color} roughness={0.85} />
-          )}
+    <group ref={groupRef}>
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshStandardMaterial color={color} roughness={0.85} />
+      </mesh>
+      {cfg?.hasAtmosphere && (
+        <mesh>
+          <sphereGeometry args={[size * 1.1, 24, 24]} />
+          <meshBasicMaterial
+            color={cfg.atmosphereColor || "#000"}
+            transparent
+            opacity={0.3}
+            side={THREE.BackSide}
+          />
         </mesh>
-        {/* Atmosphere glow */}
-        {hasAtmo && (
-          <mesh>
-            <sphereGeometry args={[size * 1.1, 24, 24]} />
-            <meshBasicMaterial
-              color={atmoColor}
-              transparent
-              opacity={0.3}
-              side={THREE.BackSide}
-            />
-          </mesh>
-        )}
-        {hasRing && (
-          <mesh rotation={[Math.PI / 3, 0, 0]}>
-            <ringGeometry args={[size * 1.4, size * 2, 32]} />
-            <meshStandardMaterial
-              color="#c8b080"
-              side={THREE.DoubleSide}
-              transparent
-              opacity={0.6}
-            />
-          </mesh>
-        )}
-      </group>
-    </>
+      )}
+      {hasRing && (
+        <mesh rotation={[Math.PI / 3, 0, 0]}>
+          <ringGeometry args={[size * 1.4, size * 2, 32]} />
+          <meshStandardMaterial
+            color="#c8b080"
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.6}
+          />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
+function HeroPlanetTextured({
+  radius,
+  speed,
+  size,
+  planetId,
+  url,
+  hasRing,
+}: {
+  radius: number;
+  speed: number;
+  size: number;
+  planetId: string;
+  url: string;
+  hasRing?: boolean;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
+  const texture = useTexture(url);
+
+  useFrame((state) => {
+    if (groupRef.current) {
+      const t = state.clock.elapsedTime * speed;
+      groupRef.current.position.x = Math.cos(t) * radius;
+      groupRef.current.position.z = Math.sin(t) * radius;
+    }
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.005;
+    }
+  });
+
+  const cfg = textureConfigs[planetId];
+
+  return (
+    <group ref={groupRef}>
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshStandardMaterial
+          map={texture}
+          roughness={0.85}
+          metalness={0.0}
+        />
+      </mesh>
+      {cfg?.hasAtmosphere && (
+        <mesh>
+          <sphereGeometry args={[size * 1.1, 24, 24]} />
+          <meshBasicMaterial
+            color={cfg.atmosphereColor || "#000"}
+            transparent
+            opacity={0.3}
+            side={THREE.BackSide}
+          />
+        </mesh>
+      )}
+      {hasRing && (
+        <mesh rotation={[Math.PI / 3, 0, 0]}>
+          <ringGeometry args={[size * 1.4, size * 2, 32]} />
+          <meshStandardMaterial
+            color="#c8b080"
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.6}
+          />
+        </mesh>
+      )}
+    </group>
   );
 }
 

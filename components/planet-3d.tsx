@@ -17,9 +17,6 @@ import {
   NightLightsFragmentShader,
 } from "@/lib/shaders";
 
-// Enable shared texture cache
-THREE.Cache.enabled = true;
-
 // ---------------------------------------------------------------------------
 // Texture hook: loads a texture from URL, handles errors gracefully
 // ---------------------------------------------------------------------------

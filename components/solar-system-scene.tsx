@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useState, useEffect, useCallback } from "react";
+import { Suspense, useRef, useMemo, useState, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -9,6 +9,7 @@ import {
   Detailed,
   AdaptiveDpr,
   PerformanceMonitor,
+  useTexture,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
@@ -22,7 +23,19 @@ import { textureConfigs } from "@/lib/texture-config";
 import { useRouter } from "next/navigation";
 import { useTimeStore } from "@/lib/time-store";
 
-THREE.Cache.enabled = true;
+// ---------------------------------------------------------------------------
+// Preload inner planet textures for instant display on scene mount
+// ---------------------------------------------------------------------------
+const INNER_PLANET_IDS = ["mercury", "venus", "earth", "mars"] as const;
+for (const id of INNER_PLANET_IDS) {
+  const cfg = textureConfigs[id];
+  const layer = cfg?.layers.find(
+    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
+  );
+  if (layer?.url) useTexture.preload(layer.url);
+}
+const _sunLayer = textureConfigs.sun?.layers.find((l) => l.id === "surface");
+if (_sunLayer?.url) useTexture.preload(_sunLayer.url);
 
 // ---------------------------------------------------------------------------
 // Frame-level time ticker — advances the zustand time store each frame
@@ -37,6 +50,45 @@ function TimeTicker() {
 // ---------------------------------------------------------------------------
 // Texture-loading planet sphere for the overview scene (smaller, simpler)
 // ---------------------------------------------------------------------------
+function ColorFallbackLOD({ color, size }: { color: string; size: number }) {
+  return (
+    <Detailed distances={[0, 20, 50]}>
+      <mesh>
+        <sphereGeometry args={[size, 64, 64]} />
+        <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[size, 16, 16]} />
+        <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
+      </mesh>
+    </Detailed>
+  );
+}
+
+function TexturedLOD({ size, url }: { size: number; url: string }) {
+  const texture = useTexture(url);
+  return (
+    <Detailed distances={[0, 20, 50]}>
+      <mesh>
+        <sphereGeometry args={[size, 64, 64]} />
+        <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[size, 16, 16]} />
+        <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
+      </mesh>
+    </Detailed>
+  );
+}
+
 function TexturedMiniPlanet({
   color,
   size,
@@ -46,59 +98,19 @@ function TexturedMiniPlanet({
   size: number;
   planetId: string;
 }) {
-  const lodRef = useRef<THREE.LOD>(null);
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  const config = textureConfigs[planetId];
+  const diffuse = config?.layers.find(
+    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
+  );
 
-  useEffect(() => {
-    const config = textureConfigs[planetId];
-    if (!config) return;
-    const diffuse = config.layers.find(
-      (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-    );
-    if (!diffuse?.url) return;
-    const loader = new THREE.TextureLoader();
-    loader.crossOrigin = "anonymous";
-    loader.load(
-      diffuse.url,
-      (tex) => {
-        tex.colorSpace = THREE.SRGBColorSpace;
-        setTexture(tex);
-      },
-      undefined,
-      () => {}, // silently fallback
-    );
-    return () => {
-      if (texture) texture.dispose();
-    };
-  }, [planetId]);
+  if (!diffuse?.url) {
+    return <ColorFallbackLOD color={color} size={size} />;
+  }
 
   return (
-    <Detailed ref={lodRef} distances={[0, 20, 50]}>
-      <mesh>
-        <sphereGeometry args={[size, 64, 64]} />
-        {texture ? (
-          <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
-        ) : (
-          <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
-        )}
-      </mesh>
-      <mesh>
-        <sphereGeometry args={[size, 32, 32]} />
-        {texture ? (
-          <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
-        ) : (
-          <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
-        )}
-      </mesh>
-      <mesh>
-        <sphereGeometry args={[size, 16, 16]} />
-        {texture ? (
-          <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
-        ) : (
-          <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
-        )}
-      </mesh>
-    </Detailed>
+    <Suspense fallback={<ColorFallbackLOD color={color} size={size} />}>
+      <TexturedLOD size={size} url={diffuse.url} />
+    </Suspense>
   );
 }
 
@@ -107,23 +119,9 @@ function TexturedMiniPlanet({
 // ---------------------------------------------------------------------------
 function SunBody() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
-
-  useEffect(() => {
-    const config = textureConfigs["sun"];
-    if (!config) return;
-    const diffuse = config.layers.find((l) => l.id === "surface");
-    if (!diffuse?.url) return;
-    const loader = new THREE.TextureLoader();
-    loader.crossOrigin = "anonymous";
-    loader.load(diffuse.url, (tex) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
-      setTexture(tex);
-    });
-    return () => {
-      if (texture) texture.dispose();
-    };
-  }, []);
+  const texture = useTexture(
+    textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "",
+  );
 
   useFrame(() => {
     if (meshRef.current) {
@@ -135,18 +133,13 @@ function SunBody() {
     <group>
       <mesh ref={meshRef}>
         <sphereGeometry args={[2, 64, 64]} />
-        {texture ? (
-          <meshStandardMaterial
-            map={texture}
-            emissive="#ffffff"
-            emissiveMap={texture}
-            emissiveIntensity={1.2}
-          />
-        ) : (
-          <meshBasicMaterial color="#ffd27a" />
-        )}
+        <meshStandardMaterial
+          map={texture}
+          emissive="#ffffff"
+          emissiveMap={texture}
+          emissiveIntensity={1.2}
+        />
       </mesh>
-      {/* Inner corona */}
       <mesh>
         <sphereGeometry args={[2.18, 32, 32]} />
         <meshBasicMaterial
@@ -157,7 +150,6 @@ function SunBody() {
           depthWrite={false}
         />
       </mesh>
-      {/* Outer corona glow */}
       <mesh>
         <sphereGeometry args={[2.6, 32, 32]} />
         <meshBasicMaterial
@@ -238,38 +230,56 @@ function MiniAtmosphere({
   );
 }
 
-function MiniRing({ planetId, size }: { planetId: string; size: number }) {
-  const config = textureConfigs[planetId];
-  const [ringTex, setRingTex] = useState<THREE.Texture | null>(null);
+function MiniRingFallback({
+  config,
+  planetId,
+  size,
+}: {
+  config: (typeof textureConfigs)[string];
+  planetId: string;
+  size: number;
+}) {
+  const inner = size * (config.ringInnerRadius || 1.3);
+  const outer = size * (config.ringOuterRadius || 2.2);
+  const opacity = config.ringOpacity || 0.5;
 
-  useEffect(() => {
-    if (!config?.ringTexture) return;
-    const loader = new THREE.TextureLoader();
-    loader.crossOrigin = "anonymous";
-    let disposed = false;
-    loader.load(
-      config.ringTexture,
-      (tex) => {
-        if (disposed) {
-          tex.dispose();
-          return;
-        }
-        tex.colorSpace = THREE.SRGBColorSpace;
-        setRingTex(tex);
-      },
-      undefined,
-      () => {},
-    );
-    return () => {
-      disposed = true;
-      setRingTex((prev) => {
-        prev?.dispose();
-        return null;
-      });
-    };
-  }, [config?.ringTexture]);
+  let rotation: [number, number, number] = [Math.PI / 2.5, 0, 0];
+  if (planetId === "uranus") rotation = [0.1, 0, Math.PI / 2];
+  else if (planetId === "jupiter" || planetId === "neptune")
+    rotation = [Math.PI / 2, 0, 0];
 
-  if (!config?.hasRings) return null;
+  const ringColors: Record<string, string> = {
+    saturn: "#d4c090",
+    uranus: "#a0c8c8",
+    jupiter: "#8b7355",
+    neptune: "#4a5a8a",
+  };
+
+  return (
+    <mesh rotation={rotation}>
+      <ringGeometry args={[inner, outer, 128]} />
+      <meshStandardMaterial
+        color={ringColors[planetId] || "#cccccc"}
+        side={THREE.DoubleSide}
+        transparent
+        opacity={opacity}
+      />
+    </mesh>
+  );
+}
+
+function MiniRingTextured({
+  config,
+  planetId,
+  size,
+  url,
+}: {
+  config: (typeof textureConfigs)[string];
+  planetId: string;
+  size: number;
+  url: string;
+}) {
+  const ringTex = useTexture(url);
 
   const inner = size * (config.ringInnerRadius || 1.3);
   const outer = size * (config.ringOuterRadius || 2.2);
@@ -298,6 +308,26 @@ function MiniRing({ planetId, size }: { planetId: string; size: number }) {
         opacity={opacity}
       />
     </mesh>
+  );
+}
+
+function MiniRing({ planetId, size }: { planetId: string; size: number }) {
+  const config = textureConfigs[planetId];
+  if (!config?.hasRings) return null;
+
+  if (!config.ringTexture) {
+    return <MiniRingFallback config={config} planetId={planetId} size={size} />;
+  }
+
+  return (
+    <Suspense fallback={<MiniRingFallback config={config} planetId={planetId} size={size} />}>
+      <MiniRingTextured
+        config={config}
+        planetId={planetId}
+        size={size}
+        url={config.ringTexture}
+      />
+    </Suspense>
   );
 }
 

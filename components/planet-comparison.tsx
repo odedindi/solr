@@ -12,9 +12,6 @@ import {
   AtmosphereFragmentShader,
 } from "@/lib/shaders";
 
-// Enable shared texture cache
-THREE.Cache.enabled = true;
-
 // Reuse the texture loading hook
 function useLoadTexture(url: string | undefined | null, srgb = true) {
   const [tex, setTex] = useState<THREE.Texture | null>(null);
