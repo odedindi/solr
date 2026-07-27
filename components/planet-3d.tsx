@@ -902,7 +902,7 @@ function LayerControlPanel({
 // ---------------------------------------------------------------------------
 // Main Export: Planet3D Component
 // ---------------------------------------------------------------------------
-const LAYER_PREFS_STORAGE_KEY = "cosmos:planet-layer-prefs:v1";
+const LAYER_PREFS_STORAGE_KEY = "Solr:planet-layer-prefs:v1";
 
 type LayerPrefs = {
   viewMode: "realistic" | "enhanced";

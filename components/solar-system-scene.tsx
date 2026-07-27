@@ -72,25 +72,31 @@ function TexturedMiniPlanet({
     };
   }, [planetId]);
 
-  const material = texture ? (
-    <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
-  ) : (
-    <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
-  );
-
   return (
     <Detailed ref={lodRef} distances={[0, 20, 50]}>
       <mesh>
         <sphereGeometry args={[size, 64, 64]} />
-        {material}
+        {texture ? (
+          <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
+        ) : (
+          <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
+        )}
       </mesh>
       <mesh>
         <sphereGeometry args={[size, 32, 32]} />
-        {material}
+        {texture ? (
+          <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
+        ) : (
+          <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
+        )}
       </mesh>
       <mesh>
         <sphereGeometry args={[size, 16, 16]} />
-        {material}
+        {texture ? (
+          <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
+        ) : (
+          <meshStandardMaterial color={color} roughness={0.85} metalness={0.0} />
+        )}
       </mesh>
     </Detailed>
   );

@@ -83,7 +83,7 @@ export default function HomePage() {
               <span className="text-balance">
                 Explore the{" "}
                 <span className="bg-gradient-to-r from-primary via-cyan-300 to-primary bg-clip-text text-transparent">
-                  Cosmos
+                  Solr
                 </span>
               </span>
             </h1>

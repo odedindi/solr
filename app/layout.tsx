@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cosmos - Interactive Solar System Encyclopedia",
+  title: "Solr - Interactive Solar System Encyclopedia",
   description:
     "Explore our solar system with interactive 3D visualizations, scientific data from NASA and ESA, and educational tools. A comprehensive encyclopedia of planets, moons, and spacecraft.",
   generator: "v0.app",

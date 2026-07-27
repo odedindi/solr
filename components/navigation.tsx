@@ -34,7 +34,7 @@ export function Navigation() {
           </div>
           <div className="flex flex-col">
             <span className="font-sans text-lg font-bold tracking-wide text-foreground">
-              COSMOS
+              Solr
             </span>
             <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-primary/70">
               Solar System
