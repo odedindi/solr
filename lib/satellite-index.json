@@ -1,18 +1,102 @@
 {
-  "moon": "/assets/textures/earth/satellites/moon_1k.jpg",
-  "moon_1k": "/assets/textures/earth/satellites/moon_1k.jpg",
-  "moon_2k": "/assets/textures/earth/satellites/moon_2k.jpg",
-  "moon_4k": "/assets/textures/earth/satellites/moon_4k.jpg",
-  "moon_topo_1k": "/assets/textures/earth/satellites/moon_topo_1k.jpg",
-  "moon_topo_2k": "/assets/textures/earth/satellites/moon_topo_2k.jpg",
-  "moon_topo_4k": "/assets/textures/earth/satellites/moon_topo_4k.jpg",
-  "europa": "/assets/textures/jupiter/satellites/europa.jpg",
-  "ganymede": "/assets/textures/jupiter/satellites/ganymede.jpg",
-  "io": "/assets/textures/jupiter/satellites/io.jpg",
-  "phobos": "/assets/textures/mars/satellites/phobos.jpg",
-  "dione": "/assets/textures/saturn/satellites/dione.jpg",
-  "enceladus": "/assets/textures/saturn/satellites/enceladus.jpg",
-  "iapetus": "/assets/textures/saturn/satellites/iapetus.jpg",
-  "rhea": "/assets/textures/saturn/satellites/rhea.jpg",
-  "tethys": "/assets/textures/saturn/satellites/tethys.jpg"
+  "moon": {
+    "jpg": "/assets/textures/earth/satellites/moon_topo_4k.jpg",
+    "webp": "/assets/textures/earth/satellites/moon_topo_4k.webp"
+  },
+  "moon_1k": {
+    "jpg": "/assets/textures/earth/satellites/moon_1k.jpg",
+    "webp": "/assets/textures/earth/satellites/moon_1k.webp"
+  },
+  "moon_2k": {
+    "jpg": "/assets/textures/earth/satellites/moon_2k.jpg",
+    "webp": "/assets/textures/earth/satellites/moon_2k.webp"
+  },
+  "moon_4k": {
+    "jpg": "/assets/textures/earth/satellites/moon_4k.jpg",
+    "webp": "/assets/textures/earth/satellites/moon_4k.webp"
+  },
+  "moon_topo_1k": {
+    "jpg": "/assets/textures/earth/satellites/moon_topo_1k.jpg",
+    "webp": "/assets/textures/earth/satellites/moon_topo_1k.webp"
+  },
+  "moon_topo_2k": {
+    "jpg": "/assets/textures/earth/satellites/moon_topo_2k.jpg",
+    "webp": "/assets/textures/earth/satellites/moon_topo_2k.webp"
+  },
+  "moon_topo_4k": {
+    "jpg": "/assets/textures/earth/satellites/moon_topo_4k.jpg",
+    "webp": "/assets/textures/earth/satellites/moon_topo_4k.webp"
+  },
+  "callisto": {
+    "jpg": "/assets/textures/jupiter/satellites/callisto.jpg",
+    "webp": "/assets/textures/jupiter/satellites/callisto.webp"
+  },
+  "europa": {
+    "jpg": "/assets/textures/jupiter/satellites/europa.jpg",
+    "webp": "/assets/textures/jupiter/satellites/europa.webp"
+  },
+  "ganymede": {
+    "jpg": "/assets/textures/jupiter/satellites/ganymede.jpg",
+    "webp": "/assets/textures/jupiter/satellites/ganymede.webp"
+  },
+  "io": {
+    "jpg": "/assets/textures/jupiter/satellites/io.jpg",
+    "webp": "/assets/textures/jupiter/satellites/io.webp"
+  },
+  "deimos": {
+    "jpg": "/assets/textures/mars/satellites/deimos.jpg",
+    "webp": "/assets/textures/mars/satellites/deimos.webp"
+  },
+  "phobos": {
+    "jpg": "/assets/textures/mars/satellites/phobos.jpg",
+    "webp": "/assets/textures/mars/satellites/phobos.webp"
+  },
+  "triton": {
+    "jpg": "/assets/textures/neptune/satellites/triton.jpg",
+    "webp": "/assets/textures/neptune/satellites/triton.webp"
+  },
+  "charon": {
+    "jpg": "/assets/textures/pluto/satellites/charon.jpg",
+    "webp": "/assets/textures/pluto/satellites/charon.webp"
+  },
+  "dione": {
+    "jpg": "/assets/textures/saturn/satellites/dione.jpg",
+    "webp": "/assets/textures/saturn/satellites/dione.webp"
+  },
+  "enceladus": {
+    "jpg": "/assets/textures/saturn/satellites/enceladus.jpg",
+    "webp": "/assets/textures/saturn/satellites/enceladus.webp"
+  },
+  "iapetus": {
+    "jpg": "/assets/textures/saturn/satellites/iapetus.jpg",
+    "webp": "/assets/textures/saturn/satellites/iapetus.webp"
+  },
+  "mimas": {
+    "jpg": "/assets/textures/saturn/satellites/mimas.jpg",
+    "webp": "/assets/textures/saturn/satellites/mimas.webp"
+  },
+  "rhea": {
+    "jpg": "/assets/textures/saturn/satellites/rhea.jpg",
+    "webp": "/assets/textures/saturn/satellites/rhea.webp"
+  },
+  "tethys": {
+    "jpg": "/assets/textures/saturn/satellites/tethys.jpg",
+    "webp": "/assets/textures/saturn/satellites/tethys.webp"
+  },
+  "titan": {
+    "jpg": "/assets/textures/saturn/satellites/titan.jpg",
+    "webp": "/assets/textures/saturn/satellites/titan.webp"
+  },
+  "ariel": {
+    "jpg": "/assets/textures/uranus/satellites/ariel.jpg",
+    "webp": "/assets/textures/uranus/satellites/ariel.webp"
+  },
+  "miranda": {
+    "jpg": "/assets/textures/uranus/satellites/miranda.jpg",
+    "webp": "/assets/textures/uranus/satellites/miranda.webp"
+  },
+  "titania": {
+    "jpg": "/assets/textures/uranus/satellites/titania.jpg",
+    "webp": "/assets/textures/uranus/satellites/titania.webp"
+  }
 }

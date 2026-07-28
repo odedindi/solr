@@ -13,17 +13,33 @@ function walk() {
   planets.forEach(planet => {
     const satDir = path.join(TEX_ROOT, planet, 'satellites');
     if (!fs.existsSync(satDir)) return;
-    const files = fs.readdirSync(satDir).filter(f => /\.(jpg|jpeg|png)$/i.test(f));
+    const files = fs.readdirSync(satDir).filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
     files.forEach(file => {
+      const ext = path.extname(file).toLowerCase();
       const name = path.parse(file).name.toLowerCase();
-      // normalize names like moon_4k -> moon
       const base = name.replace(/_\d+k$/i, '').replace(/_topo(_\d+k)?$/i, '').replace(/[_\s]+/g, '_');
       const publicPath = `/assets/textures/${planet}/satellites/${file}`;
-      // prefer exact base name mapping
-      if (!entries[base]) entries[base] = publicPath;
-      // also map raw filename (without suffix)
-      if (!entries[name]) entries[name] = publicPath;
+
+      const addEntry = (key) => {
+        if (!entries[key]) {
+          entries[key] = { jpg: null, webp: null };
+        }
+        if (ext === '.webp') {
+          entries[key].webp = publicPath;
+        } else {
+          entries[key].jpg = publicPath;
+        }
+      };
+
+      addEntry(base);
+      addEntry(name);
     });
+  });
+
+  Object.keys(entries).forEach(key => {
+    if (!entries[key].jpg && !entries[key].webp) {
+      delete entries[key];
+    }
   });
 
   fs.writeFileSync(outPath, JSON.stringify(entries, null, 2));
