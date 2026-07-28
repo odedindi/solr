@@ -449,6 +449,22 @@ export const dwarfPlanets: Planet[] = [
 
 export const allBodies = [...planets, ...dwarfPlanets]
 
+// Per-planet zoom limits and initial camera offset for detail scenes
+export const zoomConfig: Record<
+  string,
+  { minDistance: number; maxDistance: number; cameraOffset: [number, number, number] }
+> = {
+  mercury: { minDistance: 3.5, maxDistance: 180, cameraOffset: [5, 3, 7] },
+  venus: { minDistance: 3.5, maxDistance: 180, cameraOffset: [5, 3, 7] },
+  earth: { minDistance: 3.5, maxDistance: 180, cameraOffset: [5, 3, 7] },
+  mars: { minDistance: 3.5, maxDistance: 180, cameraOffset: [5, 3, 7] },
+  jupiter: { minDistance: 5, maxDistance: 180, cameraOffset: [8, 5, 12] },
+  saturn: { minDistance: 6, maxDistance: 180, cameraOffset: [10, 6, 14] },
+  uranus: { minDistance: 4.5, maxDistance: 180, cameraOffset: [7, 4, 10] },
+  neptune: { minDistance: 4.5, maxDistance: 180, cameraOffset: [7, 4, 10] },
+  pluto: { minDistance: 3, maxDistance: 180, cameraOffset: [4, 2, 6] },
+}
+
 // Orbital parameters for 3D rendering (scaled for visualization)
 export const orbitalParams = {
   mercury: { radius: 3.5, speed: 4.15, size: 0.15, inclination: 7 },
