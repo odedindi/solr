@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -13,28 +13,50 @@ import {
 } from "@/lib/shaders";
 
 // Reuse the texture loading hook
-function useLoadTexture(url: string | undefined | null, srgb = true) {
+function useLoadTexture(
+  url: string | undefined | null,
+  srgb = true,
+  webpUrl?: string | null,
+) {
   const [tex, setTex] = useState<THREE.Texture | null>(null);
-  const loadedUrlRef = useRef<string | null | undefined>(null);
 
-  if (url !== loadedUrlRef.current) {
-    loadedUrlRef.current = url;
+  useEffect(() => {
     if (!url) {
       setTex(null);
-    } else {
-      const loader = new THREE.TextureLoader();
-      loader.crossOrigin = "anonymous";
-      loader.load(
-        url,
-        (t) => {
-          if (srgb) t.colorSpace = THREE.SRGBColorSpace;
-          setTex(t);
-        },
-        undefined,
-        () => setTex(null),
-      );
+      return;
     }
-  }
+    let disposed = false;
+    const loader = new THREE.TextureLoader();
+    loader.crossOrigin = "anonymous";
+
+    const apply = (t: THREE.Texture) => {
+      if (disposed) return;
+      if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+      setTex(t);
+    };
+
+    const fallbacks = webpUrl ? [webpUrl] : [];
+
+    let idx = 0;
+    const tryLoad = (candidate: string) => {
+      loader.load(candidate, apply, undefined, () => {
+        if (disposed) return;
+        idx += 1;
+        if (idx - 1 < fallbacks.length) {
+          tryLoad(fallbacks[idx - 1]);
+        } else {
+          setTex(null);
+        }
+      });
+    };
+
+    tryLoad(url);
+
+    return () => {
+      disposed = true;
+      setTex(null);
+    };
+  }, [url, srgb, webpUrl]);
 
   return tex;
 }
@@ -109,9 +131,9 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
       l.id === "surface" ||
       (l.id === "clouds" && config.planetId === "venus"),
   );
-  const diffuseTex = useLoadTexture(diffuseLayer?.url ?? null);
+  const diffuseTex = useLoadTexture(diffuseLayer?.url ?? null, true, diffuseLayer?.urlWebP);
   const cloudLayer = config?.layers.find((l) => l.type === "clouds");
-  const cloudTex = useLoadTexture(cloudLayer?.url ?? null);
+  const cloudTex = useLoadTexture(cloudLayer?.url ?? null, true, cloudLayer?.urlWebP);
 
   useFrame(() => {
     if (meshRef.current) meshRef.current.rotation.y += 0.003;
