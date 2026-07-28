@@ -26,8 +26,14 @@ export interface TextureLayer {
     | "atmosphere"
     | "overlay"
     | "surface-alt";
+  /** Primary texture URL (JPG/PNG) */
   url: string;
+  /** WebP version of the primary texture (loaded first for better compression) */
+  urlWebP?: string;
+  /** Hi-res texture URL */
   urlHiRes?: string;
+  /** WebP version of the hi-res texture */
+  urlHiResWebP?: string;
   defaultEnabled: boolean;
   defaultOpacity: number;
   description: string;
@@ -46,7 +52,9 @@ export interface PlanetTextureConfig {
   atmosphereDensity?: number;
   hasRings: boolean;
   ringTexture?: string;
+  ringTextureWebP?: string;
   ringAlphaTexture?: string;
+  ringAlphaTextureWebP?: string;
   ringInnerRadius?: number;
   ringOuterRadius?: number;
   ringOpacity?: number;
@@ -63,7 +71,9 @@ const earthLayers: TextureLayer[] = [
     label: "Surface Texture",
     type: "diffuse",
     url: `${T}/earth/earth_daymap_2k.jpg`,
+    urlWebP: `${T}/earth/earth_daymap_2k.webp`,
     urlHiRes: `${T}/earth/earth_daymap_8k.jpg`,
+    urlHiResWebP: `${T}/earth/earth_daymap_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -78,7 +88,9 @@ const earthLayers: TextureLayer[] = [
     label: "Surface Relief",
     type: "normal",
     url: `${T}/earth/earth_topo_4k.jpg`,
+    urlWebP: `${T}/earth/earth_topo_4k.webp`,
     urlHiRes: `${T}/earth/earth_topo_10k.jpg`,
+    urlHiResWebP: `${T}/earth/earth_topo_10k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -92,7 +104,9 @@ const earthLayers: TextureLayer[] = [
     label: "Ocean Specular",
     type: "specular",
     url: `${T}/earth/earth_ocean_reflectance_4k.jpg`,
+    urlWebP: `${T}/earth/earth_ocean_reflectance_4k.webp`,
     urlHiRes: `${T}/earth/earth_ocean_reflectance_10k.jpg`,
+    urlHiResWebP: `${T}/earth/earth_ocean_reflectance_10k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -106,7 +120,9 @@ const earthLayers: TextureLayer[] = [
     label: "Cloud Layer",
     type: "clouds",
     url: `${T}/earth/earth_clouds_2k.jpg`,
+    urlWebP: `${T}/earth/earth_clouds_2k.webp`,
     urlHiRes: `${T}/earth/earth_clouds_8k.jpg`,
+    urlHiResWebP: `${T}/earth/earth_clouds_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.8,
     description:
@@ -120,7 +136,9 @@ const earthLayers: TextureLayer[] = [
     label: "City Lights",
     type: "emissive",
     url: `${T}/earth/earth_nightmap_2k.jpg`,
+    urlWebP: `${T}/earth/earth_nightmap_2k.webp`,
     urlHiRes: `${T}/earth/earth_nightmap_8k.jpg`,
+    urlHiResWebP: `${T}/earth/earth_nightmap_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.6,
     description:
@@ -152,7 +170,9 @@ const marsLayers: TextureLayer[] = [
     label: "Surface Texture",
     type: "diffuse",
     url: `${T}/mars/mars_2k.jpg`,
+    urlWebP: `${T}/mars/mars_2k.webp`,
     urlHiRes: `${T}/mars/mars_8k.jpg`,
+    urlHiResWebP: `${T}/mars/mars_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -167,6 +187,7 @@ const marsLayers: TextureLayer[] = [
     label: "Surface Topography",
     type: "bump",
     url: `${T}/mars/mars_topo.jpg`,
+    urlWebP: `${T}/mars/mars_topo.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.8,
     description:
@@ -197,6 +218,7 @@ const venusLayers: TextureLayer[] = [
     label: "Cloud Layer (Visible)",
     type: "diffuse",
     url: `${T}/venus/venus_atmosphere_4k.jpg`,
+    urlWebP: `${T}/venus/venus_atmosphere_4k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -227,7 +249,9 @@ const mercuryLayers: TextureLayer[] = [
     label: "Surface Texture",
     type: "diffuse",
     url: `${T}/mercury/mercury_2k.jpg`,
+    urlWebP: `${T}/mercury/mercury_2k.webp`,
     urlHiRes: `${T}/mercury/mercury_8k.jpg`,
+    urlHiResWebP: `${T}/mercury/mercury_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description: "Heavily cratered surface resembling Earth's Moon.",
@@ -240,6 +264,7 @@ const mercuryLayers: TextureLayer[] = [
     label: "Surface Topography",
     type: "bump",
     url: `${T}/mercury/mercury_topo.jpg`,
+    urlWebP: `${T}/mercury/mercury_topo.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.6,
     description:
@@ -257,7 +282,9 @@ const jupiterLayers: TextureLayer[] = [
     label: "Cloud Bands",
     type: "diffuse",
     url: `${T}/jupiter/jupiter_2k.jpg`,
+    urlWebP: `${T}/jupiter/jupiter_2k.webp`,
     urlHiRes: `${T}/jupiter/jupiter_8k.jpg`,
+    urlHiResWebP: `${T}/jupiter/jupiter_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -287,7 +314,9 @@ const saturnLayers: TextureLayer[] = [
     label: "Cloud Bands",
     type: "diffuse",
     url: `${T}/saturn/saturn_2k_sss.jpg`,
+    urlWebP: `${T}/saturn/saturn_2k_sss.webp`,
     urlHiRes: `${T}/saturn/saturn_8k.jpg`,
+    urlHiResWebP: `${T}/saturn/saturn_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -317,6 +346,7 @@ const uranusLayers: TextureLayer[] = [
     label: "Cloud Layer",
     type: "diffuse",
     url: `${T}/uranus/uranus_2k.jpg`,
+    urlWebP: `${T}/uranus/uranus_2k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -346,6 +376,7 @@ const neptuneLayers: TextureLayer[] = [
     label: "Cloud Layer",
     type: "diffuse",
     url: `${T}/neptune/neptune_2k.jpg`,
+    urlWebP: `${T}/neptune/neptune_2k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -376,7 +407,9 @@ const moonLayers: TextureLayer[] = [
     label: "Surface Texture",
     type: "diffuse",
     url: `${T}/moon/moon_2k.jpg`,
+    urlWebP: `${T}/moon/moon_2k.webp`,
     urlHiRes: `${T}/moon/moon_8k.jpg`,
+    urlHiResWebP: `${T}/moon/moon_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -390,6 +423,7 @@ const moonLayers: TextureLayer[] = [
     label: "Surface Topography",
     type: "bump",
     url: `${T}/moon/moon_topo_4k.jpg`,
+    urlWebP: `${T}/moon/moon_topo_4k.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.6,
     description:
@@ -407,6 +441,7 @@ const plutoLayers: TextureLayer[] = [
     label: "Surface Texture",
     type: "diffuse",
     url: `${T}/pluto/pluto_2k.jpg`,
+    urlWebP: `${T}/pluto/pluto_2k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -420,6 +455,7 @@ const plutoLayers: TextureLayer[] = [
     label: "Surface Topography",
     type: "bump",
     url: `${T}/pluto/pluto_topo_2k.jpg`,
+    urlWebP: `${T}/pluto/pluto_topo_2k.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.6,
     description:
@@ -437,7 +473,9 @@ const sunLayers: TextureLayer[] = [
     label: "Photosphere",
     type: "diffuse",
     url: `${T}/sun/sun_2k.jpg`,
+    urlWebP: `${T}/sun/sun_2k.webp`,
     urlHiRes: `${T}/sun/sun_8k.jpg`,
+    urlHiResWebP: `${T}/sun/sun_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
     description:
@@ -532,6 +570,7 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereDensity: 0.7,
     hasRings: true,
     ringTexture: `${T}/jupiter/rings/rings_color_map.png`,
+    ringTextureWebP: `${T}/jupiter/rings/rings_color_map.webp`,
     ringInnerRadius: 1.05,
     ringOuterRadius: 1.15,
     ringOpacity: 0.1,
@@ -550,7 +589,9 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereDensity: 0.5,
     hasRings: true,
     ringTexture: `${T}/saturn/rings/saturn_rings_color_map.png`,
+    ringTextureWebP: `${T}/saturn/rings/saturn_rings_color_map.webp`,
     ringAlphaTexture: `${T}/saturn/rings/saturn_ring_alpha_8k.png`,
+    ringAlphaTextureWebP: `${T}/saturn/rings/saturn_ring_alpha_8k.webp`,
     ringInnerRadius: 1.3,
     ringOuterRadius: 2.3,
     ringOpacity: 0.7,
