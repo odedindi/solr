@@ -5,11 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Line, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { planets, dwarfPlanets, zoomConfig, type Planet, type Moon } from "@/lib/planet-data";
-import {
-  getTextureConfig,
-  textureConfigs,
-  type PlanetTextureConfig,
-} from "@/lib/texture-config";
+import { getTextureConfig, textureConfigs, type PlanetTextureConfig } from "@/lib/texture-config";
 import { Info, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import {
   AtmosphereVertexShader,
@@ -59,10 +55,10 @@ function useLoadTexture(
     };
 
     const explicitFallbacks = Array.isArray(fallbackUrl)
-      ? fallbackUrl.filter(Boolean) as string[]
+      ? (fallbackUrl.filter(Boolean) as string[])
       : fallbackUrl
-      ? [fallbackUrl]
-      : [];
+        ? [fallbackUrl]
+        : [];
     const fallbacks = [webpUrl, ...explicitFallbacks].filter(Boolean) as string[];
 
     let idx = 0;
@@ -142,10 +138,8 @@ function TexturedPlanetSurface({
   const meshRef = useRef<THREE.Mesh>(null);
   const multi = getEnhancedMultipliers(viewMode);
 
-  const diffuseLayer = config.layers.find(
-    (l) => l.type === "diffuse" && l.id === "surface",
-  );
-  const surfaceAltLayer = config.layers.find((l) => l.type === "surface-alt")
+  const diffuseLayer = config.layers.find((l) => l.type === "diffuse" && l.id === "surface");
+  const surfaceAltLayer = config.layers.find((l) => l.type === "surface-alt");
   const specularLayer = config.layers.find((l) => l.type === "specular");
   const bumpLayer = config.layers.find((l) => l.type === "bump");
   const normalLayer = config.layers.find((l) => l.type === "normal");
@@ -155,32 +149,21 @@ function TexturedPlanetSurface({
     layerStates[surfaceAltLayer.id]?.enabled &&
     !layerStates[diffuseLayer?.id || "surface"]?.enabled;
 
-  const isVenusClouds =
-    config.planetId === "venus" && diffuseLayer?.id === "clouds";
+  const isVenusClouds = config.planetId === "venus" && diffuseLayer?.id === "clouds";
   const activeUrl = showAlt
     ? surfaceAltLayer!.url
     : diffuseLayer?.urlHiRes || diffuseLayer?.url || "";
 
-  const surfaceEnabled = diffuseLayer
-    ? (layerStates[diffuseLayer.id]?.enabled ?? true)
-    : true;
-  const specularEnabled = specularLayer
-    ? (layerStates[specularLayer.id]?.enabled ?? true)
-    : false;
-  const bumpEnabled = bumpLayer
-    ? (layerStates[bumpLayer.id]?.enabled ?? true)
-    : false;
-  const normalEnabled = normalLayer
-    ? (layerStates[normalLayer.id]?.enabled ?? true)
-    : false;
+  const surfaceEnabled = diffuseLayer ? (layerStates[diffuseLayer.id]?.enabled ?? true) : true;
+  const specularEnabled = specularLayer ? (layerStates[specularLayer.id]?.enabled ?? true) : false;
+  const bumpEnabled = bumpLayer ? (layerStates[bumpLayer.id]?.enabled ?? true) : false;
+  const normalEnabled = normalLayer ? (layerStates[normalLayer.id]?.enabled ?? true) : false;
 
   const diffuseTex = useLoadTexture(
     surfaceEnabled || isVenusClouds ? activeUrl : null,
     true,
-    diffuseLayer?.url && diffuseLayer.urlHiRes
-      ? diffuseLayer.url
-      : undefined,
-    showAlt ? surfaceAltLayer?.urlWebP : (diffuseLayer?.urlHiResWebP || diffuseLayer?.urlWebP),
+    diffuseLayer?.url && diffuseLayer.urlHiRes ? diffuseLayer.url : undefined,
+    showAlt ? surfaceAltLayer?.urlWebP : diffuseLayer?.urlHiResWebP || diffuseLayer?.urlWebP,
   );
   const specularTex = useLoadTexture(
     specularEnabled ? specularLayer?.urlHiRes || specularLayer?.url : null,
@@ -201,12 +184,8 @@ function TexturedPlanetSurface({
     normalLayer?.urlHiResWebP || normalLayer?.urlWebP,
   );
 
-  const bumpOpacity = bumpLayer
-    ? (layerStates[bumpLayer.id]?.opacity ?? 0.8)
-    : 0;
-  const normalOpacity = normalLayer
-    ? (layerStates[normalLayer.id]?.opacity ?? 1.0)
-    : 0;
+  const bumpOpacity = bumpLayer ? (layerStates[bumpLayer.id]?.opacity ?? 0.8) : 0;
+  const normalOpacity = normalLayer ? (layerStates[normalLayer.id]?.opacity ?? 1.0) : 0;
 
   useFrame(() => {
     if (meshRef.current) {
@@ -236,12 +215,7 @@ function TexturedPlanetSurface({
           roughness={useSpecular ? 0.4 : 0.7}
         />
       ) : (
-        <meshStandardMaterial
-          key="fallback"
-          color={planet.color}
-          roughness={0.6}
-          metalness={0.1}
-        />
+        <meshStandardMaterial key="fallback" color={planet.color} roughness={0.6} metalness={0.1} />
       )}
     </mesh>
   );
@@ -266,9 +240,7 @@ function CloudLayer({
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
   const multi = getEnhancedMultipliers(viewMode);
 
-  const isEnabled = cloudLayer
-    ? (layerStates[cloudLayer.id]?.enabled ?? true)
-    : false;
+  const isEnabled = cloudLayer ? (layerStates[cloudLayer.id]?.enabled ?? true) : false;
   const texture = useLoadTexture(
     isEnabled ? cloudLayer?.urlHiRes || cloudLayer?.url : null,
     true,
@@ -331,16 +303,11 @@ function NightLightsLayer({
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const multi = getEnhancedMultipliers(viewMode);
 
-  const isEnabled = emissiveLayer
-    ? (layerStates[emissiveLayer.id]?.enabled ?? true)
-    : false;
-  const texture = useLoadTexture(
-    isEnabled ? emissiveLayer?.urlHiRes || emissiveLayer?.url : null,
-  );
+  const isEnabled = emissiveLayer ? (layerStates[emissiveLayer.id]?.enabled ?? true) : false;
+  const texture = useLoadTexture(isEnabled ? emissiveLayer?.urlHiRes || emissiveLayer?.url : null);
 
   const intensity =
-    (layerStates[emissiveLayer?.id || ""]?.opacity ?? 0.6) *
-    multi.nightLightIntensity;
+    (layerStates[emissiveLayer?.id || ""]?.opacity ?? 0.6) * multi.nightLightIntensity;
 
   useFrame(() => {
     if (meshRef.current) {
@@ -430,9 +397,7 @@ function AtmosphereGlow({
   // Single source of truth for shell radius — no double scaling.
   const shellRadius =
     size *
-    (1 +
-      Math.max(0.015, config.atmosphereThickness) *
-        (viewMode === "enhanced" ? 2.2 : 1.4));
+    (1 + Math.max(0.015, config.atmosphereThickness) * (viewMode === "enhanced" ? 2.2 : 1.4));
 
   return (
     <mesh>
@@ -476,7 +441,7 @@ function RingSystem({
     config.hasRings ? config.ringTextureWebP : null,
   );
   const ringAlpha = useLoadTexture(
-    config.hasRings ? config.ringAlphaTexture ?? null : null,
+    config.hasRings ? (config.ringAlphaTexture ?? null) : null,
     false,
     undefined,
     config.hasRings ? config.ringAlphaTextureWebP : null,
@@ -507,8 +472,7 @@ function RingSystem({
 
   let rotation: [number, number, number] = [Math.PI / 2.5, 0, 0];
   if (planetId === "uranus") rotation = [0.1, 0, Math.PI / 2];
-  else if (planetId === "jupiter" || planetId === "neptune")
-    rotation = [Math.PI / 2, 0, 0];
+  else if (planetId === "jupiter" || planetId === "neptune") rotation = [Math.PI / 2, 0, 0];
 
   const ringColors: Record<string, string> = {
     saturn: "#ffffff",
@@ -574,20 +538,10 @@ function MoonOrbit({
   return (
     <>
       {showMoonOrbits && (
-        <Line
-          points={orbitPoints}
-          color="#1e3a5f"
-          transparent
-          opacity={0.3}
-          lineWidth={1}
-        />
+        <Line points={orbitPoints} color="#1e3a5f" transparent opacity={0.3} lineWidth={1} />
       )}
       <group ref={groupRef}>
-        <MoonBody
-          size={moonSize}
-          moonName={moon.name}
-          parentPlanetId={planetId}
-        />
+        <MoonBody size={moonSize} moonName={moon.name} parentPlanetId={planetId} />
       </group>
     </>
   );
@@ -599,30 +553,84 @@ interface SatelliteEntry {
   webp: string;
 }
 const _AUTO_SATELLITE_INDEX: Record<string, SatelliteEntry> =
-  (typeof satelliteIndex === 'object' && satelliteIndex) || {};
+  (typeof satelliteIndex === "object" && satelliteIndex) || {};
 
 const MOON_TEXTURE_ENTRIES: Record<string, SatelliteEntry> = {
-  moon: { jpg: "/assets/textures/earth/satellites/moon_4k.jpg", webp: "/assets/textures/earth/satellites/moon_4k.webp" },
-  phobos: { jpg: "/assets/textures/mars/satellites/phobos.jpg", webp: "/assets/textures/mars/satellites/phobos.webp" },
-  io: { jpg: "/assets/textures/jupiter/satellites/io.jpg", webp: "/assets/textures/jupiter/satellites/io.webp" },
-  europa: { jpg: "/assets/textures/jupiter/satellites/europa.jpg", webp: "/assets/textures/jupiter/satellites/europa.webp" },
-  ganymede: { jpg: "/assets/textures/jupiter/satellites/ganymede.jpg", webp: "/assets/textures/jupiter/satellites/ganymede.webp" },
-  dione: { jpg: "/assets/textures/saturn/satellites/dione.jpg", webp: "/assets/textures/saturn/satellites/dione.webp" },
-  enceladus: { jpg: "/assets/textures/saturn/satellites/enceladus.jpg", webp: "/assets/textures/saturn/satellites/enceladus.webp" },
-  iapetus: { jpg: "/assets/textures/saturn/satellites/iapetus.jpg", webp: "/assets/textures/saturn/satellites/iapetus.webp" },
-  rhea: { jpg: "/assets/textures/saturn/satellites/rhea.jpg", webp: "/assets/textures/saturn/satellites/rhea.webp" },
-  tethys: { jpg: "/assets/textures/saturn/satellites/tethys.jpg", webp: "/assets/textures/saturn/satellites/tethys.webp" },
-  callisto: { jpg: "/assets/textures/jupiter/satellites/callisto.jpg", webp: "/assets/textures/jupiter/satellites/callisto.webp" },
-  mimas: { jpg: "/assets/textures/saturn/satellites/mimas.jpg", webp: "/assets/textures/saturn/satellites/mimas.webp" },
-  titania: { jpg: "/assets/textures/uranus/satellites/titania.jpg", webp: "/assets/textures/uranus/satellites/titania.webp" },
-  ariel: { jpg: "/assets/textures/uranus/satellites/ariel.jpg", webp: "/assets/textures/uranus/satellites/ariel.webp" },
-  miranda: { jpg: "/assets/textures/uranus/satellites/miranda.jpg", webp: "/assets/textures/uranus/satellites/miranda.webp" },
-  titan: { jpg: "/assets/textures/saturn/satellites/titan.jpg", webp: "/assets/textures/saturn/satellites/titan.webp" },
-  triton: { jpg: "/assets/textures/neptune/satellites/triton.jpg", webp: "/assets/textures/neptune/satellites/triton.webp" },
-  charon: { jpg: "/assets/textures/pluto/satellites/charon.jpg", webp: "/assets/textures/pluto/satellites/charon.webp" },
+  moon: {
+    jpg: "/assets/textures/earth/satellites/moon_4k.jpg",
+    webp: "/assets/textures/earth/satellites/moon_4k.webp",
+  },
+  phobos: {
+    jpg: "/assets/textures/mars/satellites/phobos.jpg",
+    webp: "/assets/textures/mars/satellites/phobos.webp",
+  },
+  io: {
+    jpg: "/assets/textures/jupiter/satellites/io.jpg",
+    webp: "/assets/textures/jupiter/satellites/io.webp",
+  },
+  europa: {
+    jpg: "/assets/textures/jupiter/satellites/europa.jpg",
+    webp: "/assets/textures/jupiter/satellites/europa.webp",
+  },
+  ganymede: {
+    jpg: "/assets/textures/jupiter/satellites/ganymede.jpg",
+    webp: "/assets/textures/jupiter/satellites/ganymede.webp",
+  },
+  dione: {
+    jpg: "/assets/textures/saturn/satellites/dione.jpg",
+    webp: "/assets/textures/saturn/satellites/dione.webp",
+  },
+  enceladus: {
+    jpg: "/assets/textures/saturn/satellites/enceladus.jpg",
+    webp: "/assets/textures/saturn/satellites/enceladus.webp",
+  },
+  iapetus: {
+    jpg: "/assets/textures/saturn/satellites/iapetus.jpg",
+    webp: "/assets/textures/saturn/satellites/iapetus.webp",
+  },
+  rhea: {
+    jpg: "/assets/textures/saturn/satellites/rhea.jpg",
+    webp: "/assets/textures/saturn/satellites/rhea.webp",
+  },
+  tethys: {
+    jpg: "/assets/textures/saturn/satellites/tethys.jpg",
+    webp: "/assets/textures/saturn/satellites/tethys.webp",
+  },
+  callisto: {
+    jpg: "/assets/textures/jupiter/satellites/callisto.jpg",
+    webp: "/assets/textures/jupiter/satellites/callisto.webp",
+  },
+  mimas: {
+    jpg: "/assets/textures/saturn/satellites/mimas.jpg",
+    webp: "/assets/textures/saturn/satellites/mimas.webp",
+  },
+  titania: {
+    jpg: "/assets/textures/uranus/satellites/titania.jpg",
+    webp: "/assets/textures/uranus/satellites/titania.webp",
+  },
+  ariel: {
+    jpg: "/assets/textures/uranus/satellites/ariel.jpg",
+    webp: "/assets/textures/uranus/satellites/ariel.webp",
+  },
+  miranda: {
+    jpg: "/assets/textures/uranus/satellites/miranda.jpg",
+    webp: "/assets/textures/uranus/satellites/miranda.webp",
+  },
+  titan: {
+    jpg: "/assets/textures/saturn/satellites/titan.jpg",
+    webp: "/assets/textures/saturn/satellites/titan.webp",
+  },
+  triton: {
+    jpg: "/assets/textures/neptune/satellites/triton.jpg",
+    webp: "/assets/textures/neptune/satellites/triton.webp",
+  },
+  charon: {
+    jpg: "/assets/textures/pluto/satellites/charon.jpg",
+    webp: "/assets/textures/pluto/satellites/charon.webp",
+  },
 };
 
-import satelliteIndex from '@/lib/satellite-index.json';
+import satelliteIndex from "@/lib/satellite-index.json";
 import { Slider } from "./ui/slider";
 
 function MoonBody({
@@ -655,8 +663,8 @@ function MoonBody({
     if (parentPlanetId) {
       const base = moonName
         .toLowerCase()
-        .replace(/\s+/g, '_')
-        .replace(/[^a-z0-9_]/g, '');
+        .replace(/\s+/g, "_")
+        .replace(/[^a-z0-9_]/g, "");
       const folder = `/assets/textures/${parentPlanetId}/satellites`;
       list.push(`${folder}/${base}.jpg`);
       list.push(`${folder}/${base}_4k.jpg`);
@@ -664,7 +672,7 @@ function MoonBody({
       list.push(`${folder}/${base}.png`);
     }
 
-    list.push('/assets/textures/asteroids/asteroid.jpg');
+    list.push("/assets/textures/asteroids/asteroid.jpg");
     return { urlCandidate: list[0] ?? null, fallbacks: list.slice(1), webpCandidate: webp };
   }, [curated, parentPlanetId, moonName, key]);
 
@@ -697,11 +705,7 @@ function DetailSun({ sunDistance }: { sunDistance: number }) {
     <group position={[-sunDistance, 0, 0]}>
       <mesh ref={meshRef}>
         <sphereGeometry args={[1.5, 32, 32]} />
-        <meshStandardMaterial
-          color="#ffd27a"
-          emissive="#ffffff"
-          emissiveIntensity={2}
-        />
+        <meshStandardMaterial color="#ffd27a" emissive="#ffffff" emissiveIntensity={2} />
       </mesh>
       <pointLight color="#fff2d6" intensity={3} distance={0} decay={0} />
     </group>
@@ -731,13 +735,7 @@ function TexturedDot({
   );
 }
 
-function PlanetDot({
-  planet,
-  position,
-}: {
-  planet: Planet;
-  position: [number, number, number];
-}) {
+function PlanetDot({ planet, position }: { planet: Planet; position: [number, number, number] }) {
   const config = textureConfigs[planet.id];
   const diffuse = config?.layers.find(
     (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
@@ -762,12 +760,7 @@ function PlanetDot({
         </mesh>
       }
     >
-      <TexturedDot
-        url={diffuse.url}
-        color={planet.color}
-        size={size}
-        position={position}
-      />
+      <TexturedDot url={diffuse.url} color={planet.color} size={size} position={position} />
     </Suspense>
   );
 }
@@ -780,13 +773,7 @@ function OtherPlanets({ currentPlanet }: { currentPlanet: Planet }) {
       {ALL_BODIES.filter((p) => p.id !== currentPlanet.id).map((p) => {
         const otherDist = compressedDistance(p.distanceFromSun);
         const offset = otherDist - currentDist;
-        return (
-          <PlanetDot
-            key={p.id}
-            planet={p}
-            position={[offset, 0, 0]}
-          />
-        );
+        return <PlanetDot key={p.id} planet={p} position={[offset, 0, 0]} />;
       })}
     </>
   );
@@ -814,13 +801,7 @@ function DetailStars({ count = 2000 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.1}
-        sizeAttenuation
-        color="#a8c4e0"
-        transparent
-        opacity={0.6}
-      />
+      <pointsMaterial size={0.1} sizeAttenuation color="#a8c4e0" transparent opacity={0.6} />
     </points>
   );
 }
@@ -832,11 +813,7 @@ function SunLight({ direction }: { direction: THREE.Vector3 }) {
   const dirLightRef = useRef<THREE.DirectionalLight>(null);
   useFrame(() => {
     if (dirLightRef.current) {
-      dirLightRef.current.position.set(
-        direction.x * 20,
-        direction.y * 20,
-        direction.z * 20,
-      );
+      dirLightRef.current.position.set(direction.x * 20, direction.y * 20, direction.z * 20);
     }
   });
   return (
@@ -865,12 +842,13 @@ function PlanetScene({
   viewMode: "realistic" | "enhanced";
 }) {
   const size = 2;
-  const zoom = zoomConfig[planet.id] ?? { minDistance: 3.5, maxDistance: 180, cameraOffset: [5, 3, 7] as [number, number, number] };
+  const zoom = zoomConfig[planet.id] ?? {
+    minDistance: 3.5,
+    maxDistance: 180,
+    cameraOffset: [5, 3, 7] as [number, number, number],
+  };
   const sunDistance = compressedDistance(planet.distanceFromSun);
-  const sunDirection = useMemo(
-    () => new THREE.Vector3(1, 0.3, 0.5).normalize(),
-    [],
-  );
+  const sunDirection = useMemo(() => new THREE.Vector3(1, 0.3, 0.5).normalize(), []);
 
   return (
     <>
@@ -885,12 +863,7 @@ function PlanetScene({
           size={size}
           viewMode={viewMode}
         />
-        <CloudLayer
-          size={size}
-          config={config}
-          layerStates={layerStates}
-          viewMode={viewMode}
-        />
+        <CloudLayer size={size} config={config} layerStates={layerStates} viewMode={viewMode} />
         <NightLightsLayer
           size={size}
           config={config}
@@ -958,7 +931,7 @@ function LayerControlPanel({
   // Sync expanded state from localStorage after hydration to avoid mismatch
   useEffect(() => {
     const stored = localStorage.getItem(`${LAYER_PANEL_EXPANDED_KEY}:${planetId}`);
-    if (stored === 'true') setExpanded(true);
+    if (stored === "true") setExpanded(true);
   }, [planetId]);
 
   useEffect(() => {
@@ -977,11 +950,7 @@ function LayerControlPanel({
           <Layers className="h-3.5 w-3.5" />
           Layer Controls
         </span>
-        {expanded ? (
-          <ChevronUp className="h-3.5 w-3.5" />
-        ) : (
-          <ChevronDown className="h-3.5 w-3.5" />
-        )}
+        {expanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
       </button>
 
       {expanded && (
@@ -1050,27 +1019,19 @@ function LayerControlPanel({
                       aria-label={`Toggle ${layer.label}`}
                       title={layer.description}
                     >
-                      {state.enabled && (
-                        <div className="h-2 w-2 rounded-sm bg-primary" />
-                      )}
+                      {state.enabled && <div className="h-2 w-2 rounded-sm bg-primary" />}
                     </button>
                     <span
                       onClick={() => onToggleLayer(layer.id)}
                       className={`flex-1 cursor-default hover:font-semibold text-[11px] transition-colors duration-200 ${
-                        state.enabled
-                          ? "text-foreground"
-                          : "text-muted-foreground line-through"
+                        state.enabled ? "text-foreground" : "text-muted-foreground line-through"
                       }`}
                       title={layer.description}
                     >
                       {layer.label}
                     </span>
                     <button
-                      onClick={() =>
-                        setActiveTooltip(
-                          activeTooltip === layer.id ? null : layer.id,
-                        )
-                      }
+                      onClick={() => setActiveTooltip(activeTooltip === layer.id ? null : layer.id)}
                       className="text-muted-foreground hover:text-foreground transition-colors"
                       aria-label={`Info about ${layer.label}`}
                       title={`${layer.scientificNote}\n\n Source: ${layer.source}`}
@@ -1089,16 +1050,14 @@ function LayerControlPanel({
                           max={100}
                           step={1}
                           value={[Math.round(state.opacity * 100)]}
-                          onValueChange={(values) =>
-                            onChangeOpacity(
-                              layer.id,
-                              (values[0]) / 100,
-                            )
-                          }
+                          onValueChange={(values) => onChangeOpacity(layer.id, values[0] / 100)}
                           title={`${layer.label}: ${Math.round(state.opacity * 100)}%`}
                         />
                       </div>
-                      <span title={`${layer.label}: ${Math.round(state.opacity * 100)}%`} className="w-8 text-right font-mono text-[9px] text-muted-foreground">
+                      <span
+                        title={`${layer.label}: ${Math.round(state.opacity * 100)}%`}
+                        className="w-8 text-right font-mono text-[9px] text-muted-foreground"
+                      >
                         {Math.round(state.opacity * 100)}%
                       </span>
                     </div>
@@ -1109,14 +1068,10 @@ function LayerControlPanel({
                     <div className="mt-1.5 ml-6 rounded-md border border-primary/20 bg-muted/80 p-2.5 text-[10px] leading-relaxed text-muted-foreground backdrop-blur-sm animate-in fade-in-0 slide-in-from-top-1 duration-200">
                       <p className="mb-1.5">{layer.description}</p>
                       <p className="text-[9px]">
-                        <span className="font-medium text-foreground/70">
-                          Source:
-                        </span>{" "}
+                        <span className="font-medium text-foreground/70">Source:</span>{" "}
                         {layer.source}
                       </p>
-                      <p className="mt-1 text-[9px] italic">
-                        {layer.scientificNote}
-                      </p>
+                      <p className="mt-1 text-[9px] italic">{layer.scientificNote}</p>
                     </div>
                   )}
                 </div>
@@ -1130,8 +1085,8 @@ function LayerControlPanel({
               Textures: Solar System Scope (CC BY 4.0), NASA/JPL, ESA
             </p>
             <p className="text-[8px] text-primary font-mono">
-              {Object.values(layerStates).filter((s) => s.enabled).length}/
-              {config.layers.length} active
+              {Object.values(layerStates).filter((s) => s.enabled).length}/{config.layers.length}{" "}
+              active
             </p>
           </div>
         </div>
@@ -1153,16 +1108,12 @@ type LayerPrefs = {
 function loadLayerPrefs(planetId: string): LayerPrefs | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem(
-      `${LAYER_PREFS_STORAGE_KEY}:${planetId}`,
-    );
+    const raw = window.localStorage.getItem(`${LAYER_PREFS_STORAGE_KEY}:${planetId}`);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<LayerPrefs>;
     if (!parsed || typeof parsed !== "object") return null;
-    const viewMode =
-      parsed.viewMode === "enhanced" ? "enhanced" : "realistic";
-    const layers =
-      parsed.layers && typeof parsed.layers === "object" ? parsed.layers : {};
+    const viewMode = parsed.viewMode === "enhanced" ? "enhanced" : "realistic";
+    const layers = parsed.layers && typeof parsed.layers === "object" ? parsed.layers : {};
     return { viewMode, layers };
   } catch {
     return null;
@@ -1177,9 +1128,7 @@ export function Planet3D({
   showMoonOrbits?: boolean;
 }) {
   const config = getTextureConfig(planet.id);
-  const [viewMode, setViewMode] = useState<"realistic" | "enhanced">(
-    "realistic",
-  );
+  const [viewMode, setViewMode] = useState<"realistic" | "enhanced">("realistic");
 
   // Initialize layer states from config
   const [layerStates, setLayerStates] = useState<
@@ -1206,11 +1155,7 @@ export function Planet3D({
         const next = { ...prev };
         config.layers.forEach((layer) => {
           const saved = prefs.layers[layer.id];
-          if (
-            saved &&
-            typeof saved.enabled === "boolean" &&
-            typeof saved.opacity === "number"
-          ) {
+          if (saved && typeof saved.enabled === "boolean" && typeof saved.opacity === "number") {
             next[layer.id] = {
               enabled: saved.enabled,
               opacity: Math.min(1, Math.max(0, saved.opacity)),
@@ -1292,7 +1237,11 @@ export function Planet3D({
     hasRings: planet.rings,
   };
 
-  const zoom = zoomConfig[planet.id] ?? { minDistance: 3.5, maxDistance: 180, cameraOffset: [5, 3, 7] as [number, number, number] };
+  const zoom = zoomConfig[planet.id] ?? {
+    minDistance: 3.5,
+    maxDistance: 180,
+    cameraOffset: [5, 3, 7] as [number, number, number],
+  };
 
   return (
     <div className="relative h-full w-full">

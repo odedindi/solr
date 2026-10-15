@@ -13,20 +13,16 @@ export function TimeControls() {
   const reset = useTimeStore((s) => s.reset);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <button
         onClick={togglePlaying}
-        className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/80 text-muted-foreground backdrop-blur-sm border border-border/50 hover:text-foreground transition-colors"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-card/80 text-muted-foreground backdrop-blur-sm border border-border/50 hover:text-foreground transition-colors"
         aria-label={playing ? "Pause simulation" : "Play simulation"}
       >
-        {playing ? (
-          <Pause className="h-3.5 w-3.5" />
-        ) : (
-          <Play className="h-3.5 w-3.5" />
-        )}
+        {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
       </button>
 
-      <div className="flex items-center gap-1 rounded-lg bg-card/80 px-1 backdrop-blur-sm border border-border/50">
+      <div className="flex max-w-full flex-wrap items-center gap-1 rounded-lg bg-card/80 px-1 backdrop-blur-sm border border-border/50">
         {SPEED_PRESETS.map((preset) => (
           <button
             key={preset}
@@ -44,7 +40,7 @@ export function TimeControls() {
 
       <button
         onClick={reset}
-        className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/80 text-muted-foreground backdrop-blur-sm border border-border/50 hover:text-foreground transition-colors"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-card/80 text-muted-foreground backdrop-blur-sm border border-border/50 hover:text-foreground transition-colors"
         aria-label="Reset simulation time"
       >
         <RotateCcw className="h-3.5 w-3.5" />

@@ -76,10 +76,8 @@ const earthLayers: TextureLayer[] = [
     urlHiResWebP: `${T}/earth/earth_daymap_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
-    description:
-      "Composite satellite imagery showing continents, oceans, and vegetation patterns.",
-    source:
-      "NASA Visible Earth / Blue Marble Next Generation / Solar System Scope",
+    description: "Composite satellite imagery showing continents, oceans, and vegetation patterns.",
+    source: "NASA Visible Earth / Blue Marble Next Generation / Solar System Scope",
     scientificNote:
       "Assembled from multiple passes of the Terra and Aqua satellites using MODIS instrument data.",
   },
@@ -96,8 +94,7 @@ const earthLayers: TextureLayer[] = [
     description:
       "Normal map creating the illusion of surface elevation - mountains, valleys, and ocean floor topography.",
     source: "USGS / NASA SRTM elevation data",
-    scientificNote:
-      "Derived from Shuttle Radar Topography Mission data at 30m resolution.",
+    scientificNote: "Derived from Shuttle Radar Topography Mission data at 30m resolution.",
   },
   {
     id: "specular",
@@ -109,11 +106,9 @@ const earthLayers: TextureLayer[] = [
     urlHiResWebP: `${T}/earth/earth_ocean_reflectance_10k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
-    description:
-      "Controls reflectivity - oceans appear shiny while land remains matte.",
+    description: "Controls reflectivity - oceans appear shiny while land remains matte.",
     source: "NASA / NOAA ocean mask data",
-    scientificNote:
-      "Defines the Fresnel reflection coefficient for realistic water surfaces.",
+    scientificNote: "Defines the Fresnel reflection coefficient for realistic water surfaces.",
   },
   {
     id: "clouds",
@@ -143,8 +138,7 @@ const earthLayers: TextureLayer[] = [
     defaultOpacity: 0.6,
     description:
       "City lights visible on Earth's night side - emissive map showing human settlement patterns.",
-    source:
-      "NASA Earth Observatory / VIIRS instrument on Suomi NPP / Solar System Scope",
+    source: "NASA Earth Observatory / VIIRS instrument on Suomi NPP / Solar System Scope",
     scientificNote:
       "Captured by the Visible Infrared Imaging Radiometer Suite, revealing global patterns of energy use.",
   },
@@ -177,10 +171,8 @@ const marsLayers: TextureLayer[] = [
     defaultOpacity: 1.0,
     description:
       "Mars surface showing iron oxide (rust) terrain, polar ice caps, and major geological features.",
-    source:
-      "NASA/JPL Mars Reconnaissance Orbiter, Viking program / Solar System Scope",
-    scientificNote:
-      "The red color comes from iron(III) oxide (Fe2O3) dust covering the surface.",
+    source: "NASA/JPL Mars Reconnaissance Orbiter, Viking program / Solar System Scope",
+    scientificNote: "The red color comes from iron(III) oxide (Fe2O3) dust covering the surface.",
   },
   {
     id: "bump",
@@ -203,8 +195,7 @@ const marsLayers: TextureLayer[] = [
     url: "",
     defaultEnabled: true,
     defaultOpacity: 0.6,
-    description:
-      "Thin atmospheric haze - Mars has ~1% of Earth's atmospheric pressure.",
+    description: "Thin atmospheric haze - Mars has ~1% of Earth's atmospheric pressure.",
     source: "Procedural shader",
     scientificNote:
       "Mars's thin CO2 atmosphere creates a subtle pinkish-orange haze from suspended dust particles.",
@@ -234,8 +225,7 @@ const venusLayers: TextureLayer[] = [
     url: "",
     defaultEnabled: true,
     defaultOpacity: 0.8,
-    description:
-      "Extremely thick atmosphere - surface pressure is 92x Earth's.",
+    description: "Extremely thick atmosphere - surface pressure is 92x Earth's.",
     source: "Procedural shader",
     scientificNote:
       "Venus has the densest atmosphere of any terrestrial planet, creating a runaway greenhouse effect.",
@@ -267,11 +257,9 @@ const mercuryLayers: TextureLayer[] = [
     urlWebP: `${T}/mercury/mercury_topo.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.6,
-    description:
-      "Topographic relief showing crater depths and highland elevations.",
+    description: "Topographic relief showing crater depths and highland elevations.",
     source: "NASA/MESSENGER laser altimeter",
-    scientificNote:
-      "Mercury's largest impact basin, Caloris, is 1,550 km in diameter.",
+    scientificNote: "Mercury's largest impact basin, Caloris, is 1,550 km in diameter.",
   },
 ];
 
@@ -319,8 +307,7 @@ const saturnLayers: TextureLayer[] = [
     urlHiResWebP: `${T}/saturn/saturn_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
-    description:
-      "Banded cloud patterns similar to Jupiter but more muted in color.",
+    description: "Banded cloud patterns similar to Jupiter but more muted in color.",
     source: "NASA/JPL Cassini-Huygens mission / Solar System Scope",
     scientificNote:
       "Saturn's cloud bands are less vivid than Jupiter's due to a thicker high-altitude ammonia crystal haze.",
@@ -334,8 +321,7 @@ const saturnLayers: TextureLayer[] = [
     defaultOpacity: 0.3,
     description: "Subtle atmospheric haze.",
     source: "Procedural shader",
-    scientificNote:
-      "Saturn is the least dense planet - it could theoretically float in water.",
+    scientificNote: "Saturn is the least dense planet - it could theoretically float in water.",
   },
 ];
 
@@ -379,8 +365,7 @@ const neptuneLayers: TextureLayer[] = [
     urlWebP: `${T}/neptune/neptune_2k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
-    description:
-      "Deep blue atmosphere with dynamic storm systems and cloud features.",
+    description: "Deep blue atmosphere with dynamic storm systems and cloud features.",
     source: "NASA/JPL Voyager 2 / Solar System Scope",
     scientificNote:
       "Neptune's vivid blue color is from methane, but an unknown compound contributes to its deeper blue vs Uranus.",
@@ -392,8 +377,7 @@ const neptuneLayers: TextureLayer[] = [
     url: "",
     defaultEnabled: true,
     defaultOpacity: 0.5,
-    description:
-      "Dynamic atmosphere with the fastest winds in the solar system.",
+    description: "Dynamic atmosphere with the fastest winds in the solar system.",
     source: "Procedural shader",
     scientificNote:
       "Winds on Neptune reach 2,100 km/h - the fastest of any planet in the solar system.",
@@ -412,8 +396,7 @@ const moonLayers: TextureLayer[] = [
     urlHiResWebP: `${T}/moon/moon_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
-    description:
-      "Lunar surface showing maria (dark basaltic plains) and highland terrain.",
+    description: "Lunar surface showing maria (dark basaltic plains) and highland terrain.",
     source: "NASA/LRO (Lunar Reconnaissance Orbiter) / Solar System Scope",
     scientificNote:
       "The dark maria were formed by ancient volcanic eruptions 3-3.5 billion years ago.",
@@ -458,8 +441,7 @@ const plutoLayers: TextureLayer[] = [
     urlWebP: `${T}/pluto/pluto_topo_2k.webp`,
     defaultEnabled: true,
     defaultOpacity: 0.6,
-    description:
-      "Topographic relief showing nitrogen ice plains and mountainous regions.",
+    description: "Topographic relief showing nitrogen ice plains and mountainous regions.",
     source: "NASA/New Horizons stereo imagery",
     scientificNote:
       "Pluto has mountains up to 3,500 meters tall, made of water ice that is rock-hard at -230 degrees C.",
@@ -478,8 +460,7 @@ const sunLayers: TextureLayer[] = [
     urlHiResWebP: `${T}/sun/sun_8k.webp`,
     defaultEnabled: true,
     defaultOpacity: 1.0,
-    description:
-      "The Sun's photosphere showing sunspot activity and granulation.",
+    description: "The Sun's photosphere showing sunspot activity and granulation.",
     source: "NASA/SDO (Solar Dynamics Observatory) / Solar System Scope",
     scientificNote:
       "The photosphere is ~5,500 degrees C; sunspots are cooler regions (~3,500 degrees C) caused by magnetic activity.",
@@ -535,12 +516,7 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
     atmosphereDensity: 0.6,
     hasRings: false,
     baseColor: "#1a4d2e",
-    specialFeatures: [
-      "multi-layer",
-      "cloud-rotation",
-      "night-lights",
-      "day-night-cycle",
-    ],
+    specialFeatures: ["multi-layer", "cloud-rotation", "night-lights", "day-night-cycle"],
     surfaceRoughness: 0.7,
     surfaceMetalness: 0.05,
   },

@@ -47,8 +47,7 @@ export function StarfieldCSS() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       frame++;
       for (const star of stars) {
-        const twinkle =
-          0.5 + 0.5 * Math.sin(frame * star.twinkleSpeed + star.twinkleOffset);
+        const twinkle = 0.5 + 0.5 * Math.sin(frame * star.twinkleSpeed + star.twinkleOffset);
         const alpha = star.a * twinkle;
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);

@@ -89,9 +89,8 @@ export default function HomePage() {
             </h1>
 
             <p className="mb-8 max-w-lg text-lg leading-relaxed text-muted-foreground">
-              Journey through our solar system with scientifically accurate 3D
-              visualizations, real NASA data, and interactive tools that bring
-              the universe to your screen.
+              Journey through our solar system with scientifically accurate 3D visualizations, real
+              NASA data, and interactive tools that bring the universe to your screen.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -165,8 +164,8 @@ export default function HomePage() {
             <span className="text-balance">Discover Our Solar System</span>
           </h2>
           <p className="mx-auto max-w-xl text-muted-foreground leading-relaxed">
-            Three powerful tools to explore, learn, and understand the vast
-            expanse of our cosmic neighborhood.
+            Three powerful tools to explore, learn, and understand the vast expanse of our cosmic
+            neighborhood.
           </p>
         </div>
 
@@ -230,27 +229,19 @@ export default function HomePage() {
               Powered by Science
             </h3>
             <p className="mx-auto mb-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              All data sourced from NASA Jet Propulsion Laboratory, European
-              Space Agency (ESA), International Astronomical Union (IAU), and
-              peer-reviewed astronomical research. Orbital mechanics calculated
-              using NASA/JPL Horizons system data.
+              All data sourced from NASA Jet Propulsion Laboratory, European Space Agency (ESA),
+              International Astronomical Union (IAU), and peer-reviewed astronomical research.
+              Orbital mechanics calculated using NASA/JPL Horizons system data.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground">
-              {[
-                "NASA JPL",
-                "ESA",
-                "IAU",
-                "Cassini Mission",
-                "Juno Mission",
-                "New Horizons",
-              ].map((source, i) => (
-                <span key={source} className="flex items-center gap-2">
-                  {i > 0 && <span className="text-border">|</span>}
-                  <span className="hover:text-primary transition-colors">
-                    {source}
+              {["NASA JPL", "ESA", "IAU", "Cassini Mission", "Juno Mission", "New Horizons"].map(
+                (source, i) => (
+                  <span key={source} className="flex items-center gap-2">
+                    {i > 0 && <span className="text-border">|</span>}
+                    <span className="hover:text-primary transition-colors">{source}</span>
                   </span>
-                </span>
-              ))}
+                ),
+              )}
             </div>
           </div>
         </div>

@@ -26,13 +26,7 @@ function Stars({ count = 4000 }) {
 
       // Most stars are white/blue, few are cyan, very few are amber
       const colorIndex =
-        Math.random() < 0.05
-          ? 3
-          : Math.random() < 0.2
-            ? 0
-            : Math.random() < 0.5
-              ? 1
-              : 2;
+        Math.random() < 0.05 ? 3 : Math.random() < 0.2 ? 0 : Math.random() < 0.5 ? 1 : 2;
       const c = colorPalette[colorIndex];
       col[i * 3] = c[0];
       col[i * 3 + 1] = c[1];
@@ -54,13 +48,7 @@ function Stars({ count = 4000 }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.12}
-        sizeAttenuation
-        vertexColors
-        transparent
-        opacity={0.9}
-      />
+      <pointsMaterial size={0.12} sizeAttenuation vertexColors transparent opacity={0.9} />
     </points>
   );
 }
@@ -78,12 +66,7 @@ function NebulaGlow() {
   return (
     <mesh ref={meshRef} position={[80, 30, -100]}>
       <planeGeometry args={[100, 100]} />
-      <meshBasicMaterial
-        color="#ffffff"
-        transparent
-        opacity={0.02}
-        side={THREE.DoubleSide}
-      />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.02} side={THREE.DoubleSide} />
     </mesh>
   );
 }

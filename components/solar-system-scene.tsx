@@ -13,12 +13,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import {
-  planets,
-  dwarfPlanets,
-  orbitalParams,
-  type Planet,
-} from "@/lib/planet-data";
+import { planets, dwarfPlanets, orbitalParams, type Planet } from "@/lib/planet-data";
 import { textureConfigs } from "@/lib/texture-config";
 import { useRouter } from "next/navigation";
 import { useTimeStore } from "@/lib/time-store";
@@ -191,13 +186,7 @@ function OrbitLine({
 
   return (
     <group rotation={[0, 0, (inclination * Math.PI) / 180]}>
-      <Line
-        points={points}
-        color="#1e3a5f"
-        transparent
-        opacity={0.35}
-        lineWidth={1}
-      />
+      <Line points={points} color="#1e3a5f" transparent opacity={0.35} lineWidth={1} />
     </group>
   );
 }
@@ -205,13 +194,7 @@ function OrbitLine({
 // ---------------------------------------------------------------------------
 // Mini atmosphere for overview planets
 // ---------------------------------------------------------------------------
-function MiniAtmosphere({
-  size,
-  planetId,
-}: {
-  size: number;
-  planetId: string;
-}) {
+function MiniAtmosphere({ size, planetId }: { size: number; planetId: string }) {
   const config = textureConfigs[planetId];
   if (!config?.hasAtmosphere) return null;
 
@@ -245,8 +228,7 @@ function MiniRingFallback({
 
   let rotation: [number, number, number] = [Math.PI / 2.5, 0, 0];
   if (planetId === "uranus") rotation = [0.1, 0, Math.PI / 2];
-  else if (planetId === "jupiter" || planetId === "neptune")
-    rotation = [Math.PI / 2, 0, 0];
+  else if (planetId === "jupiter" || planetId === "neptune") rotation = [Math.PI / 2, 0, 0];
 
   const ringColors: Record<string, string> = {
     saturn: "#d4c090",
@@ -287,8 +269,7 @@ function MiniRingTextured({
 
   let rotation: [number, number, number] = [Math.PI / 2.5, 0, 0];
   if (planetId === "uranus") rotation = [0.1, 0, Math.PI / 2];
-  else if (planetId === "jupiter" || planetId === "neptune")
-    rotation = [Math.PI / 2, 0, 0];
+  else if (planetId === "jupiter" || planetId === "neptune") rotation = [Math.PI / 2, 0, 0];
 
   const ringColors: Record<string, string> = {
     saturn: "#d4c090",
@@ -321,12 +302,7 @@ function MiniRing({ planetId, size }: { planetId: string; size: number }) {
 
   return (
     <Suspense fallback={<MiniRingFallback config={config} planetId={planetId} size={size} />}>
-      <MiniRingTextured
-        config={config}
-        planetId={planetId}
-        size={size}
-        url={config.ringTexture}
-      />
+      <MiniRingTextured config={config} planetId={planetId} size={size} url={config.ringTexture} />
     </Suspense>
   );
 }
@@ -373,18 +349,10 @@ function PlanetBody({
 
   return (
     <>
-      <OrbitLine
-        radius={params.radius}
-        inclination={params.inclination}
-        visible={showOrbits}
-      />
+      <OrbitLine radius={params.radius} inclination={params.inclination} visible={showOrbits} />
       <group ref={groupRef}>
         <group ref={planetMeshRef}>
-          <TexturedMiniPlanet
-            color={planet.color}
-            size={params.size}
-            planetId={planet.id}
-          />
+          <TexturedMiniPlanet color={planet.color} size={params.size} planetId={planet.id} />
           <MiniAtmosphere size={params.size} planetId={planet.id} />
         </group>
 
@@ -500,13 +468,7 @@ function SceneStars({ count = 4000 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.08}
-        sizeAttenuation
-        color="#a8c4e0"
-        transparent
-        opacity={0.8}
-      />
+      <pointsMaterial size={0.08} sizeAttenuation color="#a8c4e0" transparent opacity={0.8} />
     </points>
   );
 }
@@ -573,24 +535,17 @@ function SolarSystemInner({
 
   const cameraTarget = useMemo(() => {
     if (!selectedPlanet) return null;
-    return (
-      planetPositions.current[selectedPlanet.id] ?? new THREE.Vector3(0, 0, 0)
-    );
+    return planetPositions.current[selectedPlanet.id] ?? new THREE.Vector3(0, 0, 0);
   }, [selectedPlanet]);
 
   const cameraPosition = useMemo(() => {
     if (!selectedPlanet) return null;
-    const params =
-      orbitalParams[selectedPlanet.id as keyof typeof orbitalParams];
+    const params = orbitalParams[selectedPlanet.id as keyof typeof orbitalParams];
     if (!params) return null;
     const offset = params.size * 4 + 3;
     const pos = planetPositions.current[selectedPlanet.id];
     if (pos) {
-      return new THREE.Vector3(
-        pos.x + offset * 0.5,
-        offset * 0.6,
-        pos.z + offset * 0.5,
-      );
+      return new THREE.Vector3(pos.x + offset * 0.5, offset * 0.6, pos.z + offset * 0.5);
     }
     return new THREE.Vector3(offset, offset * 0.6, offset);
   }, [selectedPlanet]);
@@ -625,12 +580,7 @@ function SolarSystemInner({
       <SceneStars />
       <CameraController target={cameraTarget} cameraPosition={cameraPosition} />
       <EffectComposer enableNormalPass={false}>
-        <Bloom
-          luminanceThreshold={0.9}
-          luminanceSmoothing={0.4}
-          intensity={0.6}
-          mipmapBlur
-        />
+        <Bloom luminanceThreshold={0.9} luminanceSmoothing={0.4} intensity={0.6} mipmapBlur />
       </EffectComposer>
     </>
   );

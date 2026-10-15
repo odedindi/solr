@@ -3,12 +3,7 @@
 import { useState, useCallback } from "react";
 import { Eye, EyeOff, Tag, Search, X, ChevronRight, Info } from "lucide-react";
 import { SolarSystemScene } from "@/components/solar-system-scene";
-import {
-  planets,
-  dwarfPlanets,
-  type Planet,
-  formatNumber,
-} from "@/lib/planet-data";
+import { planets, dwarfPlanets, type Planet, formatNumber } from "@/lib/planet-data";
 import { TimeControls } from "@/components/time-controls";
 import Link from "next/link";
 
@@ -48,14 +43,14 @@ export default function ExplorerPage() {
       />
 
       {/* Top bar */}
-      <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="rounded-lg bg-card/80 px-4 py-2 font-sans text-sm font-semibold text-foreground backdrop-blur-sm border border-border/50">
-            Solar System Explorer
-          </h1>
+      <div className="absolute top-4 left-4 right-4 z-10 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center">
+        <h1 className="rounded-lg bg-card/80 px-4 py-2 font-sans text-sm font-semibold text-foreground backdrop-blur-sm border border-border/50">
+          Solar System Explorer
+        </h1>
+        <div className="col-span-2 row-start-2 min-w-0 lg:col-span-1 lg:col-start-2 lg:row-start-1">
           <TimeControls />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="col-start-2 row-start-1 flex shrink-0 items-center gap-2 lg:col-start-3">
           {/* Search toggle */}
           <button
             onClick={() => setShowSearch(!showSearch)}
@@ -69,63 +64,55 @@ export default function ExplorerPage() {
             onClick={() => setShowControls(!showControls)}
             className="flex h-9 items-center gap-2 rounded-lg bg-card/80 px-3 text-sm text-muted-foreground backdrop-blur-sm border border-border/50 hover:text-foreground transition-colors"
           >
-            {showControls ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {showControls ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             <span className="hidden sm:inline">Controls</span>
+            <span className="sr-only sm:hidden">Controls</span>
           </button>
         </div>
-      </div>
 
-      {/* Search panel */}
-      {showSearch && (
-        <div className="absolute top-16 right-4 z-20 w-72 rounded-xl border border-border/50 bg-card/90 backdrop-blur-xl">
-          <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search planets..."
-              className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
-              autoFocus
-            />
-            <button
-              onClick={() => {
-                setShowSearch(false);
-                setSearchQuery("");
-              }}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-          <div className="max-h-60 overflow-y-auto p-2">
-            {filteredBodies.map((body) => (
+        {/* Search panel */}
+        {showSearch && (
+          <div className="col-span-full w-full max-w-72 justify-self-end rounded-xl border border-border/50 bg-card/90 backdrop-blur-xl">
+            <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search planets..."
+                className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+                autoFocus
+              />
               <button
-                key={body.id}
                 onClick={() => {
-                  setSelectedPlanet(body);
                   setShowSearch(false);
                   setSearchQuery("");
                 }}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm hover:bg-secondary transition-colors"
+                className="text-muted-foreground hover:text-foreground"
               >
-                <div
-                  className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: body.color }}
-                />
-                <span className="text-foreground">{body.name}</span>
-                <span className="ml-auto text-xs text-muted-foreground">
-                  {body.type}
-                </span>
+                <X className="h-4 w-4" />
               </button>
-            ))}
+            </div>
+            <div className="max-h-60 overflow-y-auto p-2">
+              {filteredBodies.map((body) => (
+                <button
+                  key={body.id}
+                  onClick={() => {
+                    setSelectedPlanet(body);
+                    setShowSearch(false);
+                    setSearchQuery("");
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm hover:bg-secondary transition-colors"
+                >
+                  <div className="h-3 w-3 rounded-full" style={{ backgroundColor: body.color }} />
+                  <span className="text-foreground">{body.name}</span>
+                  <span className="ml-auto text-xs text-muted-foreground">{body.type}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Controls Panel */}
       {showControls && (
@@ -182,10 +169,7 @@ export default function ExplorerPage() {
                       : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   }`}
                 >
-                  <div
-                    className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: body.color }}
-                  />
+                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: body.color }} />
                   {body.name}
                 </button>
               ))}
@@ -199,9 +183,7 @@ export default function ExplorerPage() {
         <div className="absolute bottom-4 right-4 z-10 w-80 rounded-xl border border-border/50 bg-card/90 backdrop-blur-xl">
           <div className="flex items-start justify-between border-b border-border/50 p-4">
             <div>
-              <h2 className="font-sans text-lg font-bold text-foreground">
-                {selectedPlanet.name}
-              </h2>
+              <h2 className="font-sans text-lg font-bold text-foreground">{selectedPlanet.name}</h2>
               <span className="text-xs capitalize text-muted-foreground">
                 {selectedPlanet.type.replace("-", " ")} planet
               </span>
@@ -216,17 +198,13 @@ export default function ExplorerPage() {
           </div>
           <div className="grid grid-cols-2 gap-3 p-4">
             <div>
-              <span className="text-xs text-muted-foreground">
-                Distance from Sun
-              </span>
+              <span className="text-xs text-muted-foreground">Distance from Sun</span>
               <p className="font-mono text-sm font-medium text-foreground">
                 {selectedPlanet.distanceFromSun}M km
               </p>
             </div>
             <div>
-              <span className="text-xs text-muted-foreground">
-                Orbital Period
-              </span>
+              <span className="text-xs text-muted-foreground">Orbital Period</span>
               <p className="font-mono text-sm font-medium text-foreground">
                 {selectedPlanet.orbitalPeriod > 365
                   ? `${(selectedPlanet.orbitalPeriod / 365.25).toFixed(1)} years`
@@ -274,10 +252,7 @@ export default function ExplorerPage() {
       <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 transform">
         <div className="flex items-center gap-3 rounded-full bg-card/60 px-4 py-2 text-xs text-muted-foreground backdrop-blur-sm border border-border/30">
           <Info className="h-3.5 w-3.5" />
-          <span>
-            Click a planet to view info. Double-click to see details. Scroll to
-            zoom.
-          </span>
+          <span>Click a planet to view info. Double-click to see details. Scroll to zoom.</span>
         </div>
       </div>
     </div>

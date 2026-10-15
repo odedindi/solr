@@ -7,17 +7,10 @@ import * as THREE from "three";
 import { getTextureConfig } from "@/lib/texture-config";
 import { planets } from "@/lib/planet-data";
 import { SplitSquareHorizontal, GripVertical, Camera, Box } from "lucide-react";
-import {
-  AtmosphereVertexShader,
-  AtmosphereFragmentShader,
-} from "@/lib/shaders";
+import { AtmosphereVertexShader, AtmosphereFragmentShader } from "@/lib/shaders";
 
 // Reuse the texture loading hook
-function useLoadTexture(
-  url: string | undefined | null,
-  srgb = true,
-  webpUrl?: string | null,
-) {
+function useLoadTexture(url: string | undefined | null, srgb = true, webpUrl?: string | null) {
   const [tex, setTex] = useState<THREE.Texture | null>(null);
 
   useEffect(() => {
@@ -64,14 +57,10 @@ function useLoadTexture(
 /**
  * NASA/JPL real photograph URLs for each planet (public domain).
  */
-const realPhotoUrls: Record<
-  string,
-  { url: string; credit: string; description: string }
-> = {
+const realPhotoUrls: Record<string, { url: string; credit: string; description: string }> = {
   mercury: {
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mercury_in_true_color.jpg/1280px-Mercury_in_true_color.jpg",
-    credit:
-      "NASA/Johns Hopkins University APL/Carnegie Institution of Washington",
+    credit: "NASA/Johns Hopkins University APL/Carnegie Institution of Washington",
     description: "True-color image from MESSENGER spacecraft (2008)",
   },
   venus: {
@@ -140,9 +129,7 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
   });
 
   const size = 2;
-  const atmoColor = config
-    ? new THREE.Color(config.atmosphereColor)
-    : new THREE.Color("#000");
+  const atmoColor = config ? new THREE.Color(config.atmosphereColor) : new THREE.Color("#000");
 
   return (
     <>
@@ -163,23 +150,14 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
               metalness={config?.surfaceMetalness ?? 0.05}
             />
           ) : (
-            <meshStandardMaterial
-              key="fallback"
-              color={planet?.color || "#888"}
-              roughness={0.6}
-            />
+            <meshStandardMaterial key="fallback" color={planet?.color || "#888"} roughness={0.6} />
           )}
         </mesh>
         {/* Cloud layer */}
         {cloudTex && (
           <mesh rotation={[0, 0.5, 0]}>
             <sphereGeometry args={[size * 1.01, 64, 64]} />
-            <meshStandardMaterial
-              map={cloudTex}
-              transparent
-              opacity={0.7}
-              depthWrite={false}
-            />
+            <meshStandardMaterial map={cloudTex} transparent opacity={0.7} depthWrite={false} />
           </mesh>
         )}
         {/* Atmosphere */}
@@ -229,12 +207,7 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
       </group>
       {/* Stars */}
       <CompStars />
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate
-        autoRotateSpeed={0.5}
-      />
+      <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
     </>
   );
 }
@@ -258,13 +231,7 @@ function CompStars({ count = 500 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.1}
-        sizeAttenuation
-        color="#a8c4e0"
-        transparent
-        opacity={0.5}
-      />
+      <pointsMaterial size={0.1} sizeAttenuation color="#a8c4e0" transparent opacity={0.5} />
     </points>
   );
 }
@@ -295,9 +262,7 @@ export function PlanetComparison({ planetId }: { planetId: string }) {
   if (!photo) {
     return (
       <div className="rounded-lg border border-border/30 bg-secondary/20 p-6 text-center">
-        <p className="text-sm text-muted-foreground">
-          No comparison data available for this body.
-        </p>
+        <p className="text-sm text-muted-foreground">No comparison data available for this body.</p>
       </div>
     );
   }
@@ -311,8 +276,8 @@ export function PlanetComparison({ planetId }: { planetId: string }) {
             Real Photo vs 3D Model
           </h3>
           <p className="text-xs text-muted-foreground">
-            Drag the slider to compare the real NASA photograph with the
-            interactive 3D textured model.
+            Drag the slider to compare the real NASA photograph with the interactive 3D textured
+            model.
           </p>
         </div>
       </div>
@@ -391,17 +356,15 @@ export function PlanetComparison({ planetId }: { planetId: string }) {
       {/* Credits */}
       <div className="max-w-2xl rounded-lg border border-border/30 bg-secondary/20 p-3">
         <p className="text-[10px] leading-relaxed text-muted-foreground">
-          <span className="font-medium text-foreground/70">Photograph:</span>{" "}
-          {photo.description}
+          <span className="font-medium text-foreground/70">Photograph:</span> {photo.description}
         </p>
         <p className="mt-0.5 text-[10px] text-muted-foreground">
-          <span className="font-medium text-foreground/70">Credit:</span>{" "}
-          {photo.credit}
+          <span className="font-medium text-foreground/70">Credit:</span> {photo.credit}
         </p>
         {config && (
           <p className="mt-0.5 text-[10px] text-muted-foreground">
-            <span className="font-medium text-foreground/70">3D Textures:</span>{" "}
-            Solar System Scope (CC BY 4.0), based on NASA/ESA mission data
+            <span className="font-medium text-foreground/70">3D Textures:</span> Solar System Scope
+            (CC BY 4.0), based on NASA/ESA mission data
           </p>
         )}
       </div>

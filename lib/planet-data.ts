@@ -1,38 +1,38 @@
 export interface Moon {
-  name: string
-  diameter: number // km
-  orbitalPeriod: number // days
-  distanceFromPlanet: number // km
-  description: string
+  name: string;
+  diameter: number; // km
+  orbitalPeriod: number; // days
+  distanceFromPlanet: number; // km
+  description: string;
 }
 
 export interface Planet {
-  id: string
-  name: string
-  type: "terrestrial" | "gas-giant" | "ice-giant" | "dwarf"
-  diameter: number // km
-  mass: string // relative to Earth
-  gravity: number // m/s²
-  distanceFromSun: number // million km (average)
-  orbitalPeriod: number // Earth days
-  rotationPeriod: number // Earth hours
-  axialTilt: number // degrees
-  meanTemp: number // °C
-  atmosphere: string[]
-  moons: Moon[]
-  rings: boolean
-  color: string // hex for 3D rendering
-  emissive?: string
-  description: string
-  funFact: string
-  discoveredBy?: string
-  discoveryYear?: number
-  missions: string[]
-  composition: string
-  magneticField: string
-  orbitEccentricity: number
-  escapeVelocity: number // km/s
-  surfaceArea: string // million km²
+  id: string;
+  name: string;
+  type: "terrestrial" | "gas-giant" | "ice-giant" | "dwarf";
+  diameter: number; // km
+  mass: string; // relative to Earth
+  gravity: number; // m/s²
+  distanceFromSun: number; // million km (average)
+  orbitalPeriod: number; // Earth days
+  rotationPeriod: number; // Earth hours
+  axialTilt: number; // degrees
+  meanTemp: number; // °C
+  atmosphere: string[];
+  moons: Moon[];
+  rings: boolean;
+  color: string; // hex for 3D rendering
+  emissive?: string;
+  description: string;
+  funFact: string;
+  discoveredBy?: string;
+  discoveryYear?: number;
+  missions: string[];
+  composition: string;
+  magneticField: string;
+  orbitEccentricity: number;
+  escapeVelocity: number; // km/s
+  surfaceArea: string; // million km²
 }
 
 export const planets: Planet[] = [
@@ -109,16 +109,14 @@ export const planets: Planet[] = [
         diameter: 3475,
         orbitalPeriod: 27.3,
         distanceFromPlanet: 384400,
-        description:
-          "Earth's only natural satellite, the fifth largest moon in the solar system.",
+        description: "Earth's only natural satellite, the fifth largest moon in the solar system.",
       },
     ],
     rings: false,
     color: "#4a90d9",
     description:
       "Earth is the third planet from the Sun and the only known planet to harbor life. It has liquid water on its surface, a protective magnetic field, and a breathable atmosphere.",
-    funFact:
-      "Earth is the densest planet in our solar system at 5.51 g/cm³.",
+    funFact: "Earth is the densest planet in our solar system at 5.51 g/cm³.",
     missions: ["ISS", "Countless Earth observation satellites"],
     composition: "Iron-nickel core, silicate mantle, thin crust",
     magneticField: "Strong dipole field, protects from solar wind",
@@ -145,16 +143,14 @@ export const planets: Planet[] = [
         diameter: 22.4,
         orbitalPeriod: 0.319,
         distanceFromPlanet: 9376,
-        description:
-          "The larger and closer of Mars's two moons, slowly spiraling inward.",
+        description: "The larger and closer of Mars's two moons, slowly spiraling inward.",
       },
       {
         name: "Deimos",
         diameter: 12.4,
         orbitalPeriod: 1.263,
         distanceFromPlanet: 23463,
-        description:
-          "The smaller and outer moon of Mars, named after the Greek god of dread.",
+        description: "The smaller and outer moon of Mars, named after the Greek god of dread.",
       },
     ],
     rings: false,
@@ -188,29 +184,21 @@ export const planets: Planet[] = [
     rotationPeriod: 9.93,
     axialTilt: 3.13,
     meanTemp: -110,
-    atmosphere: [
-      "Hydrogen (89.8%)",
-      "Helium (10.2%)",
-      "Methane",
-      "Ammonia",
-      "Water Vapor",
-    ],
+    atmosphere: ["Hydrogen (89.8%)", "Helium (10.2%)", "Methane", "Ammonia", "Water Vapor"],
     moons: [
       {
         name: "Io",
         diameter: 3643,
         orbitalPeriod: 1.769,
         distanceFromPlanet: 421700,
-        description:
-          "The most volcanically active body in the solar system.",
+        description: "The most volcanically active body in the solar system.",
       },
       {
         name: "Europa",
         diameter: 3122,
         orbitalPeriod: 3.551,
         distanceFromPlanet: 671034,
-        description:
-          "Suspected to harbor a subsurface ocean beneath its icy crust.",
+        description: "Suspected to harbor a subsurface ocean beneath its icy crust.",
       },
       {
         name: "Ganymede",
@@ -224,8 +212,7 @@ export const planets: Planet[] = [
         diameter: 4821,
         orbitalPeriod: 16.689,
         distanceFromPlanet: 1882709,
-        description:
-          "The most heavily cratered object in the solar system.",
+        description: "The most heavily cratered object in the solar system.",
       },
     ],
     rings: true,
@@ -253,44 +240,35 @@ export const planets: Planet[] = [
     rotationPeriod: 10.66,
     axialTilt: 26.73,
     meanTemp: -140,
-    atmosphere: [
-      "Hydrogen (96.3%)",
-      "Helium (3.25%)",
-      "Methane",
-      "Ammonia",
-    ],
+    atmosphere: ["Hydrogen (96.3%)", "Helium (3.25%)", "Methane", "Ammonia"],
     moons: [
       {
         name: "Titan",
         diameter: 5150,
         orbitalPeriod: 15.945,
         distanceFromPlanet: 1221870,
-        description:
-          "The only moon with a dense atmosphere and surface lakes of liquid methane.",
+        description: "The only moon with a dense atmosphere and surface lakes of liquid methane.",
       },
       {
         name: "Enceladus",
         diameter: 504,
         orbitalPeriod: 1.37,
         distanceFromPlanet: 238042,
-        description:
-          "Has geysers spraying water ice, hinting at a subsurface ocean.",
+        description: "Has geysers spraying water ice, hinting at a subsurface ocean.",
       },
       {
         name: "Mimas",
         diameter: 396,
         orbitalPeriod: 0.942,
         distanceFromPlanet: 185539,
-        description:
-          "Known for its massive Herschel Crater, resembling the Death Star.",
+        description: "Known for its massive Herschel Crater, resembling the Death Star.",
       },
       {
         name: "Rhea",
         diameter: 1528,
         orbitalPeriod: 4.518,
         distanceFromPlanet: 527108,
-        description:
-          "Saturn's second-largest moon, composed mostly of water ice.",
+        description: "Saturn's second-largest moon, composed mostly of water ice.",
       },
     ],
     rings: true,
@@ -318,11 +296,7 @@ export const planets: Planet[] = [
     rotationPeriod: -17.24,
     axialTilt: 97.77,
     meanTemp: -195,
-    atmosphere: [
-      "Hydrogen (82.5%)",
-      "Helium (15.2%)",
-      "Methane (2.3%)",
-    ],
+    atmosphere: ["Hydrogen (82.5%)", "Helium (15.2%)", "Methane (2.3%)"],
     moons: [
       {
         name: "Miranda",
@@ -374,11 +348,7 @@ export const planets: Planet[] = [
     rotationPeriod: 16.11,
     axialTilt: 28.32,
     meanTemp: -200,
-    atmosphere: [
-      "Hydrogen (80%)",
-      "Helium (19%)",
-      "Methane (1.5%)",
-    ],
+    atmosphere: ["Hydrogen (80%)", "Helium (19%)", "Methane (1.5%)"],
     moons: [
       {
         name: "Triton",
@@ -404,7 +374,7 @@ export const planets: Planet[] = [
     escapeVelocity: 23.5,
     surfaceArea: "7,618",
   },
-]
+];
 
 export const dwarfPlanets: Planet[] = [
   {
@@ -445,9 +415,9 @@ export const dwarfPlanets: Planet[] = [
     escapeVelocity: 1.21,
     surfaceArea: "17.7",
   },
-]
+];
 
-export const allBodies = [...planets, ...dwarfPlanets]
+export const allBodies = [...planets, ...dwarfPlanets];
 
 // Per-planet zoom limits and initial camera offset for detail scenes
 export const zoomConfig: Record<
@@ -463,7 +433,7 @@ export const zoomConfig: Record<
   uranus: { minDistance: 4.5, maxDistance: 180, cameraOffset: [7, 4, 10] },
   neptune: { minDistance: 4.5, maxDistance: 180, cameraOffset: [7, 4, 10] },
   pluto: { minDistance: 3, maxDistance: 180, cameraOffset: [4, 2, 6] },
-}
+};
 
 // Orbital parameters for 3D rendering (scaled for visualization)
 export const orbitalParams = {
@@ -476,7 +446,7 @@ export const orbitalParams = {
   uranus: { radius: 20, speed: 0.012, size: 0.6, inclination: 0.77 },
   neptune: { radius: 24, speed: 0.006, size: 0.55, inclination: 1.77 },
   pluto: { radius: 27, speed: 0.004, size: 0.08, inclination: 17.16 },
-} as const
+} as const;
 
 // Travel speed data for distance calculator
 export const travelSpeeds = {
@@ -487,7 +457,7 @@ export const travelSpeeds = {
   rocket: { name: "Rocket (Apollo)", speed: 40000, unit: "km/h" },
   newHorizons: { name: "New Horizons", speed: 58536, unit: "km/h" },
   light: { name: "Speed of Light", speed: 1079252849, unit: "km/h" },
-} as const
+} as const;
 
 export const historicalSpacecraft = [
   {
@@ -514,8 +484,7 @@ export const historicalSpacecraft = [
     currentDistance: 8.2,
     speed: 58536,
     status: "Active - Kuiper Belt",
-    description:
-      "First spacecraft to fly by Pluto (2015) and Kuiper Belt object Arrokoth (2019).",
+    description: "First spacecraft to fly by Pluto (2015) and Kuiper Belt object Arrokoth (2019).",
   },
   {
     name: "Pioneer 10",
@@ -523,8 +492,7 @@ export const historicalSpacecraft = [
     currentDistance: 19.4,
     speed: 44000,
     status: "Signal lost (2003)",
-    description:
-      "First spacecraft to cross the asteroid belt and fly by Jupiter.",
+    description: "First spacecraft to cross the asteroid belt and fly by Jupiter.",
   },
   {
     name: "Pioneer 11",
@@ -532,26 +500,25 @@ export const historicalSpacecraft = [
     currentDistance: 16.5,
     speed: 40000,
     status: "Signal lost (1995)",
-    description:
-      "First spacecraft to study Saturn and its rings at close range.",
+    description: "First spacecraft to study Saturn and its rings at close range.",
   },
-]
+];
 
 export function formatNumber(num: number): string {
-  if (Math.abs(num) >= 1e9) return (num / 1e9).toFixed(2) + "B"
-  if (Math.abs(num) >= 1e6) return (num / 1e6).toFixed(2) + "M"
-  if (Math.abs(num) >= 1e3) return num.toLocaleString()
-  return num.toString()
+  if (Math.abs(num) >= 1e9) return (num / 1e9).toFixed(2) + "B";
+  if (Math.abs(num) >= 1e6) return (num / 1e6).toFixed(2) + "M";
+  if (Math.abs(num) >= 1e3) return num.toLocaleString();
+  return num.toString();
 }
 
 export function formatTravelTime(hours: number): string {
-  if (hours < 1) return `${Math.round(hours * 60)} minutes`
-  if (hours < 24) return `${hours.toFixed(1)} hours`
-  const days = hours / 24
-  if (days < 365) return `${days.toFixed(1)} days`
-  const years = days / 365.25
-  if (years < 1000) return `${years.toFixed(1)} years`
-  if (years < 1e6) return `${(years / 1000).toFixed(1)} thousand years`
-  if (years < 1e9) return `${(years / 1e6).toFixed(1)} million years`
-  return `${(years / 1e9).toFixed(1)} billion years`
+  if (hours < 1) return `${Math.round(hours * 60)} minutes`;
+  if (hours < 24) return `${hours.toFixed(1)} hours`;
+  const days = hours / 24;
+  if (days < 365) return `${days.toFixed(1)} days`;
+  const years = days / 365.25;
+  if (years < 1000) return `${years.toFixed(1)} years`;
+  if (years < 1e6) return `${(years / 1000).toFixed(1)} thousand years`;
+  if (years < 1e9) return `${(years / 1e6).toFixed(1)} million years`;
+  return `${(years / 1e9).toFixed(1)} billion years`;
 }

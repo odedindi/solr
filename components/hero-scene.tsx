@@ -13,8 +13,7 @@ import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { textureConfigs } from "@/lib/texture-config";
 
-const SUN_URL =
-  textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "";
+const SUN_URL = textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "";
 if (SUN_URL) useTexture.preload(SUN_URL);
 
 const INNER_IDS = ["mercury", "venus", "earth", "mars"] as const;
@@ -79,15 +78,7 @@ function OrbitPath({ radius }: { radius: number }) {
     return pts;
   }, [radius]);
 
-  return (
-    <Line
-      points={points}
-      color="#1a2d4a"
-      transparent
-      opacity={0.4}
-      lineWidth={1}
-    />
-  );
+  return <Line points={points} color="#1a2d4a" transparent opacity={0.4} lineWidth={1} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -117,11 +108,36 @@ function HeroPlanet({
     <>
       <OrbitPath radius={radius} />
       {diffuse?.url ? (
-        <Suspense fallback={<HeroPlanetFallback radius={radius} speed={speed} size={size} color={color} planetId={planetId} hasRing={hasRing} />}>
-          <HeroPlanetTextured radius={radius} speed={speed} size={size} planetId={planetId} url={diffuse.url} hasRing={hasRing} />
+        <Suspense
+          fallback={
+            <HeroPlanetFallback
+              radius={radius}
+              speed={speed}
+              size={size}
+              color={color}
+              planetId={planetId}
+              hasRing={hasRing}
+            />
+          }
+        >
+          <HeroPlanetTextured
+            radius={radius}
+            speed={speed}
+            size={size}
+            planetId={planetId}
+            url={diffuse.url}
+            hasRing={hasRing}
+          />
         </Suspense>
       ) : (
-        <HeroPlanetFallback radius={radius} speed={speed} size={size} color={color} planetId={planetId} hasRing={hasRing} />
+        <HeroPlanetFallback
+          radius={radius}
+          speed={speed}
+          size={size}
+          color={color}
+          planetId={planetId}
+          hasRing={hasRing}
+        />
       )}
     </>
   );
@@ -178,12 +194,7 @@ function HeroPlanetFallback({
       {hasRing && (
         <mesh rotation={[Math.PI / 3, 0, 0]}>
           <ringGeometry args={[size * 1.4, size * 2, 32]} />
-          <meshStandardMaterial
-            color="#c8b080"
-            side={THREE.DoubleSide}
-            transparent
-            opacity={0.6}
-          />
+          <meshStandardMaterial color="#c8b080" side={THREE.DoubleSide} transparent opacity={0.6} />
         </mesh>
       )}
     </group>
@@ -226,11 +237,7 @@ function HeroPlanetTextured({
     <group ref={groupRef}>
       <mesh ref={meshRef}>
         <sphereGeometry args={[size, 32, 32]} />
-        <meshStandardMaterial
-          map={texture}
-          roughness={0.85}
-          metalness={0.0}
-        />
+        <meshStandardMaterial map={texture} roughness={0.85} metalness={0.0} />
       </mesh>
       {cfg?.hasAtmosphere && (
         <mesh>
@@ -246,12 +253,7 @@ function HeroPlanetTextured({
       {hasRing && (
         <mesh rotation={[Math.PI / 3, 0, 0]}>
           <ringGeometry args={[size * 1.4, size * 2, 32]} />
-          <meshStandardMaterial
-            color="#c8b080"
-            side={THREE.DoubleSide}
-            transparent
-            opacity={0.6}
-          />
+          <meshStandardMaterial color="#c8b080" side={THREE.DoubleSide} transparent opacity={0.6} />
         </mesh>
       )}
     </group>
@@ -280,13 +282,7 @@ function HeroStars({ count = 2000 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.1}
-        sizeAttenuation
-        color="#c8d8f0"
-        transparent
-        opacity={0.7}
-      />
+      <pointsMaterial size={0.1} sizeAttenuation color="#c8d8f0" transparent opacity={0.7} />
     </points>
   );
 }
@@ -302,63 +298,14 @@ function Scene() {
       <ambientLight intensity={0.95} />
       <hemisphereLight args={["#7ea8d6", "#1a1a2a", 0.4]} />
       <Sun />
-      <HeroPlanet
-        radius={3}
-        speed={0.8}
-        size={0.12}
-        color="#8c7e6d"
-        planetId="mercury"
-      />
-      <HeroPlanet
-        radius={4.2}
-        speed={0.6}
-        size={0.25}
-        color="#e6c87a"
-        planetId="venus"
-      />
-      <HeroPlanet
-        radius={5.5}
-        speed={0.45}
-        size={0.27}
-        color="#4a90d9"
-        planetId="earth"
-      />
-      <HeroPlanet
-        radius={7}
-        speed={0.35}
-        size={0.17}
-        color="#c1440e"
-        planetId="mars"
-      />
-      <HeroPlanet
-        radius={10}
-        speed={0.2}
-        size={0.7}
-        color="#c88b3a"
-        planetId="jupiter"
-      />
-      <HeroPlanet
-        radius={13.5}
-        speed={0.12}
-        size={0.6}
-        color="#e8d5a3"
-        planetId="saturn"
-        hasRing
-      />
-      <HeroPlanet
-        radius={17}
-        speed={0.07}
-        size={0.4}
-        color="#7ec8c8"
-        planetId="uranus"
-      />
-      <HeroPlanet
-        radius={20}
-        speed={0.04}
-        size={0.38}
-        color="#3f54ba"
-        planetId="neptune"
-      />
+      <HeroPlanet radius={3} speed={0.8} size={0.12} color="#8c7e6d" planetId="mercury" />
+      <HeroPlanet radius={4.2} speed={0.6} size={0.25} color="#e6c87a" planetId="venus" />
+      <HeroPlanet radius={5.5} speed={0.45} size={0.27} color="#4a90d9" planetId="earth" />
+      <HeroPlanet radius={7} speed={0.35} size={0.17} color="#c1440e" planetId="mars" />
+      <HeroPlanet radius={10} speed={0.2} size={0.7} color="#c88b3a" planetId="jupiter" />
+      <HeroPlanet radius={13.5} speed={0.12} size={0.6} color="#e8d5a3" planetId="saturn" hasRing />
+      <HeroPlanet radius={17} speed={0.07} size={0.4} color="#7ec8c8" planetId="uranus" />
+      <HeroPlanet radius={20} speed={0.04} size={0.38} color="#3f54ba" planetId="neptune" />
       <HeroStars />
       <OrbitControls
         enableZoom={false}
@@ -369,12 +316,7 @@ function Scene() {
         minPolarAngle={Math.PI / 4}
       />
       <EffectComposer enableNormalPass={false}>
-        <Bloom
-          luminanceThreshold={0.9}
-          luminanceSmoothing={0.4}
-          intensity={0.5}
-          mipmapBlur
-        />
+        <Bloom luminanceThreshold={0.9} luminanceSmoothing={0.4} intensity={0.5} mipmapBlur />
       </EffectComposer>
     </>
   );
@@ -383,11 +325,7 @@ function Scene() {
 export function HeroScene() {
   return (
     <div className="absolute inset-0">
-      <Canvas
-        camera={{ position: [12, 10, 18], fov: 50 }}
-        gl={{ antialias: true }}
-        dpr={[1, 1.5]}
-      >
+      <Canvas camera={{ position: [12, 10, 18], fov: 50 }} gl={{ antialias: true }} dpr={[1, 1.5]}>
         <Scene />
       </Canvas>
     </div>
