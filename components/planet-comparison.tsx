@@ -69,28 +69,28 @@ const realPhotoUrls: Record<
   { url: string; credit: string; description: string }
 > = {
   mercury: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mercury_in_true_color.jpg/1024px-Mercury_in_true_color.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mercury_in_true_color.jpg/1280px-Mercury_in_true_color.jpg",
     credit:
       "NASA/Johns Hopkins University APL/Carnegie Institution of Washington",
     description: "True-color image from MESSENGER spacecraft (2008)",
   },
   venus: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Venus_from_Mariner_10.jpg/1024px-Venus_from_Mariner_10.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Venus_from_Mariner_10.jpg/1280px-Venus_from_Mariner_10.jpg",
     credit: "NASA/JPL-Caltech",
     description: "Enhanced color image from Mariner 10 (1974)",
   },
   earth: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_Blue_Marble_%28remastered%29.jpg/1024px-The_Blue_Marble_%28remastered%29.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_Blue_Marble_%28remastered%29.jpg/1280px-The_Blue_Marble_%28remastered%29.jpg",
     credit: "NASA/Apollo 17 crew",
     description: "The Blue Marble - Apollo 17 (December 7, 1972)",
   },
   mars: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Mars_-_August_30_2021_-_Flickr_-_Kevin_M._Gill.png/1024px-Mars_-_August_30_2021_-_Flickr_-_Kevin_M._Gill.png",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Mars_-_August_30_2021_-_Flickr_-_Kevin_M._Gill.png/1280px-Mars_-_August_30_2021_-_Flickr_-_Kevin_M._Gill.png",
     credit: "NASA/JPL-Caltech/Kevin M. Gill",
     description: "Processed from Mars Reconnaissance Orbiter data",
   },
   jupiter: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Jupiter_New_Horizons.jpg/1024px-Jupiter_New_Horizons.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Jupiter_New_Horizons.jpg/1280px-Jupiter_New_Horizons.jpg",
     credit: "NASA/Johns Hopkins University APL/Southwest Research Institute",
     description: "True-color image from New Horizons spacecraft (2007)",
   },
@@ -100,17 +100,17 @@ const realPhotoUrls: Record<
     description: "Saturn during equinox - Cassini spacecraft (2008)",
   },
   uranus: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Uranus_as_seen_by_NASA%27s_Voyager_2_%28reprocessed%29_-_JPEG_converted.jpg/1024px-Uranus_as_seen_by_NASA%27s_Voyager_2_%28reprocessed%29_-_JPEG_converted.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Uranus_as_seen_by_NASA%27s_Voyager_2_%28reprocessed%29_-_JPEG_converted.jpg/1280px-Uranus_as_seen_by_NASA%27s_Voyager_2_%28reprocessed%29_-_JPEG_converted.jpg",
     credit: "NASA/JPL-Caltech (Voyager 2)",
     description: "Reprocessed Voyager 2 image (1986)",
   },
   neptune: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Neptune_Voyager2_color_calibrated.png/1024px-Neptune_Voyager2_color_calibrated.png",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Neptune_Voyager2_color_calibrated.png/1280px-Neptune_Voyager2_color_calibrated.png",
     credit: "NASA/JPL (Voyager 2)",
     description: "Color-calibrated Voyager 2 image (1989)",
   },
   pluto: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Pluto_in_True_Color_-_High-Res.jpg/1024px-Pluto_in_True_Color_-_High-Res.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Pluto_in_True_Color_-_High-Res.jpg/1280px-Pluto_in_True_Color_-_High-Res.jpg",
     credit: "NASA/Johns Hopkins University APL/Southwest Research Institute",
     description: "True-color image from New Horizons (July 14, 2015)",
   },
