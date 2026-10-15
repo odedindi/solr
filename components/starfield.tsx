@@ -79,7 +79,7 @@ function NebulaGlow() {
     <mesh ref={meshRef} position={[80, 30, -100]}>
       <planeGeometry args={[100, 100]} />
       <meshBasicMaterial
-        color="#06b6d4"
+        color="#ffffff"
         transparent
         opacity={0.02}
         side={THREE.DoubleSide}
@@ -95,7 +95,7 @@ export function Starfield() {
         <Stars />
         <NebulaGlow />
         {/* Ambient space lighting */}
-        <ambientLight intensity={0.02} color="#06b6d4" />
+        <ambientLight intensity={0.02} color="#fff2d6" />
       </Canvas>
     </div>
   );

@@ -3,66 +3,66 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Futuristic Sci-Fi Space Theme */
+/* Warm charcoal + orange theme — faithful to the original (main) vibe */
 :root {
-  /* Deep space background with subtle blue undertone */
-  --background: #030712;
-  --foreground: #e2e8f0;
-  
-  /* Card with subtle glow effect */
-  --card: #0c1222;
-  --card-foreground: #e2e8f0;
-  
-  --popover: #0c1222;
-  --popover-foreground: #e2e8f0;
-  
-  /* Neon cyan as primary - high-tech feel */
-  --primary: #06b6d4;
-  --primary-foreground: #030712;
-  
-  /* Deep space secondary */
-  --secondary: #111827;
-  --secondary-foreground: #94a3b8;
-  
-  /* Muted for subtle text */
-  --muted: #1e293b;
-  --muted-foreground: #64748b;
-  
-  /* Amber/orange accent for highlights */
-  --accent: #f59e0b;
-  --accent-foreground: #030712;
-  
-  /* Destructive */
-  --destructive: #ef4444;
+  /* Warm charcoal background (Mantine dark palette) */
+  --background: #141517;
+  --foreground: #ffffff;
+
+  /* Card surfaces from the original dark[7] hero background */
+  --card: #25262b;
+  --card-foreground: #c1c2c5;
+
+  --popover: #25262b;
+  --popover-foreground: #c1c2c5;
+
+  /* Orange — THE original accent (Mantine orange[7]) */
+  --primary: #f76707;
+  --primary-foreground: #ffffff;
+
+  /* Secondary from Mantine dark[6] */
+  --secondary: #2c2e33;
+  --secondary-foreground: #adb5bd;
+
+  /* Muted surfaces/text from Mantine dark[5] / gray */
+  --muted: #373a40;
+  --muted-foreground: #868e96;
+
+  /* Accent = hot end of the original red→yellow gradient */
+  --accent: #fab005;
+  --accent-foreground: #141517;
+
+  /* Destructive = cool end of the original gradient */
+  --destructive: #fa5252;
   --destructive-foreground: #ffffff;
-  
-  /* Borders with subtle glow potential */
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #06b6d4;
-  
-  /* Chart colors - sci-fi palette */
-  --chart-1: #06b6d4;
-  --chart-2: #f59e0b;
-  --chart-3: #10b981;
-  --chart-4: #8b5cf6;
-  --chart-5: #ec4899;
-  
+
+  /* Borders from Mantine dark[5] */
+  --border: #373a40;
+  --input: #373a40;
+  --ring: #f76707;
+
+  /* Charts: warm trio (the old gradient) + Mantine blue + gray */
+  --chart-1: #f76707;
+  --chart-2: #fab005;
+  --chart-3: #fa5252;
+  --chart-4: #1c7ed6;
+  --chart-5: #868e96;
+
   --radius: 0.625rem;
-  
-  /* Sidebar */
-  --sidebar: #050a14;
-  --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #06b6d4;
-  --sidebar-primary-foreground: #030712;
-  --sidebar-accent: #111827;
-  --sidebar-accent-foreground: #94a3b8;
-  --sidebar-border: #1e293b;
-  --sidebar-ring: #06b6d4;
-  
+
+  /* Sidebar from Mantine dark[9] */
+  --sidebar: #101113;
+  --sidebar-foreground: #c1c2c5;
+  --sidebar-primary: #f76707;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2c2e33;
+  --sidebar-accent-foreground: #adb5bd;
+  --sidebar-border: #373a40;
+  --sidebar-ring: #f76707;
+
   /* Custom glow colors */
-  --glow-primary: rgba(6, 182, 212, 0.5);
-  --glow-accent: rgba(245, 158, 11, 0.5);
+  --glow-primary: rgba(247, 103, 7, 0.45);
+  --glow-accent: rgba(250, 176, 5, 0.35);
 }
 
 @theme inline {
@@ -126,7 +126,7 @@
   }
   
   .glow-border {
-    box-shadow: inset 0 0 0 1px var(--border), 0 0 15px rgba(6, 182, 212, 0.15);
+    box-shadow: inset 0 0 0 1px var(--border), 0 0 15px rgba(247, 103, 7, 0.15);
   }
   
   .glow-border-accent {
@@ -140,9 +140,9 @@
   .bg-holographic {
     background: linear-gradient(
       135deg,
-      rgba(6, 182, 212, 0.1) 0%,
-      rgba(139, 92, 246, 0.05) 50%,
-      rgba(6, 182, 212, 0.1) 100%
+      rgba(247, 103, 7, 0.1) 0%,
+      rgba(250, 176, 5, 0.05) 50%,
+      rgba(247, 103, 7, 0.1) 100%
     );
   }
   
@@ -150,7 +150,7 @@
     border: 1px solid transparent;
     background: 
       linear-gradient(var(--card), var(--card)) padding-box,
-      linear-gradient(135deg, rgba(6, 182, 212, 0.5), rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.5)) border-box;
+      linear-gradient(135deg, rgba(247, 103, 7, 0.5), rgba(250, 176, 5, 0.3), rgba(247, 103, 7, 0.5)) border-box;
   }
   
   .scanline {
@@ -165,8 +165,8 @@
       0deg,
       transparent,
       transparent 2px,
-      rgba(6, 182, 212, 0.03) 2px,
-      rgba(6, 182, 212, 0.03) 4px
+      rgba(247, 103, 7, 0.03) 2px,
+      rgba(247, 103, 7, 0.03) 4px
     );
     pointer-events: none;
   }
@@ -193,6 +193,6 @@
 
 /* Selection styling */
 ::selection {
-  background: rgba(6, 182, 212, 0.3);
+  background: rgba(247, 103, 7, 0.3);
   color: var(--foreground);
 }

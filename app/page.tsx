@@ -82,7 +82,7 @@ export default function HomePage() {
             <h1 className="mb-6 font-sans text-5xl font-bold leading-tight tracking-tight text-foreground lg:text-7xl">
               <span className="text-balance">
                 Explore the{" "}
-                <span className="bg-gradient-to-r from-primary via-cyan-300 to-primary bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#fa5252] via-[#f76707] to-[#fcc419] bg-clip-text text-transparent">
                   Solr
                 </span>
               </span>
