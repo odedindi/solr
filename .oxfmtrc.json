@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    ".next/**",
+    "node_modules/**",
+    "public/**",
+    ".sisyphus/**",
+    "pnpm-lock.yaml",
+    "next-env.d.ts",
+    "lib/satellite-index.json"
+  ],
+  "sortImports": false,
+  "sortPackageJson": false
+}

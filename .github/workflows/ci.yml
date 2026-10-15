@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -28,32 +28,19 @@ jobs:
       - name: Use Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.local/share/pnpm/store/v3
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-store-
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Prepare pnpm (v11)
-        run: corepack prepare pnpm@11 --activate
+          node-version: "24"
 
       - name: Install pnpm action
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: '11'
+          cache: true
 
       - name: Verify tooling
         run: |
           node -v
           npm -v
           pnpm -v
+          pnpm store path
 
       - name: Install dependencies (reproducible)
         # Enforce frozen lockfile to ensure CI reproduces committed resolutions.
@@ -64,3 +51,6 @@ jobs:
 
       - name: Lint
         run: pnpm run lint
+
+      - name: Check formatting
+        run: pnpm run check:format
