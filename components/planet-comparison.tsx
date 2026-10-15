@@ -100,7 +100,7 @@ const realPhotoUrls: Record<
     description: "Saturn during equinox - Cassini spacecraft (2008)",
   },
   uranus: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Uranus_as_seen_by_NASA%27s_Voyager_2_%28reprocessed%29_-_JPEG_converted.jpg/1280px-Uranus_as_seen_by_NASA%27s_Voyager_2_%28reprocessed%29_-_JPEG_converted.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Uranus_as_seen_by_NASA%27s_Voyager_2.tif/lossless-page1-1280px-Uranus_as_seen_by_NASA%27s_Voyager_2.tif.jpg",
     credit: "NASA/JPL-Caltech (Voyager 2)",
     description: "Reprocessed Voyager 2 image (1986)",
   },
@@ -157,12 +157,14 @@ function ComparisonPlanet({ planetId }: { planetId: string }) {
           <sphereGeometry args={[size, 64, 64]} />
           {diffuseTex ? (
             <meshStandardMaterial
+              key="textured"
               map={diffuseTex}
               roughness={config?.surfaceRoughness ?? 0.8}
               metalness={config?.surfaceMetalness ?? 0.05}
             />
           ) : (
             <meshStandardMaterial
+              key="fallback"
               color={planet?.color || "#888"}
               roughness={0.6}
             />

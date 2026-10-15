@@ -222,21 +222,22 @@ function TexturedPlanetSurface({
   return (
     <mesh ref={meshRef}>
       <sphereGeometry args={[size, 64, 64]} />
-      {diffuseTex ? (
-        needsStandardMat ? (
-          <meshStandardMaterial
-            map={diffuseTex}
-            bumpMap={useBump ? bumpTex : useNormal ? normalTex : undefined}
-            bumpScale={useBump ? bumpOpacity * 0.5 : useNormal ? normalOpacity * 0.3 : 0}
-            metalnessMap={useSpecular ? specularTex : undefined}
-            metalness={useSpecular ? 0.8 : 0.05}
-            roughness={useSpecular ? 0.4 : 0.7}
-          />
-        ) : (
-          <meshBasicMaterial map={diffuseTex} />
-        )
+      {diffuseTex && !needsStandardMat ? (
+        <meshBasicMaterial key="texture-only" map={diffuseTex} />
+      ) : diffuseTex ? (
+        <meshStandardMaterial
+          // Recreate when shader map defines change; never reuse the tinted fallback.
+          key={`textured-${Boolean(useBump || useNormal)}-${Boolean(useSpecular)}`}
+          map={diffuseTex}
+          bumpMap={useBump ? bumpTex : useNormal ? normalTex : null}
+          bumpScale={useBump ? bumpOpacity * 0.5 : useNormal ? normalOpacity * 0.3 : 0}
+          metalnessMap={useSpecular ? specularTex : null}
+          metalness={useSpecular ? 0.8 : 0.05}
+          roughness={useSpecular ? 0.4 : 0.7}
+        />
       ) : (
         <meshStandardMaterial
+          key="fallback"
           color={planet.color}
           roughness={0.6}
           metalness={0.1}
