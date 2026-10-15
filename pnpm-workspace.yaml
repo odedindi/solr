@@ -1,0 +1,21 @@
+# Explicitly allow specific dependency build scripts to run during CI installs.
+# Approving only needed packages is safer than `pnpm approve-builds --all`.
+packages:
+  - .
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - "@next/env@16.4.1"
+  - "@next/swc-darwin-arm64@16.4.1"
+  - "@next/swc-darwin-x64@16.4.1"
+  - "@next/swc-linux-arm64-gnu@16.4.1"
+  - "@next/swc-linux-arm64-musl@16.4.1"
+  - "@next/swc-linux-x64-gnu@16.4.1"
+  - "@next/swc-linux-x64-musl@16.4.1"
+  - "@next/swc-win32-arm64-msvc@16.4.1"
+  - "@next/swc-win32-x64-msvc@16.4.1"
+  - "@react-three/fiber@9.8.2"
+  - next@16.4.1
+  - react-dom@19.3.1
+  - react@19.3.1

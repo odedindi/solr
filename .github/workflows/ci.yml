@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install pnpm action
+        uses: pnpm/action-setup@v4
+        with:
+          cache: true
+
+      - name: Verify tooling
+        run: |
+          node -v
+          npm -v
+          pnpm -v
+          pnpm store path
+
+      - name: Install dependencies (reproducible)
+        # Enforce frozen lockfile to ensure CI reproduces committed resolutions.
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check & Build
+        run: pnpm run build
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Check formatting
+        run: pnpm run check:format
