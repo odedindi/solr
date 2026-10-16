@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Eye, EyeOff, Tag, Search, X, ChevronRight, Info } from "lucide-react";
 import { SolarSystemScene } from "@/components/solar-system-scene";
 import { planets, dwarfPlanets, type Planet, formatNumber } from "@/lib/planet-data";
@@ -24,6 +24,15 @@ export default function ExplorerPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showControls, setShowControls] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    const update = () => setIsTouch(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const handleSelectPlanet = useCallback((planet: Planet) => {
     setSelectedPlanet(planet);
@@ -254,7 +263,11 @@ export default function ExplorerPage() {
       <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 transform">
         <div className="flex items-center gap-3 rounded-full bg-card/60 px-4 py-2 text-xs text-muted-foreground backdrop-blur-sm border border-border/30">
           <Info className="h-3.5 w-3.5" />
-          <span>Click a planet to view info. Double-click to see details. Scroll to zoom.</span>
+          <span>
+            {isTouch
+              ? "Tap a planet for info, then “View Details”. Drag to rotate, pinch to zoom."
+              : "Click a planet to view info. Double-click to see details. Scroll to zoom."}
+          </span>
         </div>
       </div>
     </div>
