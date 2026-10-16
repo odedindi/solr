@@ -40,6 +40,9 @@ export function SceneLoader({
   const blocking = variant === "overlay" && !initialDone;
   const showIndicator = !blocking && active;
   const [overlayMounted, setOverlayMounted] = useState(variant === "overlay");
+  // The server-rendered button would ignore clicks until hydration; only show it once it works.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   useEffect(() => {
     if (blocking || !overlayMounted) return;
@@ -80,7 +83,7 @@ export function SceneLoader({
             <p className="font-mono text-xs text-muted-foreground">
               {loaded > 0 ? `${loaded} / ${total} textures · ${pct}%` : "Fetching textures…"}
             </p>
-            {blocking && (
+            {blocking && hydrated && (
               <button
                 type="button"
                 onClick={() => setInitialDone(true)}
