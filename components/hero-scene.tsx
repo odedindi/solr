@@ -11,19 +11,12 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { textureConfigs } from "@/lib/texture-config";
+import { textureConfigs, getOverviewTextureUrl } from "@/lib/texture-config";
+import { preloadTextures } from "@/lib/preload-textures";
+import { SceneLoader } from "./scene-loader";
 
-const SUN_URL = textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "";
-if (SUN_URL) useTexture.preload(SUN_URL);
-
-const INNER_IDS = ["mercury", "venus", "earth", "mars"] as const;
-for (const id of INNER_IDS) {
-  const cfg = textureConfigs[id];
-  const layer = cfg?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
-  if (layer?.url) useTexture.preload(layer.url);
-}
+const SUN_URL = getOverviewTextureUrl("sun") ?? "";
+preloadTextures(["sun", "earth", "mercury", "venus", "mars"].map(getOverviewTextureUrl));
 
 // ---------------------------------------------------------------------------
 // Textured Sun
@@ -99,15 +92,12 @@ function HeroPlanet({
   planetId: string;
   hasRing?: boolean;
 }) {
-  const config = textureConfigs[planetId];
-  const diffuse = config?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const url = getOverviewTextureUrl(planetId);
 
   return (
     <>
       <OrbitPath radius={radius} />
-      {diffuse?.url ? (
+      {url ? (
         <Suspense
           fallback={
             <HeroPlanetFallback
@@ -125,7 +115,7 @@ function HeroPlanet({
             speed={speed}
             size={size}
             planetId={planetId}
-            url={diffuse.url}
+            url={url}
             hasRing={hasRing}
           />
         </Suspense>
@@ -297,7 +287,10 @@ function Scene() {
       <AdaptiveDpr pixelated />
       <ambientLight intensity={0.95} />
       <hemisphereLight args={["#7ea8d6", "#1a1a2a", 0.4]} />
-      <Sun />
+      {/* Own boundary: an unbounded suspension inside <Canvas> suspends the surrounding page. */}
+      <Suspense fallback={null}>
+        <Sun />
+      </Suspense>
       <HeroPlanet radius={3} speed={0.8} size={0.12} color="#8c7e6d" planetId="mercury" />
       <HeroPlanet radius={4.2} speed={0.6} size={0.25} color="#e6c87a" planetId="venus" />
       <HeroPlanet radius={5.5} speed={0.45} size={0.27} color="#4a90d9" planetId="earth" />
@@ -328,6 +321,7 @@ export function HeroScene() {
       <Canvas camera={{ position: [12, 10, 18], fov: 50 }} gl={{ antialias: true }} dpr={[1, 1.5]}>
         <Scene />
       </Canvas>
+      <SceneLoader variant="inline" className="bottom-6 left-auto right-6" />
     </div>
   );
 }

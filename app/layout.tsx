@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Navigation } from "@/components/navigation";
 import { StarfieldCSS } from "@/components/starfield-css";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
@@ -12,7 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Solr - Interactive Solar System Encyclopedia",
+  title: {
+    default: "Solr - Interactive Solar System Encyclopedia",
+    template: "%s | Solr",
+  },
   description:
     "Explore our solar system with interactive 3D visualizations, scientific data from NASA and ESA, and educational tools. A comprehensive encyclopedia of planets, moons, and spacecraft.",
   generator: "v0.app",
@@ -53,6 +57,7 @@ export default function RootLayout({
         <Navigation />
         <main className="pt-16">{children}</main>
         <Analytics />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

@@ -14,23 +14,16 @@ import {
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { planets, dwarfPlanets, orbitalParams, type Planet } from "@/lib/planet-data";
-import { textureConfigs } from "@/lib/texture-config";
+import { textureConfigs, getOverviewTextureUrl, getRingTextureUrl } from "@/lib/texture-config";
+import { preloadTextures } from "@/lib/preload-textures";
 import { useRouter } from "next/navigation";
 import { useTimeStore } from "@/lib/time-store";
 
 // ---------------------------------------------------------------------------
-// Preload inner planet textures for instant display on scene mount
+// Preload in priority order: Sun and inner planets first, then the rest.
 // ---------------------------------------------------------------------------
-const INNER_PLANET_IDS = ["mercury", "venus", "earth", "mars"] as const;
-for (const id of INNER_PLANET_IDS) {
-  const cfg = textureConfigs[id];
-  const layer = cfg?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
-  if (layer?.url) useTexture.preload(layer.url);
-}
-const _sunLayer = textureConfigs.sun?.layers.find((l) => l.id === "surface");
-if (_sunLayer?.url) useTexture.preload(_sunLayer.url);
+const SUN_URL = getOverviewTextureUrl("sun") ?? "";
+preloadTextures(["sun", "earth", "mercury", "venus", "mars"].map(getOverviewTextureUrl));
 
 // ---------------------------------------------------------------------------
 // Frame-level time ticker — advances the zustand time store each frame
@@ -93,18 +86,15 @@ function TexturedMiniPlanet({
   size: number;
   planetId: string;
 }) {
-  const config = textureConfigs[planetId];
-  const diffuse = config?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const url = getOverviewTextureUrl(planetId);
 
-  if (!diffuse?.url) {
+  if (!url) {
     return <ColorFallbackLOD color={color} size={size} />;
   }
 
   return (
     <Suspense fallback={<ColorFallbackLOD color={color} size={size} />}>
-      <TexturedLOD size={size} url={diffuse.url} />
+      <TexturedLOD size={size} url={url} />
     </Suspense>
   );
 }
@@ -114,9 +104,7 @@ function TexturedMiniPlanet({
 // ---------------------------------------------------------------------------
 function SunBody() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const texture = useTexture(
-    textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "",
-  );
+  const texture = useTexture(SUN_URL);
 
   useFrame(() => {
     if (meshRef.current) {
@@ -296,13 +284,14 @@ function MiniRing({ planetId, size }: { planetId: string; size: number }) {
   const config = textureConfigs[planetId];
   if (!config?.hasRings) return null;
 
-  if (!config.ringTexture) {
+  const ringUrl = getRingTextureUrl(planetId);
+  if (!ringUrl) {
     return <MiniRingFallback config={config} planetId={planetId} size={size} />;
   }
 
   return (
     <Suspense fallback={<MiniRingFallback config={config} planetId={planetId} size={size} />}>
-      <MiniRingTextured config={config} planetId={planetId} size={size} url={config.ringTexture} />
+      <MiniRingTextured config={config} planetId={planetId} size={size} url={ringUrl} />
     </Suspense>
   );
 }
@@ -559,7 +548,10 @@ function SolarSystemInner({
       <TimeTicker />
       <ambientLight intensity={0.9} />
       <hemisphereLight args={["#7ea8d6", "#1a1a2a", 0.35]} />
-      <SunBody />
+      {/* Own boundary: an unbounded suspension inside <Canvas> suspends the surrounding page. */}
+      <Suspense fallback={null}>
+        <SunBody />
+      </Suspense>
       <AsteroidBelt />
       {allPlanets.map((planet) => {
         const params = orbitalParams[planet.id as keyof typeof orbitalParams];

@@ -21,16 +21,7 @@ import {
 import { planets, dwarfPlanets, formatNumber, type Planet } from "@/lib/planet-data";
 import { Planet3D } from "@/components/planet-3d";
 import { PlanetComparison } from "@/components/planet-comparison";
-import { textureConfigs } from "@/lib/texture-config";
-
-function planetThumbUrl(planetId: string): string | null {
-  const cfg = textureConfigs[planetId];
-  if (!cfg) return null;
-  const diffuse = cfg.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
-  return diffuse?.url || null;
-}
+import { getOverviewTextureUrl as planetThumbUrl } from "@/lib/texture-config";
 
 const allBodies = [...planets, ...dwarfPlanets];
 
@@ -307,7 +298,7 @@ export default function PlanetDetailPage({ params }: { params: Promise<{ id: str
   const [showMoonOrbits, setShowMoonOrbits] = useState(true);
 
   const planet3DElement = useMemo(
-    () => <Planet3D planet={planet!} showMoonOrbits={showMoonOrbits} />,
+    () => <Planet3D key={planet?.id} planet={planet!} showMoonOrbits={showMoonOrbits} />,
     [planet, showMoonOrbits],
   );
 
@@ -415,7 +406,7 @@ export default function PlanetDetailPage({ params }: { params: Promise<{ id: str
               {activeTab === "atmosphere" && <AtmosphereTab planet={planet} />}
               {activeTab === "moons" && <MoonsTab planet={planet} />}
               {activeTab === "missions" && <MissionsTab planet={planet} />}
-              {activeTab === "compare" && <PlanetComparison planetId={planet.id} />}
+              {activeTab === "compare" && <PlanetComparison key={planet.id} planetId={planet.id} />}
             </div>
 
             {/* Navigation */}
