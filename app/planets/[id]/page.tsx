@@ -413,7 +413,7 @@ export default function PlanetDetailPage({ params }: { params: Promise<{ id: str
               {activeTab === "atmosphere" && <AtmosphereTab planet={planet} />}
               {activeTab === "moons" && <MoonsTab planet={planet} />}
               {activeTab === "missions" && <MissionsTab planet={planet} />}
-              {activeTab === "compare" && <PlanetComparison planetId={planet.id} />}
+              {activeTab === "compare" && <PlanetComparison key={planet.id} planetId={planet.id} />}
             </div>
 
             {/* Navigation */}
