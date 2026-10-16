@@ -12,6 +12,11 @@ export interface TextureSource {
 
 const pending = new Map<string, Promise<THREE.Texture | null>>();
 const resolved = new Map<string, THREE.Texture>();
+/**
+ * Hi-res upgrades load through their own manager so they don't hold the loading
+ * screen (driven by THREE.DefaultLoadingManager) while multi-MB maps download.
+ */
+const backgroundManager = new THREE.LoadingManager();
 
 function candidatesFor(webp: string | undefined, fallback: string | undefined): string[] {
   return [webp, fallback].filter((u): u is string => !!u && !/\.tiff?$/i.test(u));
@@ -26,12 +31,16 @@ function cacheKey(candidates: string[], srgb: boolean) {
  * Textures are cached per (candidates, color space) so toggling layers or
  * remounting a canvas never re-downloads or flashes an untextured sphere.
  */
-export function loadTexture(candidates: string[], srgb: boolean): Promise<THREE.Texture | null> {
+export function loadTexture(
+  candidates: string[],
+  srgb: boolean,
+  { background = false }: { background?: boolean } = {},
+): Promise<THREE.Texture | null> {
   const key = cacheKey(candidates, srgb);
   const existing = pending.get(key);
   if (existing) return existing;
 
-  const loader = new THREE.TextureLoader();
+  const loader = new THREE.TextureLoader(background ? backgroundManager : undefined);
   loader.setCrossOrigin("anonymous");
   const promise = (async () => {
     for (const url of candidates) {
@@ -94,7 +103,9 @@ export function useProgressiveTexture(
       );
     };
     const loadHigh = () => {
-      if (high.length) void loadTexture(high, srgb).then((t) => show(t, true));
+      if (high.length) {
+        void loadTexture(high, srgb, { background: low.length > 0 }).then((t) => show(t, true));
+      }
     };
     if (low.length) {
       void loadTexture(low, srgb).then((t) => {
