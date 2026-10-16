@@ -298,7 +298,7 @@ export default function PlanetDetailPage({ params }: { params: Promise<{ id: str
   const [showMoonOrbits, setShowMoonOrbits] = useState(true);
 
   const planet3DElement = useMemo(
-    () => <Planet3D planet={planet!} showMoonOrbits={showMoonOrbits} />,
+    () => <Planet3D key={planet?.id} planet={planet!} showMoonOrbits={showMoonOrbits} />,
     [planet, showMoonOrbits],
   );
 
@@ -406,7 +406,7 @@ export default function PlanetDetailPage({ params }: { params: Promise<{ id: str
               {activeTab === "atmosphere" && <AtmosphereTab planet={planet} />}
               {activeTab === "moons" && <MoonsTab planet={planet} />}
               {activeTab === "missions" && <MissionsTab planet={planet} />}
-              {activeTab === "compare" && <PlanetComparison planetId={planet.id} />}
+              {activeTab === "compare" && <PlanetComparison key={planet.id} planetId={planet.id} />}
             </div>
 
             {/* Navigation */}

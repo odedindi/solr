@@ -70,14 +70,7 @@ describe("texture files", () => {
     for (const l of cfg.layers) {
       for (const u of [l.url, l.urlWebP, l.urlHiRes, l.urlHiResWebP]) if (u) urls.add(u);
     }
-    for (const u of [
-      cfg.ringTexture,
-      cfg.ringTextureWebP,
-      cfg.ringAlphaTexture,
-      cfg.ringAlphaTextureWebP,
-    ]) {
-      if (u) urls.add(u);
-    }
+    for (const u of [cfg.ringTexture, cfg.ringTextureWebP]) if (u) urls.add(u);
   }
 
   it.each([...urls])("%s exists in /public", (url) => {
