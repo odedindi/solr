@@ -11,17 +11,14 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { textureConfigs } from "@/lib/texture-config";
+import { getAppearanceLayer, textureConfigs } from "@/lib/texture-config";
 
 const SUN_URL = textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "";
 if (SUN_URL) useTexture.preload(SUN_URL);
 
 const INNER_IDS = ["mercury", "venus", "earth", "mars"] as const;
 for (const id of INNER_IDS) {
-  const cfg = textureConfigs[id];
-  const layer = cfg?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const layer = getAppearanceLayer(id);
   if (layer?.url) useTexture.preload(layer.url);
 }
 
@@ -99,10 +96,7 @@ function HeroPlanet({
   planetId: string;
   hasRing?: boolean;
 }) {
-  const config = textureConfigs[planetId];
-  const diffuse = config?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const diffuse = getAppearanceLayer(planetId);
 
   return (
     <>

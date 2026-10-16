@@ -14,7 +14,7 @@ import {
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { planets, dwarfPlanets, orbitalParams, type Planet } from "@/lib/planet-data";
-import { textureConfigs } from "@/lib/texture-config";
+import { getAppearanceLayer, textureConfigs } from "@/lib/texture-config";
 import { useRouter } from "next/navigation";
 import { useTimeStore } from "@/lib/time-store";
 
@@ -23,10 +23,7 @@ import { useTimeStore } from "@/lib/time-store";
 // ---------------------------------------------------------------------------
 const INNER_PLANET_IDS = ["mercury", "venus", "earth", "mars"] as const;
 for (const id of INNER_PLANET_IDS) {
-  const cfg = textureConfigs[id];
-  const layer = cfg?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const layer = getAppearanceLayer(id);
   if (layer?.url) useTexture.preload(layer.url);
 }
 const _sunLayer = textureConfigs.sun?.layers.find((l) => l.id === "surface");
@@ -93,10 +90,7 @@ function TexturedMiniPlanet({
   size: number;
   planetId: string;
 }) {
-  const config = textureConfigs[planetId];
-  const diffuse = config?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const diffuse = getAppearanceLayer(planetId);
 
   if (!diffuse?.url) {
     return <ColorFallbackLOD color={color} size={size} />;

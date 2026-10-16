@@ -21,14 +21,12 @@ import {
 import { planets, dwarfPlanets, formatNumber, type Planet } from "@/lib/planet-data";
 import { Planet3D } from "@/components/planet-3d";
 import { PlanetComparison } from "@/components/planet-comparison";
-import { textureConfigs } from "@/lib/texture-config";
+import { getAppearanceLayer, textureConfigs } from "@/lib/texture-config";
 
 function planetThumbUrl(planetId: string): string | null {
   const cfg = textureConfigs[planetId];
   if (!cfg) return null;
-  const diffuse = cfg.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const diffuse = getAppearanceLayer(planetId);
   return diffuse?.url || null;
 }
 
