@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Navigation } from "@/components/navigation";
 import { StarfieldCSS } from "@/components/starfield-css";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
@@ -56,6 +57,7 @@ export default function RootLayout({
         <Navigation />
         <main className="pt-16">{children}</main>
         <Analytics />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
