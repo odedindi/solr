@@ -727,10 +727,15 @@ function TexturedDot({
   position: [number, number, number];
 }) {
   const texture = useTexture(url);
+  // White preserves the texture; blend 25% toward the planet color for a subtle tint without transparency.
+  const tint = useMemo(
+    () => new THREE.Color("#ffffff").lerp(new THREE.Color(color), 0.25),
+    [color],
+  );
   return (
     <mesh position={position}>
       <sphereGeometry args={[size, 16, 16]} />
-      <meshStandardMaterial map={texture} />
+      <meshStandardMaterial color={tint} map={texture} />
     </mesh>
   );
 }
@@ -768,6 +773,7 @@ function PlanetDot({ planet, position }: { planet: Planet; position: [number, nu
 function OtherPlanets({ currentPlanet }: { currentPlanet: Planet }) {
   const currentDist = compressedDistance(currentPlanet.distanceFromSun);
 
+  // return null;
   return (
     <>
       {ALL_BODIES.filter((p) => p.id !== currentPlanet.id).map((p) => {
