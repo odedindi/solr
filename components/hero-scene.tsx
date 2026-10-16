@@ -297,7 +297,10 @@ function Scene() {
       <AdaptiveDpr pixelated />
       <ambientLight intensity={0.95} />
       <hemisphereLight args={["#7ea8d6", "#1a1a2a", 0.4]} />
-      <Sun />
+      {/* Own boundary: an unbounded suspension inside <Canvas> suspends the surrounding page. */}
+      <Suspense fallback={null}>
+        <Sun />
+      </Suspense>
       <HeroPlanet radius={3} speed={0.8} size={0.12} color="#8c7e6d" planetId="mercury" />
       <HeroPlanet radius={4.2} speed={0.6} size={0.25} color="#e6c87a" planetId="venus" />
       <HeroPlanet radius={5.5} speed={0.45} size={0.27} color="#4a90d9" planetId="earth" />

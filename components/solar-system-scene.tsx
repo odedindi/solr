@@ -559,7 +559,10 @@ function SolarSystemInner({
       <TimeTicker />
       <ambientLight intensity={0.9} />
       <hemisphereLight args={["#7ea8d6", "#1a1a2a", 0.35]} />
-      <SunBody />
+      {/* Own boundary: an unbounded suspension inside <Canvas> suspends the surrounding page. */}
+      <Suspense fallback={null}>
+        <SunBody />
+      </Suspense>
       <AsteroidBelt />
       {allPlanets.map((planet) => {
         const params = orbitalParams[planet.id as keyof typeof orbitalParams];
