@@ -15,6 +15,7 @@ import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { planets, dwarfPlanets, orbitalParams, type Planet } from "@/lib/planet-data";
 import { textureConfigs, getOverviewTextureUrl, getRingTextureUrl } from "@/lib/texture-config";
+import { preloadTextures } from "@/lib/preload-textures";
 import { useRouter } from "next/navigation";
 import { useTimeStore } from "@/lib/time-store";
 
@@ -22,10 +23,7 @@ import { useTimeStore } from "@/lib/time-store";
 // Preload in priority order: Sun and inner planets first, then the rest.
 // ---------------------------------------------------------------------------
 const SUN_URL = getOverviewTextureUrl("sun") ?? "";
-for (const id of ["sun", "earth", "mercury", "venus", "mars"]) {
-  const url = getOverviewTextureUrl(id);
-  if (url) useTexture.preload(url);
-}
+preloadTextures(["sun", "earth", "mercury", "venus", "mars"].map(getOverviewTextureUrl));
 
 // ---------------------------------------------------------------------------
 // Frame-level time ticker — advances the zustand time store each frame

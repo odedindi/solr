@@ -5,6 +5,7 @@ import { Eye, EyeOff, Tag, Search, X, ChevronRight, Info } from "lucide-react";
 import { SolarSystemScene } from "@/components/solar-system-scene";
 import { planets, dwarfPlanets, type Planet, formatNumber } from "@/lib/planet-data";
 import { TimeControls } from "@/components/time-controls";
+import { SceneLoader } from "@/components/scene-loader";
 import Link from "next/link";
 
 const allBodies = [...planets, ...dwarfPlanets];
@@ -41,6 +42,7 @@ export default function ExplorerPage() {
         selectedPlanet={selectedPlanet}
         onSelectPlanet={handleSelectPlanet}
       />
+      <SceneLoader />
 
       {/* Top bar */}
       <div className="absolute top-4 left-4 right-4 z-10 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center">

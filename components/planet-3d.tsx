@@ -10,6 +10,7 @@ import {
   getOverviewTextureUrl,
   type PlanetTextureConfig,
 } from "@/lib/texture-config";
+import { preloadTextures } from "@/lib/preload-textures";
 import { Info, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import {
   AtmosphereVertexShader,
@@ -19,10 +20,7 @@ import {
 } from "@/lib/shaders";
 
 const ALL_BODIES = [...planets, ...dwarfPlanets];
-for (const body of ALL_BODIES) {
-  const url = getOverviewTextureUrl(body.id);
-  if (url) useTexture.preload(url);
-}
+preloadTextures(ALL_BODIES.map((body) => getOverviewTextureUrl(body.id)));
 
 // ---------------------------------------------------------------------------
 // Texture hook: loads a texture from URL, handles errors gracefully
@@ -640,6 +638,7 @@ const MOON_TEXTURE_ENTRIES: Record<string, SatelliteEntry> = {
 
 import satelliteIndex from "@/lib/satellite-index.json";
 import { Slider } from "./ui/slider";
+import { SceneLoader } from "./scene-loader";
 
 function MoonBody({
   size,
@@ -1267,6 +1266,7 @@ export function Planet3D({
           viewMode={viewMode}
         />
       </Canvas>
+      <SceneLoader />
 
       {/* Layer Control Panel overlay */}
       {config && config.layers.length > 0 && (

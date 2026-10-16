@@ -12,12 +12,11 @@ import {
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { textureConfigs, getOverviewTextureUrl } from "@/lib/texture-config";
+import { preloadTextures } from "@/lib/preload-textures";
+import { SceneLoader } from "./scene-loader";
 
 const SUN_URL = getOverviewTextureUrl("sun") ?? "";
-for (const id of ["sun", "earth", "mercury", "venus", "mars"]) {
-  const url = getOverviewTextureUrl(id);
-  if (url) useTexture.preload(url);
-}
+preloadTextures(["sun", "earth", "mercury", "venus", "mars"].map(getOverviewTextureUrl));
 
 // ---------------------------------------------------------------------------
 // Textured Sun
@@ -322,6 +321,7 @@ export function HeroScene() {
       <Canvas camera={{ position: [12, 10, 18], fov: 50 }} gl={{ antialias: true }} dpr={[1, 1.5]}>
         <Scene />
       </Canvas>
+      <SceneLoader variant="inline" className="bottom-6 left-auto right-6" />
     </div>
   );
 }
