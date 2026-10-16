@@ -10,3 +10,8 @@ node_modules/
 .DS_Store
 
 tsconfig.tsbuildinfo
+
+# Test output
+test-results/
+playwright-report/
+blob-report/
