@@ -638,3 +638,22 @@ export const textureConfigs: Record<string, PlanetTextureConfig> = {
 export function getTextureConfig(planetId: string): PlanetTextureConfig | null {
   return textureConfigs[planetId] || null;
 }
+
+/** Base-resolution URL for a layer, preferring the (much smaller) WebP version. */
+export function preferredLayerUrl(layer: TextureLayer | undefined | null): string | null {
+  return layer?.urlWebP || layer?.url || null;
+}
+
+/** Base-resolution diffuse map used for overview scenes and thumbnails. */
+export function getOverviewTextureUrl(planetId: string): string | null {
+  const cfg = textureConfigs[planetId];
+  const diffuse = cfg?.layers.find(
+    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
+  );
+  return preferredLayerUrl(diffuse);
+}
+
+export function getRingTextureUrl(planetId: string): string | null {
+  const cfg = textureConfigs[planetId];
+  return cfg?.ringTextureWebP || cfg?.ringTexture || null;
+}

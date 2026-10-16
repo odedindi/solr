@@ -11,18 +11,12 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { textureConfigs } from "@/lib/texture-config";
+import { textureConfigs, getOverviewTextureUrl } from "@/lib/texture-config";
 
-const SUN_URL = textureConfigs["sun"]?.layers.find((l) => l.id === "surface")?.url ?? "";
-if (SUN_URL) useTexture.preload(SUN_URL);
-
-const INNER_IDS = ["mercury", "venus", "earth", "mars"] as const;
-for (const id of INNER_IDS) {
-  const cfg = textureConfigs[id];
-  const layer = cfg?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
-  if (layer?.url) useTexture.preload(layer.url);
+const SUN_URL = getOverviewTextureUrl("sun") ?? "";
+for (const id of ["sun", "earth", "mercury", "venus", "mars"]) {
+  const url = getOverviewTextureUrl(id);
+  if (url) useTexture.preload(url);
 }
 
 // ---------------------------------------------------------------------------
@@ -99,15 +93,12 @@ function HeroPlanet({
   planetId: string;
   hasRing?: boolean;
 }) {
-  const config = textureConfigs[planetId];
-  const diffuse = config?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const url = getOverviewTextureUrl(planetId);
 
   return (
     <>
       <OrbitPath radius={radius} />
-      {diffuse?.url ? (
+      {url ? (
         <Suspense
           fallback={
             <HeroPlanetFallback
@@ -125,7 +116,7 @@ function HeroPlanet({
             speed={speed}
             size={size}
             planetId={planetId}
-            url={diffuse.url}
+            url={url}
             hasRing={hasRing}
           />
         </Suspense>

@@ -5,7 +5,11 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Line, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { planets, dwarfPlanets, zoomConfig, type Planet, type Moon } from "@/lib/planet-data";
-import { getTextureConfig, textureConfigs, type PlanetTextureConfig } from "@/lib/texture-config";
+import {
+  getTextureConfig,
+  getOverviewTextureUrl,
+  type PlanetTextureConfig,
+} from "@/lib/texture-config";
 import { Info, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import {
   AtmosphereVertexShader,
@@ -16,11 +20,8 @@ import {
 
 const ALL_BODIES = [...planets, ...dwarfPlanets];
 for (const body of ALL_BODIES) {
-  const cfg = textureConfigs[body.id];
-  const diffuse = cfg?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
-  if (diffuse?.url) useTexture.preload(diffuse.url);
+  const url = getOverviewTextureUrl(body.id);
+  if (url) useTexture.preload(url);
 }
 
 // ---------------------------------------------------------------------------
@@ -59,22 +60,24 @@ function useLoadTexture(
       : fallbackUrl
         ? [fallbackUrl]
         : [];
-    const fallbacks = [webpUrl, ...explicitFallbacks].filter(Boolean) as string[];
+    const candidates = [webpUrl, url, ...explicitFallbacks].filter(
+      (c, i, arr): c is string => Boolean(c) && arr.indexOf(c) === i,
+    );
 
     let idx = 0;
-    const tryLoad = (candidate: string) => {
-      loader.load(candidate, apply, undefined, () => {
+    const tryLoad = () => {
+      loader.load(candidates[idx], apply, undefined, () => {
         if (disposed) return;
         idx += 1;
-        if (idx - 1 < fallbacks.length) {
-          tryLoad(fallbacks[idx - 1]);
+        if (idx < candidates.length) {
+          tryLoad();
         } else {
           setTex(null);
         }
       });
     };
 
-    tryLoad(url);
+    tryLoad();
 
     return () => {
       disposed = true;
@@ -304,7 +307,12 @@ function NightLightsLayer({
   const multi = getEnhancedMultipliers(viewMode);
 
   const isEnabled = emissiveLayer ? (layerStates[emissiveLayer.id]?.enabled ?? true) : false;
-  const texture = useLoadTexture(isEnabled ? emissiveLayer?.urlHiRes || emissiveLayer?.url : null);
+  const texture = useLoadTexture(
+    isEnabled ? emissiveLayer?.urlHiRes || emissiveLayer?.url : null,
+    true,
+    undefined,
+    isEnabled ? emissiveLayer?.urlHiResWebP || emissiveLayer?.urlWebP : null,
+  );
 
   const intensity =
     (layerStates[emissiveLayer?.id || ""]?.opacity ?? 0.6) * multi.nightLightIntensity;
@@ -736,13 +744,10 @@ function TexturedDot({
 }
 
 function PlanetDot({ planet, position }: { planet: Planet; position: [number, number, number] }) {
-  const config = textureConfigs[planet.id];
-  const diffuse = config?.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
+  const url = getOverviewTextureUrl(planet.id);
   const size = 0.08 + (planet.diameter / 142984) * 0.3;
 
-  if (!diffuse?.url) {
+  if (!url) {
     return (
       <mesh position={position}>
         <sphereGeometry args={[size, 12, 12]} />
@@ -760,7 +765,7 @@ function PlanetDot({ planet, position }: { planet: Planet; position: [number, nu
         </mesh>
       }
     >
-      <TexturedDot url={diffuse.url} color={planet.color} size={size} position={position} />
+      <TexturedDot url={url} color={planet.color} size={size} position={position} />
     </Suspense>
   );
 }

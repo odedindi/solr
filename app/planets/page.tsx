@@ -2,19 +2,10 @@
 
 import Link from "next/link";
 import { planets, dwarfPlanets, formatNumber } from "@/lib/planet-data";
-import { textureConfigs } from "@/lib/texture-config";
+import { getOverviewTextureUrl as planetThumbUrl } from "@/lib/texture-config";
 import { ArrowRight, Thermometer, Scale, Orbit } from "lucide-react";
 
 const _allBodies = [...planets, ...dwarfPlanets];
-
-function planetThumbUrl(planetId: string): string | null {
-  const cfg = textureConfigs[planetId];
-  if (!cfg) return null;
-  const diffuse = cfg.layers.find(
-    (l) => l.type === "diffuse" && (l.id === "surface" || l.id === "clouds"),
-  );
-  return diffuse?.url || null;
-}
 
 export default function PlanetsPage() {
   return (

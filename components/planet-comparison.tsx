@@ -28,22 +28,24 @@ function useLoadTexture(url: string | undefined | null, srgb = true, webpUrl?: s
       setTex(t);
     };
 
-    const fallbacks = webpUrl ? [webpUrl] : [];
+    const candidates = [webpUrl, url].filter(
+      (c, i, arr): c is string => Boolean(c) && arr.indexOf(c) === i,
+    );
 
     let idx = 0;
-    const tryLoad = (candidate: string) => {
-      loader.load(candidate, apply, undefined, () => {
+    const tryLoad = () => {
+      loader.load(candidates[idx], apply, undefined, () => {
         if (disposed) return;
         idx += 1;
-        if (idx - 1 < fallbacks.length) {
-          tryLoad(fallbacks[idx - 1]);
+        if (idx < candidates.length) {
+          tryLoad();
         } else {
           setTex(null);
         }
       });
     };
 
-    tryLoad(url);
+    tryLoad();
 
     return () => {
       disposed = true;
