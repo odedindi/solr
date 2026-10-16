@@ -305,7 +305,7 @@ export default function PlanetDetailPage({ params }: { params: Promise<{ id: str
   const [showMoonOrbits, setShowMoonOrbits] = useState(true);
 
   const planet3DElement = useMemo(
-    () => <Planet3D planet={planet!} showMoonOrbits={showMoonOrbits} />,
+    () => <Planet3D key={planet?.id} planet={planet!} showMoonOrbits={showMoonOrbits} />,
     [planet, showMoonOrbits],
   );
 
