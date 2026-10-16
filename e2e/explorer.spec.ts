@@ -42,8 +42,13 @@ test.describe("explorer", () => {
     });
     await page.goto("/explorer", { waitUntil: "domcontentloaded" });
 
-    await page.getByRole("button", { name: /skip/i }).click();
-    await expect(page.getByText("Loading the solar system")).toBeHidden();
+    const skip = page.getByRole("button", { name: /skip/i });
+    await skip.click();
+    // The overlay fades out before unmounting; once dismissed it is aria-hidden and inert.
+    await expect(
+      page.getByRole("status").filter({ hasText: "Loading the solar system" }),
+    ).toBeHidden();
+    await expect(skip).toBeHidden();
   });
 
   test("loads WebP textures instead of JPG", async ({ page }) => {
